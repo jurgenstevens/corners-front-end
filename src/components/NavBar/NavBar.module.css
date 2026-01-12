@@ -1,16 +1,15 @@
-.navbar {
+.nav {
   height: 64px;
-  width: 100%;
-  padding: 0 24px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
+  background: #000;
+  color: #fff;
+  padding: 0 20px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-/* ---------------- Left ---------------- */
+/* LEFT */
 
 .left {
   display: flex;
@@ -25,12 +24,12 @@
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
-/* ---------------- Right ---------------- */
+/* RIGHT */
 
 .right {
   display: flex;
@@ -39,63 +38,61 @@
 }
 
 .welcome {
-  font-weight: 500;
-  margin-right: 8px;
-}
-
-.link {
-  text-decoration: none;
-  color: #000;
-  font-weight: 500;
-}
-
-/* Primary black buttons (Login / Signup) */
-.button {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.05s ease;
-}
-
-.button:hover {
+  font-size: 14px;
   opacity: 0.9;
 }
 
-.button:active {
+/* BUTTONS */
+
+.navButton {
+  background: #fff;
+  color: #000;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.05s ease, opacity 0.15s ease;
+}
+
+.navButton:hover {
+  opacity: 0.9;
+}
+
+.navButton:active {
   transform: scale(0.97);
 }
 
-/* Secondary button (Logout) */
-.secondaryButton {
-  background-color: #f2f2f2;
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 600;
-  cursor: pointer;
+/* TOGGLE */
+
+.toggleWrapper {
+  margin-left: 8px;
 }
 
-.secondaryButton:hover {
-  background-color: #e6e6e6;
-}
-
-/* ---------------- Theme Toggle Placeholder ---------------- */
-
-.themeToggle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid #ddd;
+.toggle {
+  width: 46px;
+  height: 24px;
+  background: #333;
+  border-radius: 999px;
+  padding: 2px;
   cursor: pointer;
-
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  font-size: 18px;
 }
+
+.toggleKnob {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+/* Later when enabled, you can slide it like this */
+/*
+.toggle.dark .toggleKnob {
+  transform: translateX(22px);
+}
+*/

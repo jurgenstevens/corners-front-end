@@ -1,19 +1,13 @@
-// npm modules
 import { NavLink } from 'react-router-dom'
-
-// css
 import styles from './NavBar.module.css'
-
-// assets (placeholder for now — swap later)
-import logo from '../../../public/corners-logo-transparent.png'
 
 const NavBar = ({ user, handleLogout }) => {
   return (
-    <header className={styles.navbar}>
+    <nav className={styles.nav}>
       {/* Left */}
       <div className={styles.left}>
         <img
-          src={logo}
+          src="../../../public/corners-logo.png"
           alt="Corners Logo"
           className={styles.logo}
         />
@@ -22,46 +16,34 @@ const NavBar = ({ user, handleLogout }) => {
 
       {/* Right */}
       <div className={styles.right}>
-        {user ? (
+        {!user ? (
           <>
-            <span className={styles.welcome}>Hi, {user.name}</span>
-
-            <NavLink
-              to="/profiles"
-              className={styles.link}
-            >
-              Profiles
+            <NavLink to="/auth/login" className={styles.navButton}>
+              Log In
             </NavLink>
 
-            <button
-              className={styles.secondaryButton}
-              onClick={handleLogout}
-            >
-              Log Out
-            </button>
+            <NavLink to="/auth/signup" className={styles.navButton}>
+              Sign Up
+            </NavLink>
           </>
         ) : (
           <>
-            <NavLink to="/auth/login">
-              <button className={styles.button}>
-                Log In
-              </button>
-            </NavLink>
+            <span className={styles.welcome}>Hi, {user.name}</span>
 
-            <NavLink to="/auth/signup">
-              <button className={styles.button}>
-                Sign Up
-              </button>
-            </NavLink>
+            <button className={styles.navButton} onClick={handleLogout}>
+              Log Out
+            </button>
           </>
         )}
 
-        {/* Theme Toggle Placeholder */}
-        <div className={styles.themeToggle}>
-          🌙
+        {/* Theme Toggle (visual only for now) */}
+        <div className={styles.toggleWrapper}>
+          <div className={styles.toggle}>
+            <div className={styles.toggleKnob} />
+          </div>
         </div>
       </div>
-    </header>
+    </nav>
   )
 }
 
