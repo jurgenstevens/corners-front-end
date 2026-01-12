@@ -1,67 +1,70 @@
-// npm modules
 import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
-// services
 import * as authService from '../../services/authService'
-
-// css
 import styles from './Signup.module.css'
+
+const ROLE_OPTIONS = ['patron', 'business', 'distributor']
 
 const Signup = ({ handleAuthEvt }) => {
   const navigate = useNavigate()
   const imgInputRef = useRef(null)
 
   const [message, setMessage] = useState('')
+  const [role, setRole] = useState(null)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     passwordConf: '',
+    businessName: '',
+    distributorCompany: '',
   })
+
   const [photoData, setPhotoData] = useState({ photo: null })
-  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleChange = evt => {
     setMessage('')
     setFormData({ ...formData, [evt.target.name]: evt.target.value })
   }
 
+  const handleRoleSelect = selectedRole => {
+    setRole(selectedRole)
+  }
+
   const handleChangePhoto = evt => {
     const file = evt.target.files[0]
-    let isFileInvalid = false
-    let errMsg = ""
+    if (!file) return
+
     const validFormats = ['gif', 'jpeg', 'jpg', 'png', 'svg', 'webp']
     const photoFormat = file.name.split('.').at(-1)
 
-    // cloudinary supports files up to 10.4MB each as of May 2023
     if (file.size >= 10485760) {
-      errMsg = "Image must be smaller than 10.4MB"
-      isFileInvalid = true
-    }
-    if (!validFormats.includes(photoFormat)) {
-      errMsg = "Image must be in gif, jpeg/jpg, png, svg, or webp format"
-      isFileInvalid = true
-    }
-    
-    setMessage(errMsg)
-    
-    if (isFileInvalid) {
+      setMessage('Image must be smaller than 10.4MB')
       imgInputRef.current.value = null
       return
     }
 
-    setPhotoData({ photo: evt.target.files[0] })
+    if (!validFormats.includes(photoFormat)) {
+      setMessage('Invalid image format')
+      imgInputRef.current.value = null
+      return
+    }
+
+    setPhotoData({ photo: file })
   }
 
   const handleSubmit = async evt => {
     evt.preventDefault()
     try {
-      if (!import.meta.env.VITE_BACK_END_SERVER_URL) {
-        throw new Error('No VITE_BACK_END_SERVER_URL in front-end .env')
-      }
       setIsSubmitted(true)
-      await authService.signup(formData, photoData.photo)
+
+      await authService.signup(
+        { ...formData, role },
+        photoData.photo
+      )
+
       handleAuthEvt()
       navigate('/')
     } catch (err) {
@@ -71,67 +74,135 @@ const Signup = ({ handleAuthEvt }) => {
     }
   }
 
-  const { name, email, password, passwordConf } = formData
+  const {
+    name,
+    email,
+    password,
+    passwordConf,
+    businessName,
+    distributorCompany,
+  } = formData
 
   const isFormInvalid = () => {
-    return !(name && email && password && password === passwordConf)
+    if (!(name && email && password && password === passwordConf && role)) {
+      return true
+    }
+
+    if (role === 'business' && !businessName) return true
+    if (role === 'distributor' && !distributorCompany) return true
+
+    return false
   }
 
   return (
     <main className={styles.container}>
-      <h1>Sign Up</h1>
-      <p className={styles.message}>{message}</p>
-      <form autoComplete="off" onSubmit={handleSubmit} className={styles.form}>
-        <label className={styles.label}>
-          Name
-          <input type="text" value={name} name="name" onChange={handleChange} />
-        </label>
-        <label className={styles.label}>
-          Email
+      <h1 className={styles.header}>Sign Up</h1>
+
+      {message && <p className={styles.message}>{message}</p>}
+
+      {!role && (
+        <div className={styles.rolePicker}>
+          {ROLE_OPTIONS.map(r => (
+            <button
+              key={r}
+              className={styles.roleButton}
+              onClick={() => handleRoleSelect(r)}
+            >
+              Sign up as {r}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {role && (
+        <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
+          <p className={styles.roleLabel}>
+            Role: <strong>{role}</strong>
+          </p>
+
           <input
-            type="text"
-            value={email}
+            className={styles.input}
+            placeholder="Full Name"
+            name="name"
+            value={name}
+            onChange={handleChange}
+          />
+
+          <input
+            className={styles.input}
+            placeholder="Email"
             name="email"
+            value={email}
             onChange={handleChange}
           />
-        </label>
-        <label className={styles.label}>
-          Password
+
           <input
+            className={styles.input}
+            placeholder="Password"
             type="password"
-            value={password}
             name="password"
+            value={password}
             onChange={handleChange}
           />
-        </label>
-        <label className={styles.label}>
-          Confirm Password
+
           <input
+            className={styles.input}
+            placeholder="Confirm Password"
             type="password"
-            value={passwordConf}
             name="passwordConf"
+            value={passwordConf}
             onChange={handleChange}
           />
-        </label>
-        <label className={styles.label}>
-          Upload Photo
-          <input 
-            type="file" 
-            name="photo" 
-            onChange={handleChangePhoto}
+
+          {/* Role-specific fields */}
+          {role === 'business' && (
+            <input
+              className={styles.input}
+              placeholder="Business Name"
+              name="businessName"
+              value={businessName}
+              onChange={handleChange}
+            />
+          )}
+
+          {role === 'distributor' && (
+            <input
+              className={styles.input}
+              placeholder="Distributor Company"
+              name="distributorCompany"
+              value={distributorCompany}
+              onChange={handleChange}
+            />
+          )}
+
+          <input
             ref={imgInputRef}
+            className={styles.fileInput}
+            type="file"
+            name="photo"
+            onChange={handleChangePhoto}
           />
-        </label>
-        <div>
-          <Link to="/">Cancel</Link>
+
           <button
             className={styles.button}
-            disabled={ isFormInvalid() || isSubmitted }
+            disabled={isFormInvalid() || isSubmitted}
           >
-            {!isSubmitted ? 'Sign Up' : '🚀 Sending...'}
+            {!isSubmitted ? 'Create Account' : '🚀 Sending...'}
           </button>
-        </div>
-      </form>
+
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={() => setRole(null)}
+          >
+            Change Role
+          </button>
+
+          <Link to="/" className={styles.link}>
+            Cancel
+          </Link>
+        </form>
+      )}
     </main>
   )
 }
