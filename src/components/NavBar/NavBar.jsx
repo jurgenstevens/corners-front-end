@@ -1,16 +1,21 @@
 import { NavLink } from 'react-router-dom'
+import { useTheme } from '../../context/ThemeContext'
 import styles from './NavBar.module.css'
 
 const NavBar = ({ user, handleLogout }) => {
+  const { theme, toggleTheme } = useTheme()
+
   return (
     <nav className={styles.nav}>
       {/* Left */}
       <div className={styles.left}>
-        <img
-          src="../../../public/corners-logo.png"
-          alt="Corners Logo"
-          className={styles.logo}
-        />
+        <a href="/">
+          <img
+            src="/corners-logo.png"
+            alt="Corners Logo"
+            className={styles.logo}
+          />
+        </a>
         <span className={styles.brand}>CORNERS</span>
       </div>
 
@@ -36,12 +41,16 @@ const NavBar = ({ user, handleLogout }) => {
           </>
         )}
 
-        {/* Theme Toggle (visual only for now) */}
-        <div className={styles.toggleWrapper}>
-          <div className={styles.toggle}>
-            <div className={styles.toggleKnob} />
-          </div>
-        </div>
+        {/* Theme Toggle */}
+        <button
+          className={`${styles.toggle} ${
+            theme === 'dark' ? styles.active : ''
+          }`}
+          onClick={toggleTheme}
+          aria-label="Toggle dark mode"
+        >
+          <div className={styles.toggleKnob} />
+        </button>
       </div>
     </nav>
   )

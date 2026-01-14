@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import * as authService from '../../services/authService'
 import styles from './Signup.module.css'
 
-const ROLE_OPTIONS = ['patron', 'business', 'distributor']
+const ROLE_OPTIONS = ['Patron', 'Business', 'Distributor']
 
 const Signup = ({ handleAuthEvt }) => {
   const navigate = useNavigate()
@@ -108,7 +108,7 @@ const Signup = ({ handleAuthEvt }) => {
               className={styles.roleButton}
               onClick={() => handleRoleSelect(r)}
             >
-              Sign up as {r}
+              Sign Up As {r}
             </button>
           ))}
         </div>

@@ -71,24 +71,36 @@
   margin-left: 8px;
 }
 
+/* Toggle */
+
 .toggle {
   width: 46px;
   height: 24px;
   background: #333;
   border-radius: 999px;
-  padding: 2px;
+  position: relative;
   cursor: pointer;
+  border: none;
+  padding: 0;
   display: flex;
   align-items: center;
 }
 
 .toggleKnob {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background: #fff;
   border-radius: 50%;
+  position: absolute;
+  left: 3px;
   transition: transform 0.2s ease;
 }
+
+/* Active (dark mode on) */
+.active .toggleKnob {
+  transform: translateX(22px);
+}
+
 
 /* Later when enabled, you can slide it like this */
 /*
