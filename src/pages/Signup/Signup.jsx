@@ -105,6 +105,7 @@ const Signup = ({ handleAuthEvt }) => {
           {ROLE_OPTIONS.map(r => (
             <button
               key={r}
+              type='button'
               className={styles.roleButton}
               onClick={() => handleRoleSelect(r)}
             >

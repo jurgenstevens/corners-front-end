@@ -1,53 +1,83 @@
+/* =========================
+   Global Reset / Box Model
+========================= */
+
 *,
 *::before,
 *::after {
   box-sizing: inherit;
 }
 
+/* =========================
+   Light Theme (Default)
+========================= */
+
 :root {
   --bg: #f5f5f5;
-  --text: #000;
-  --card-bg: #fff;
-  --muted: #555;
-  --border: #ddd;
+  --text: #0f0f0f;
+  --card-bg: #ffffff;
+  --muted: #555555;
+  --border: #dddddd;
+
+  /* Buttons */
+  --button-bg: #000000;
+  --button-text: #ffffff;
+  --button-hover: #222222;
 }
+
+/* =========================
+   Dark Theme Overrides
+========================= */
 
 [data-theme='dark'] {
   --bg: #0f0f0f;
-  --text: #fff;
+  --text: #ffffff;
   --card-bg: #1a1a1a;
-  --muted: #aaa;
-  --border: #333;
+  --muted: #aaaaaa;
+  --border: #333333;
+
+  /* Buttons */
+  --button-bg: #ffffff;
+  --button-text: #000000;
+  --button-hover: #e5e5e5;
 }
+
+/* =========================
+   Base Page Styles
+========================= */
 
 body {
   box-sizing: border-box;
-
   margin: 0;
   min-height: 100vh;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  background: var(--bg);
-  color: var(--text);
-  transition: background 0.2s ease, color 0.2s ease;
 }
+
+/* =========================
+   Links
+========================= */
 
 a,
 a:visited {
-  color: #00d8ff
+  color: #00d8ff;
 }
+
+/* =========================
+   Navigation
+========================= */
 
 nav > ul {
   margin: 0;
   padding: 16px 32px;
 }
-
