@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as authService from '../../services/authService'
 import styles from './Signup.module.css'
+import { redirectByRole } from '../../utils/redirectByRole'
 
 const ROLE_OPTIONS = ['Patron', 'Business', 'Distributor']
 
@@ -60,13 +61,13 @@ const Signup = ({ handleAuthEvt }) => {
     try {
       setIsSubmitted(true)
 
-      await authService.signup(
+      const user = await authService.signup(
         { ...formData, role },
         photoData.photo
       )
 
-      handleAuthEvt()
-      navigate('/')
+      handleAuthEvt(user)
+      redirectByRole(user, navigate)
     } catch (err) {
       console.log(err)
       setMessage(err.message)
