@@ -1,12 +1,13 @@
 // npm modules
-import { useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 
 // pages
 import Signup from './pages/Signup/Signup'
 import Login from './pages/Login/Login'
 import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
+import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 
 // components
@@ -29,9 +30,14 @@ function App() {
     navigate('/')
   }
 
-  const handleAuthEvt = () => {
-    setUser(authService.getUser())
+  const handleAuthEvt = (user) => {
+    setUser(user)
   }
+
+  useEffect(() => {
+  setUser(authService.getUser())
+}, [])
+
 
   return (
     <>
@@ -62,7 +68,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/dashboard/business"
+          element={
+            user?.role === 'business'
+              ? <BusinessDashboard />
+              : <Navigate to="/" />
+          }
+        />
       </Routes>
+
     </>
   )
 }
