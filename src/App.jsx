@@ -1,13 +1,15 @@
 // npm modules
 import { useState, useEffect } from 'react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 
 // pages
 import Signup from './pages/Signup/Signup'
 import Login from './pages/Login/Login'
 import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
+import PatronDashboard from './pages/Dashboards/PatronDashboard'
 import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
+import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 
 // components
@@ -69,15 +71,32 @@ function App() {
           }
         />
         <Route
+          path="/dashboard/patron"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['patron']}>
+              <PatronDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/dashboard/business"
           element={
-            user?.role === 'business'
-              ? <BusinessDashboard />
-              : <Navigate to="/" />
+            <ProtectedRoute user={user} allowedRoles={['business']}>
+              <BusinessDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/distributor"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['distributor']}>
+              <DistributorDashboard />
+            </ProtectedRoute>
           }
         />
       </Routes>
-
     </>
   )
 }
