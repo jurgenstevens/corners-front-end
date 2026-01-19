@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as authService from '../../services/authService'
+import { redirectByRole } from '../../utils/redirectByRole'
 import styles from './Login.module.css'
 
 const LoginPage = ({ handleAuthEvt }) => {

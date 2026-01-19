@@ -21,6 +21,8 @@ async function signup(signupFormData, photoData) {
       if (photoData) {
         await addProfilePhoto(photoData)
       }
+
+      return tokenService.getUserFromToken()
     }
   } catch (err) {
     throw new Error(err)
@@ -46,7 +48,10 @@ async function login(loginFormData) {
 
     if (json.err) throw new Error(json.err)
 
-    if (json.token) tokenService.setToken(json.token)
+    if (json.token) {
+      tokenService.setToken(json.token)
+      return tokenService.getUserFromToken()
+    }
   } catch (err) {
     throw new Error(err)
   }
