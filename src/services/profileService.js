@@ -18,7 +18,7 @@ async function addPhoto(photoData) {
   try {
     const photoFormData = new FormData()
     photoFormData.append('photo', photoData)
-    const profileId = tokenService.getUserFromToken().profile
+    const profileId = tokenService.getUserFromToken().profileId
     const res = await fetch(`${BASE_URL}/${profileId}/add-photo`, {
       method: 'PUT',
       headers: {
