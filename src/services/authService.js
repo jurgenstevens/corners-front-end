@@ -12,7 +12,6 @@ async function signup(signupFormData, photoData) {
       body: JSON.stringify(signupFormData),
     })
     const json = await res.json()
-
     if (json.err) throw new Error(json.err)
 
     if (json.token) {
@@ -21,6 +20,9 @@ async function signup(signupFormData, photoData) {
       if (photoData) {
         await addProfilePhoto(photoData)
       }
+      const user = tokenService.getUserFromToken()
+      console.log('Decoded user:', user)
+
 
       return tokenService.getUserFromToken()
     }

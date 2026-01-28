@@ -1,23 +1,19 @@
+const AUTH_LEVEL_TO_ROUTE = {
+  100: '/dashboard/patron',
+  250: '/dashboard/business',
+  500: '/dashboard/distributor',
+}
+
 export function redirectByRole(user, navigate) {
-  if (!user || !user.role) return
+  if (!user || user.authorizationLevel == null) return
 
-  const role = user.role.toLowerCase()
+  const route = AUTH_LEVEL_TO_ROUTE[user.authorizationLevel]
 
-  switch (role) {
-    case 'Patron':
-      navigate('/dashboard/patron')
-      break
-
-    case 'Business':
-      navigate('/dashboard/business')
-      break
-
-    case 'Distributor':
-      navigate('/dashboard/distributor')
-      break
-
-    default:
-      console.warn('Unknown role:', role)
-      navigate('/')
+  if (!route) {
+    console.warn('Unknown authorizationLevel:', user.authorizationLevel)
+    navigate('/')
+    return
   }
+
+  navigate(route)
 }

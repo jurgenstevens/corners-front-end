@@ -19,8 +19,6 @@ const Signup = ({ handleAuthEvt }) => {
     email: '',
     password: '',
     passwordConf: '',
-    businessName: '',
-    distributorCompany: '',
   })
 
   const [photoData, setPhotoData] = useState({ photo: null })
@@ -80,20 +78,28 @@ const Signup = ({ handleAuthEvt }) => {
     email,
     password,
     passwordConf,
-    businessName,
-    distributorCompany,
   } = formData
 
   const isFormInvalid = () => {
     if (!(name && email && password && password === passwordConf && role)) {
       return true
     }
-
-    if (role === 'business' && !businessName) return true
-    if (role === 'distributor' && !distributorCompany) return true
-
     return false
   }
+
+  const getNamePlaceholder = () => {
+    switch (role) {
+      case 'Patron':
+        return 'Full Name'
+      case 'Business':
+        return 'Business Name'
+      case 'Distributor':
+        return 'Distributor Name'
+      default:
+        return 'Name'
+    }
+  }
+
 
   return (
     <main className={styles.container}>
@@ -124,7 +130,7 @@ const Signup = ({ handleAuthEvt }) => {
 
           <input
             className={styles.input}
-            placeholder="Full Name"
+            placeholder={getNamePlaceholder()}
             name="name"
             value={name}
             onChange={handleChange}
@@ -157,26 +163,6 @@ const Signup = ({ handleAuthEvt }) => {
           />
 
           {/* Role-specific fields */}
-          {role === 'business' && (
-            <input
-              className={styles.input}
-              placeholder="Business Name"
-              name="businessName"
-              value={businessName}
-              onChange={handleChange}
-            />
-          )}
-
-          {role === 'distributor' && (
-            <input
-              className={styles.input}
-              placeholder="Distributor Company"
-              name="distributorCompany"
-              value={distributorCompany}
-              onChange={handleChange}
-            />
-          )}
-
           <input
             ref={imgInputRef}
             className={styles.fileInput}

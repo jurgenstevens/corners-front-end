@@ -20,7 +20,7 @@ function getToken() {
 
 function getUserFromToken() {
   const token = getToken()
-  return token ? jwtDecode(token).user : null
+  return token ? jwtDecode(token) : null
 }
 
 function removeToken() {
