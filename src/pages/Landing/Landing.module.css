@@ -1,7 +1,7 @@
 .container {
   min-height: 100vh;
-  background: #f5f5f5;
-  color: #000;
+  background: var(--bg);
+  color: var(--text);
   padding: 40px 16px 80px;
 }
 
@@ -21,7 +21,7 @@
 
 .tagline {
   font-size: 20px;
-  color: #444;
+  color: var(--text-muted);
   margin-bottom: 32px;
   line-height: 1.4;
 }
@@ -34,8 +34,8 @@
 }
 
 .primaryButton {
-  background: #000;
-  color: #fff;
+  background: var(--primary);
+  color: var(--on-primary);
   border: none;
   padding: 14px 28px;
   border-radius: 8px;
@@ -49,9 +49,9 @@
 }
 
 .secondaryButton {
-  background: #fff;
-  color: #000;
-  border: 2px solid #000;
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--text);
   padding: 12px 26px;
   border-radius: 8px;
   font-size: 16px;
@@ -60,14 +60,14 @@
 }
 
 .secondaryButton:hover {
-  background: #eee;
+  opacity: 0.85;
 }
 
 .linkButton {
   margin-top: 16px;
   background: none;
   border: none;
-  color: #000;
+  color: var(--text);
   cursor: pointer;
   font-size: 14px;
   text-decoration: underline;
@@ -84,10 +84,10 @@
 }
 
 .featureCard {
-  background: #fff;
+  background: var(--surface);
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow);
 }
 
 .featureCard h3 {
@@ -95,7 +95,7 @@
 }
 
 .featureCard p {
-  color: #555;
+  color: var(--text-muted);
   line-height: 1.4;
 }
 
