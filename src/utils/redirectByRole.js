@@ -1,5 +1,5 @@
 const AUTH_LEVEL_TO_ROUTE = {
-  100: '/dashboard/patron',
+  150: '/dashboard/patron',
   250: '/dashboard/business',
   500: '/dashboard/distributor',
 }

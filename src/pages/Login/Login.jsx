@@ -25,7 +25,6 @@ const LoginPage = ({ handleAuthEvt }) => {
         throw new Error('No VITE_BACK_END_SERVER_URL in front-end .env')
       }
       const user = await authService.login(formData)
-
       handleAuthEvt(user)
       redirectByRole(user, navigate)
     } catch (err) {

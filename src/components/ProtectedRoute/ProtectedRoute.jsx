@@ -10,6 +10,8 @@ const ProtectedRoute = ({ user, allowedRoles, children }) => {
   if (!user) {
     return <Navigate to="/auth/login" replace />
   }
+  console.log('Allowed Roles:', allowedRoles)
+  console.log('User level:', user.authorizationLevel)
 
   if (
     allowedRoles &&

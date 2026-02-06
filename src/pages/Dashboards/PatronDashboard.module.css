@@ -1,0 +1,141 @@
+.container {
+  padding: 32px 20px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* =========================
+   Welcome Header
+========================= */
+
+.welcome {
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+/* =========================
+   Grid Layout
+========================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 56px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+}
+
+/* =========================
+   Dashboard Card
+========================= */
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.cardHeader h6 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Caret circle */
+
+.caretCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.caret {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* =========================
+   Icon Circle
+========================= */
+
+.iconWrapper {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #ffffff; /* Always white */
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transition: transform 0.15s ease;
+}
+
+.iconWrapper img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.card:hover .iconWrapper {
+  transform: scale(1.05);
+}
+
+/* =========================
+   Bottom Feed Section
+========================= */
+
+.feedSection {
+  margin-top: 40px;
+}
+
+.feedSection h4 {
+  margin-bottom: 14px;
+}
+
+.feedCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 16px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
