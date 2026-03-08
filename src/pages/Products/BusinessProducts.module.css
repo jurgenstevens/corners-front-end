@@ -2,7 +2,7 @@
   display: flex;
   justify-content: flex-end;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: var(--bg);
 }
 
 /* Feed container */
@@ -10,7 +10,7 @@
   width: 100%;
   max-width: 500px;
   padding: 24px;
-  background: white;
+  background: var(--card-bg);
 }
 
 /* Desktop: right half only */
@@ -38,14 +38,15 @@
   border: none;
   padding: 6px 14px;
   border-radius: 20px;
-  background: #eee;
+  background: var(--border);
+  color: var(--text);
   cursor: pointer;
   font-size: 0.85rem;
 }
 
 .activeFilter {
-  background: black;
-  color: white;
+  background: var(--button-bg);
+  color: var(--button-text);
 }
 
 /* Feed List */
@@ -61,7 +62,7 @@
   align-items: center;
   gap: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 .leftIndicator {
@@ -79,12 +80,12 @@
 .activityContent p {
   margin: 4px 0;
   font-size: 0.85rem;
-  color: #666;
+  color: var(--muted);
 }
 
 .time {
   font-size: 0.75rem;
-  color: #999;
+  color: var(--muted);
 }
 
 .actions {
@@ -107,7 +108,7 @@
 }
 
 .reject {
-  background: #ddd;
+  background: var(--border);
 }
 
 /* MOBILE FOOTER */
@@ -121,8 +122,8 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: white;
-    border-top: 1px solid #ddd;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
     display: flex;
     justify-content: space-around;
     padding: 12px 0;
@@ -154,5 +155,5 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #ccc;
+  background: var(--border);
 }
