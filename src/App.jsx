@@ -11,6 +11,8 @@ import PatronDashboard from './pages/Dashboards/PatronDashboard'
 import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
 import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
+// business pages
+import BusinessProducts from './pages/Products/BusinessProducts'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -78,7 +80,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        {/* Business Pages */}
         <Route
           path="/dashboard/business"
           element={
@@ -87,7 +89,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/business/products"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['Business']}>
+              <BusinessProducts />
+            </ProtectedRoute>
+          }
+        />
+        {/* Distributor Pages */}
         <Route
           path="/dashboard/distributor"
           element={
