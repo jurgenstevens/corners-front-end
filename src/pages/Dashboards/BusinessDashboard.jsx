@@ -44,32 +44,32 @@ const BusinessDashboard = ({ user }) => {
         <DashboardCard
           title="Products"
           icon={productsIcon}
-          onClick={() => navigate('/business/products')}
+          onClick={() => navigate('/dashboard/business/products')}
         />
         <DashboardCard
           title="Promotions"
           icon={promotionsIcon}
-          onClick={() => navigate('/business/promotions')}
+          onClick={() => navigate('/dashboard/business/promotions')}
         />
         <DashboardCard
           title="Inventory"
           icon={inventoryIcon}
-          onClick={() => navigate('/business/inventory')}
+          onClick={() => navigate('/dashboard/business/inventory')}
         />
         <DashboardCard
           title="Analytics"
           icon={analyticsIcon}
-          onClick={() => navigate('/business/analytics')}
+          onClick={() => navigate('/dashboard/business/analytics')}
         />
         <DashboardCard
           title="Settings"
           icon={settingsIcon}
-          onClick={() => navigate('/business/settings')}
+          onClick={() => navigate('/dashboard/business/settings')}
         />
         <DashboardCard
           title="Requests"
           icon={requestsIcon}
-          onClick={() => navigate('/business/requests')}
+          onClick={() => navigate('/dashboard/business/requests')}
         />
       </div>
 

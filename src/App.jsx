@@ -90,7 +90,7 @@ function App() {
           }
         />
         <Route
-          path="/business/products"
+          path="/dashboard/business/products"
           element={
             <ProtectedRoute user={user} allowedRoles={['Business']}>
               <BusinessProducts />
