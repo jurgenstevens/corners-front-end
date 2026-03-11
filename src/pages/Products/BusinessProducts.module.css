@@ -1,35 +1,30 @@
 .pageWrapper {
-  display: flex;
-  justify-content: flex-end;
   min-height: 100vh;
   background: var(--bg);
 }
 
 /* Feed container */
+
 .feedContainer {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   padding: 24px;
+  margin: 0 auto;
   background: var(--card-bg);
 }
 
-/* Desktop: right half only */
-@media (min-width: 900px) {
-  .feedContainer {
-    width: 50%;
-    border-left: 1px solid #eaeaea;
-  }
-}
-
 /* Header */
+
 .header {
   font-size: 1.5rem;
   margin-bottom: 16px;
 }
 
 /* Filter Row */
+
 .filterRow {
   display: flex;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -50,6 +45,7 @@
 }
 
 /* Feed List */
+
 .feedList {
   display: flex;
   flex-direction: column;
@@ -57,6 +53,7 @@
 }
 
 /* Activity Item */
+
 .activityItem {
   display: flex;
   align-items: center;
@@ -112,6 +109,7 @@
 }
 
 /* MOBILE FOOTER */
+
 .mobileFooter {
   display: none;
 }
@@ -134,7 +132,6 @@
   }
 }
 
-/* Notification Badge */
 .notificationWrapper {
   position: relative;
 }
@@ -150,7 +147,6 @@
   padding: 2px 6px;
 }
 
-/* Profile Circle */
 .profileCircle {
   width: 24px;
   height: 24px;
