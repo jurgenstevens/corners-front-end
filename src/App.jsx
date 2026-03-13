@@ -12,7 +12,7 @@ import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
 import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 // business pages
-import BusinessProducts from './pages/Products/BusinessProducts'
+import BusinessProducts from './pages/BusinessUIs/Products/BusinessProducts'
 
 // components
 import NavBar from './components/NavBar/NavBar'

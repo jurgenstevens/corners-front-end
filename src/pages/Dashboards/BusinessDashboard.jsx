@@ -9,7 +9,7 @@ import analyticsIcon from '../assets/analytics.png'
 import settingsIcon from '../assets/settings.png'
 import requestsIcon from '../assets/requests.svg'
 
-import BusinessProducts from '../Products/BusinessProducts'
+import BusinessProducts from '../BusinessUIs/Products/BusinessProducts'
 
 const DashboardCard = ({ title, icon, onClick }) => {
   return (
