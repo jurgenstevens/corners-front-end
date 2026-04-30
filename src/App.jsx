@@ -13,6 +13,7 @@ import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 // business pages
 import BusinessProducts from './pages/BusinessUIs/Products/BusinessProducts'
+import BusinessPromotions from './pages/BusinessUIs/Promotions/BusinessPromotions'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -94,6 +95,14 @@ function App() {
           element={
             <ProtectedRoute user={user} allowedRoles={['Business']}>
               <BusinessProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/business/promotions"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['Business']}>
+              <BusinessPromotions />
             </ProtectedRoute>
           }
         />

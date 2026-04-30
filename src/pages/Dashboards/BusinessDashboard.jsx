@@ -10,6 +10,8 @@ import settingsIcon from '../assets/settings.png'
 import requestsIcon from '../assets/requests.svg'
 
 import BusinessProducts from '../BusinessUIs/Products/BusinessProducts'
+import BusinessPromotions from '../BusinessUIs/Promotions/BusinessPromotions'
+import BusinessInventory from '../BusinessUIs/Inventory/BusinessInventory'
 
 const DashboardCard = ({ title, icon, onClick }) => {
   return (
@@ -95,7 +97,7 @@ const BusinessDashboard = ({ user }) => {
                 : navigate("/dashboard/business/settings")
             }
           />
-
+          {/* this should be changed to Patrons and inside it should have patron requests. It should look like the IG feed like Products */}
           <DashboardCard
             title="Requests"
             icon={requestsIcon}
@@ -135,10 +137,10 @@ const BusinessDashboard = ({ user }) => {
           </button>
 
           {activePanel === "products" && <BusinessProducts />}
-          {/* {activePanel === "promotions" && <BusinessPromotions />} */}
-          {/* {activePanel === "inventory" && <BusinessInventory />} */}
+          {activePanel === "promotions" && <BusinessPromotions />}
+          {activePanel === "inventory" && <BusinessInventory />}
           {/* {activePanel === "analytics" && <BusinessAnalytics />} */}
-          {/* {activePanel === "requests" && <BusinessRequests />} */}
+          {/* {activePanel === "requests" && <BusinessPatrons />} */}
           {/* {activePanel === "settings" && <BusinessSettings />} */}
 
         </div>
