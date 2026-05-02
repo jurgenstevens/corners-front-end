@@ -14,6 +14,10 @@ import ChangePassword from './pages/ChangePassword/ChangePassword'
 // business pages
 import BusinessProducts from './pages/BusinessUIs/Products/BusinessProducts'
 import BusinessPromotions from './pages/BusinessUIs/Promotions/BusinessPromotions'
+import BusinessInventory from './pages/BusinessUIs/Inventory/BusinessInventory'
+import BusinessAnalytics from './pages/BusinessUIs/Analytics/BusinessAnalytics'
+import BusinessSettings from './pages/BusinessUIs/Settings/BusinessSettings'
+import BusinessPatronRequests from './pages/BusinessUIs/PatronRequests/BusinessPatronRequests'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -103,6 +107,38 @@ function App() {
           element={
             <ProtectedRoute user={user} allowedRoles={['Business']}>
               <BusinessPromotions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/business/inventory"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['Business']}>
+              <BusinessInventory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/business/analytics"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['Business']}>
+              <BusinessAnalytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/business/settings"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['Business']}>
+              <BusinessSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/business/patronRequests"
+          element={
+            <ProtectedRoute user={user} allowedRoles={['Business']}>
+              <BusinessPatronRequests />
             </ProtectedRoute>
           }
         />
