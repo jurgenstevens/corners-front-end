@@ -14,6 +14,7 @@ import BusinessPromotions from '../BusinessUIs/Promotions/BusinessPromotions'
 import BusinessInventory from '../BusinessUIs/Inventory/BusinessInventory'
 import BusinessAnalytics from '../BusinessUIs/Analytics/BusinessAnalytics'
 import BusinessSettings from '../BusinessUIs/Settings/BusinessSettings'
+import BusinessPatronRequests from '../BusinessUIs/PatronRequests/BusinessPatronRequests'
 
 const DashboardCard = ({ title, icon, onClick }) => {
   return (
@@ -142,7 +143,7 @@ const BusinessDashboard = ({ user }) => {
           {activePanel === "promotions" && <BusinessPromotions />}
           {activePanel === "inventory" && <BusinessInventory />}
           {activePanel === "analytics" && <BusinessAnalytics />}
-          {/* {activePanel === "patronRequests" && <BusinessPatronRequests />} */}
+          {activePanel === "patronRequests" && <BusinessPatronRequests />}
           {activePanel === "settings" && <BusinessSettings />}
 
         </div>
