@@ -1,91 +1,83 @@
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import * as connectionService from '../../services/connectionService'
 import styles from './PatronDashboard.module.css'
-import { useNavigate } from 'react-router-dom'
 
-// Temporary placeholder images
-import storesIcon from '../assets/stores.png'
-import productsIcon from '../assets/products.png'
-import promotionsIcon from '../assets/promotions.png'
-import requestsIcon from '../assets/requests.png'
-import favoritesIcon from '../assets/favorites.png'
-import settingsIcon from '../assets/settings.png'
+export default function PatronDashboard({ user }) {
+  const [nearby, setNearby] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [requested, setRequested] = useState({})
 
-const DashboardCard = ({ title, icon, onClick }) => {
-  return (
-    <div className={styles.card} onClick={onClick}>
-      <div className={styles.cardHeader}>
-        <h6>{title}</h6>
-        <div className={styles.caretCircle}>
-          <span className={styles.caret}>&gt;</span>
-        </div>
-      </div>
+  useEffect(() => {
+    connectionService.getNearbyBusinesses()
+      .then(data => { if (Array.isArray(data)) setNearby(data) })
+      .finally(() => setLoading(false))
+  }, [])
 
-      <div className={styles.iconWrapper}>
-        <img src={icon} alt={title} />
-      </div>
-    </div>
-  )
-}
+  async function handleRegister(businessId) {
+    await connectionService.requestConnection(businessId)
+    setRequested(prev => ({ ...prev, [businessId]: true }))
+    setNearby(prev => prev.filter(b => b._id !== businessId))
+  }
 
-const PatronDashboard = ({ user }) => {
-  const navigate = useNavigate()
-
-  const patronName = user?.name || 'Patron'
+  async function handleDismiss(businessId) {
+    await connectionService.dismissBusiness(businessId)
+    setNearby(prev => prev.filter(b => b._id !== businessId))
+  }
 
   return (
     <div className={styles.container}>
-      {/* Welcome Header */}
-      <h2 className={styles.welcome}>
-        Welcome, {patronName}!
-      </h2>
+      <h1>Welcome, {user?.name}</h1>
 
-      {/* Dashboard Grid */}
-      <div className={styles.grid}>
-        <DashboardCard
-          title="My Stores"
-          icon={storesIcon}
-          onClick={() => navigate('/patron/stores')}
-        />
-        <DashboardCard
-          title="Products"
-          icon={productsIcon}
-          onClick={() => navigate('/patron/products')}
-        />
-        <DashboardCard
-          title="Promotions / Sales"
-          icon={promotionsIcon}
-          onClick={() => navigate('/patron/promotions')}
-        />
-        <DashboardCard
-          title="Requests"
-          icon={requestsIcon}
-          onClick={() => navigate('/patron/requests')}
-        />
-        <DashboardCard
-          title="Favorites"
-          icon={favoritesIcon}
-          onClick={() => navigate('/patron/favorites')}
-        />
-        <DashboardCard
-          title="Settings"
-          icon={settingsIcon}
-          onClick={() => navigate('/patron/settings')}
-        />
+      <div className={styles.cards}>
+        <Link to="/patron/stores" className={styles.card}>
+          <span>🏪</span>
+          <h3>My Stores</h3>
+          <p>View your connected businesses</p>
+        </Link>
+        <Link to="/patron/products" className={styles.card}>
+          <span>🛍️</span>
+          <h3>Products</h3>
+          <p>Browse and vote on products</p>
+        </Link>
+        <Link to="/patron/requests" className={styles.card}>
+          <span>📋</span>
+          <h3>Promotions & Sales</h3>
+          <p>See deals from your stores</p>
+        </Link>
       </div>
 
-      {/* Bottom Section */}
-      <div className={styles.feedSection}>
-        <h4>Neighborhood Updates</h4>
-        <div className={styles.feedCard}>
-          <p>
-            Discover new stores in your area, seasonal promotions,
-            local events, and community announcements. Soon, this
-            section will also highlight trending products and
-            personalized recommendations near you.
-          </p>
+      <section className={styles.nearby}>
+        <h2>Businesses Near You</h2>
+        {loading && <p>Loading…</p>}
+        {!loading && nearby.length === 0 && (
+          <p className={styles.empty}>No new businesses in your area right now.</p>
+        )}
+        <div className={styles.businessList}>
+          {nearby.map(b => (
+            <div key={b._id} className={styles.businessCard}>
+              <div className={styles.bizInfo}>
+                <h4>{b.displayName || b.profile?.name}</h4>
+                {b.businessType && <span className={styles.type}>{b.businessType}</span>}
+                {b.address && <p className={styles.address}>📍 {b.address}</p>}
+                {b.location?.zip && <p className={styles.zip}>📮 {b.location.zip}</p>}
+              </div>
+              <div className={styles.actions}>
+                {requested[b._id] ? (
+                  <span className={styles.requested}>✓ Requested</span>
+                ) : (
+                  <button className={styles.registerBtn} onClick={() => handleRegister(b._id)}>
+                    Register
+                  </button>
+                )}
+                <button className={styles.dismissBtn} onClick={() => handleDismiss(b._id)}>
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
     </div>
   )
 }
-
-export default PatronDashboard

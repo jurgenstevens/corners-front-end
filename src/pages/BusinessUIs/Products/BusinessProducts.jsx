@@ -1,123 +1,130 @@
-// ASSO_03
-import { useState } from "react";
-import styles from "./BusinessProducts.module.css";
+import { useState, useEffect } from 'react'
+import * as productService from '../../../services/productService'
+import styles from './BusinessProducts.module.css'
 
-/*
-  NOTE:
-  ActivityItem and MobileFooter should be extracted
-  into reusable components in the future:
-  
-  components/ActivityItem/ActivityItem.jsx
-  components/MobileFooter/MobileFooter.jsx
-*/
+const TABS = ['Requests', 'Approved', 'In Store']
+const STATUS_MAP = { 'Requests': ['pending','ready_to_stock'], 'Approved': ['approved'], 'In Store': ['stocked'] }
 
-const fakeActivity = [
-  {
-    id: 1,
-    type: "request",
-    user: "Hannah",
-    title: "Cafe Bustello Request",
-    subtitle: "Requested by Hannah",
-    time: "1d",
-    actionable: true,
-  },
-  {
-    id: 2,
-    type: "trending",
-    user: "Tom",
-    title: "Guanciale Votes Threshold Met",
-    subtitle: "10/10 Votes Reached",
-    time: "1d",
-    actionable: false,
-  },
-  {
-    id: 3,
-    type: "added",
-    user: "Jurgen",
-    title: "Lucky Strike 100s Gold",
-    subtitle: "Requested by Jurgen",
-    time: "1d",
-    actionable: true,
-  },
-  {
-    id: 4,
-    type: "system",
-    user: "Corners",
-    title: "Reminder",
-    subtitle: "You haven’t approved any product requests yet.",
-    time: "4d",
-    actionable: false,
-  },
-];
+export default function BusinessProducts() {
+  const [products, setProducts] = useState([])
+  const [tab, setTab] = useState('Requests')
+  const [showForm, setShowForm] = useState(false)
+  const [editId, setEditId] = useState(null)
+  const [form, setForm] = useState({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
 
-const filters = ["All", "Requests", "Trending", "Added"];
+  async function load() {
+    const data = await productService.getBusinessProducts()
+    if (Array.isArray(data)) setProducts(data)
+  }
 
-const BusinessProducts = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
+  useEffect(() => { load() }, [])
 
-  const filteredActivity =
-    activeFilter === "All"
-      ? fakeActivity
-      : fakeActivity.filter((item) =>
-          item.type.toLowerCase().includes(activeFilter.toLowerCase())
-        );
+  const filtered = products.filter(p => STATUS_MAP[tab].includes(p.status))
+
+  async function handleApprove(id) {
+    await productService.updateProductStatus(id, 'approved')
+    load()
+  }
+  async function handleReject(id) {
+    await productService.updateProductStatus(id, 'rejected')
+    load()
+  }
+  async function handleStock(id) {
+    await productService.updateProductStatus(id, 'stocked')
+    load()
+  }
+  async function handleDelete(id) {
+    await productService.deleteProduct(id)
+    load()
+  }
+
+  function handleChange(e) {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (editId) {
+      await productService.updateProduct(editId, form)
+    } else {
+      await productService.createProduct({ ...form, tallyGoal: Number(form.tallyGoal) })
+    }
+    setForm({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
+    setEditId(null)
+    setShowForm(false)
+    load()
+  }
+
+  function startEdit(p) {
+    setForm({ name: p.name, brand: p.brand||'', description: p.description||'', price: p.price||'', tallyGoal: p.tallyGoal||10 })
+    setEditId(p._id)
+    setShowForm(true)
+  }
 
   return (
-    <div className={styles.pageWrapper}>
-      <div className={styles.feedContainer}>
-        <h2 className={styles.header}>Products</h2>
-
-        {/* Filter Tabs */}
-        <div className={styles.filterRow}>
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              className={`${styles.filterButton} ${
-                activeFilter === filter ? styles.activeFilter : ""
-              }`}
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-
-        {/* Activity Feed */}
-        <div className={styles.feedList}>
-          {filteredActivity.map((item) => (
-            <div key={item.id} className={styles.activityItem}>
-              <div className={styles.leftIndicator}></div>
-
-              <div className={styles.activityContent}>
-                <h4>{item.title}</h4>
-                <p>{item.subtitle}</p>
-                <span className={styles.time}>{item.time}</span>
-              </div>
-
-              {item.actionable && (
-                <div className={styles.actions}>
-                  <button className={styles.approve}>✓</button>
-                  <button className={styles.reject}>✕</button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2>Products</h2>
+        <button className={styles.addBtn} onClick={() => { setShowForm(s => !s); setEditId(null) }}>
+          {showForm ? 'Cancel' : '+ Add Product'}
+        </button>
       </div>
 
-      {/* Mobile Footer Nav */}
-      <div className={styles.mobileFooter}>
-        <span>🏠</span>
-        <span>🔍</span>
-        <span>➕</span>
-        <span className={styles.notificationWrapper}>
-          🔔
-          <span className={styles.notificationBadge}>5</span>
-        </span>
-        <span className={styles.profileCircle}></span>
+      {showForm && (
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <input name="name" placeholder="Product name *" value={form.name} onChange={handleChange} required />
+          <input name="brand" placeholder="Brand" value={form.brand} onChange={handleChange} />
+          <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+          <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
+          <div className={styles.tallyRow}>
+            <label>Tally Goal</label>
+            <input name="tallyGoal" type="number" min={1} value={form.tallyGoal} onChange={handleChange} />
+          </div>
+          <button type="submit">{editId ? 'Update' : 'Add Product'}</button>
+        </form>
+      )}
+
+      <div className={styles.tabs}>
+        {TABS.map(t => (
+          <button key={t} className={`${styles.tab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
+            {t}
+          </button>
+        ))}
+      </div>
+
+      <div className={styles.list}>
+        {filtered.length === 0 && <p className={styles.empty}>No products here yet.</p>}
+        {filtered.map(p => (
+          <div key={p._id} className={styles.card}>
+            <div className={styles.info}>
+              <h4>{p.name}</h4>
+              {p.brand && <span className={styles.brand}>{p.brand}</span>}
+              {p.description && <p className={styles.desc}>{p.description}</p>}
+              {p.price != null && <p className={styles.price}>${p.price}</p>}
+            </div>
+            <div className={styles.tally}>
+              <div className={styles.tallyCounts}>{p.currentTally} / {p.tallyGoal} votes</div>
+              <div className={styles.bar}>
+                <div className={styles.fill} style={{ width: `${Math.min(100, (p.currentTally / p.tallyGoal) * 100)}%` }} />
+              </div>
+              {p.status === 'ready_to_stock' && <span className={styles.readyBadge}>🎯 Ready to Stock</span>}
+            </div>
+            <div className={styles.actions}>
+              {(p.status === 'pending' || p.status === 'ready_to_stock') && (
+                <>
+                  <button className={styles.approveBtn} onClick={() => handleApprove(p._id)}>Approve</button>
+                  <button className={styles.rejectBtn} onClick={() => handleReject(p._id)}>Reject</button>
+                </>
+              )}
+              {p.status === 'approved' && (
+                <button className={styles.stockBtn} onClick={() => handleStock(p._id)}>Mark In Store</button>
+              )}
+              <button className={styles.editBtn} onClick={() => startEdit(p)}>Edit</button>
+              <button className={styles.deleteBtn} onClick={() => handleDelete(p._id)}>Delete</button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  );
-};
-
-export default BusinessProducts;
+  )
+}
