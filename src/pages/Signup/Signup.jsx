@@ -4,7 +4,7 @@ import * as authService from '../../services/authService'
 import styles from './Signup.module.css'
 import { redirectByRole } from '../../utils/redirectByRole'
 
-export default function Signup({ setUser }) {
+export default function Signup({ handleAuthEvt }) {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', photo: '',
@@ -29,7 +29,7 @@ export default function Signup({ setUser }) {
     }
     try {
       const user = await authService.signup(formData)
-      setUser(user)
+      handleAuthEvt(user)
       navigate(redirectByRole(user))
     } catch (err) {
       setError(err.message || 'Signup failed')

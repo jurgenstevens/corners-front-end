@@ -19,7 +19,7 @@ export default function PatronStoreDetail({ user }) {
 
   useEffect(() => {
     businessService.getBusinessById(id).then(data => { if (!data.err) setBusiness(data) })
-    productService.getPatronProducts().then(data => { if (Array.isArray(data)) setProducts(data.filter(p => p.business === id || true)) })
+    productService.getPatronProducts().then(data => { if (Array.isArray(data)) setProducts(data.filter(Boolean)) })
   }, [id])
 
   const photos = business?.photos?.length ? business.photos : []
