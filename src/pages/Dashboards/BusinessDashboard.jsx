@@ -1,21 +1,24 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import * as businessService from '../../services/businessService'
 import styles from './BusinessDashboard.module.css'
+
+const NAV_CARDS = [
+  { to: '/dashboard/business/products',       emoji: '📦', label: 'Products',       sub: 'Manage your catalog'        },
+  { to: '/dashboard/business/patron-requests', emoji: '👥', label: 'Patron Requests', sub: 'Approve or deny patrons'    },
+  { to: '/dashboard/business/analytics',       emoji: '📊', label: 'Analytics',      sub: 'View your business stats'   },
+  { to: '/dashboard/business/setup',           emoji: '⚙️', label: 'Settings',       sub: 'Update your business info'  },
+]
 
 export default function BusinessDashboard({ user }) {
   const navigate = useNavigate()
   const [business, setBusiness] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
     businessService.getMyBusiness()
       .then(data => {
-        if (data?.err) {
-          navigate('/dashboard/business/setup')
-          return
-        }
-        if (!data?.businessType || !data?.location?.zip) {
+        if (data?.err || !data?.businessType || !data?.location?.zip) {
           navigate('/dashboard/business/setup')
           return
         }
@@ -28,24 +31,24 @@ export default function BusinessDashboard({ user }) {
   if (loading) return <div className={styles.loading}>Loading…</div>
 
   return (
-    <div className={styles.container}>
-      <h1>{business?.displayName || user?.name}</h1>
-      {business?.businessType && <p className={styles.type}>{business.businessType}</p>}
+    <div className={styles.page}>
+      <header className={styles.greeting}>
+        <h1>Welcome back{business?.displayName ? `, ${business.displayName}` : ''} 👋</h1>
+        {business?.businessType && <p>{business.businessType}</p>}
+      </header>
 
-      <div className={styles.grid}>
-        <div className={styles.card} onClick={() => navigate('/dashboard/business/products')}>
-          <span>📦</span><h3>Products</h3><p>Manage your product catalog</p>
-        </div>
-        <div className={styles.card} onClick={() => navigate('/dashboard/business/patron-requests')}>
-          <span>👥</span><h3>Patron Requests</h3><p>Approve or deny patrons</p>
-        </div>
-        <div className={styles.card} onClick={() => navigate('/dashboard/business/analytics')}>
-          <span>📊</span><h3>Analytics</h3><p>View your business stats</p>
-        </div>
-        <div className={styles.card} onClick={() => navigate('/dashboard/business/setup')}>
-          <span>⚙️</span><h3>Settings</h3><p>Update business info</p>
-        </div>
-      </div>
+      <section className={styles.cardGrid}>
+        {NAV_CARDS.map(({ to, emoji, label, sub }) => (
+          <Link key={to} to={to} className={styles.card}>
+            <span className={styles.cardEmoji}>{emoji}</span>
+            <div>
+              <h3 className={styles.cardLabel}>{label}</h3>
+              <p className={styles.cardSub}>{sub}</p>
+            </div>
+            <span className={styles.cardArrow}>›</span>
+          </Link>
+        ))}
+      </section>
     </div>
   )
 }

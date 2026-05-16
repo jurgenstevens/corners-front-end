@@ -3,68 +3,99 @@ import { Link } from 'react-router-dom'
 import * as connectionService from '../../services/connectionService'
 import styles from './PatronDashboard.module.css'
 
+const QUICK_LINKS = [
+  { to: '/patron/stores',   emoji: '🏪', label: 'My Stores',  sub: 'Your connected businesses' },
+  { to: '/patron/products', emoji: '🛍️', label: 'Products',   sub: 'Browse & vote on items'    },
+  { to: '/patron/requests', emoji: '📋', label: 'My Requests', sub: 'Track what you've asked for' },
+]
+
 export default function PatronDashboard({ user }) {
-  const [nearby, setNearby] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [nearby, setNearby]     = useState([])
+  const [loading, setLoading]   = useState(true)
   const [requested, setRequested] = useState({})
 
   useEffect(() => {
     connectionService.getNearbyBusinesses()
-      .then(data => { if (Array.isArray(data)) setNearby(data) })
+      .then(d => { if (Array.isArray(d)) setNearby(d) })
       .finally(() => setLoading(false))
   }, [])
 
-  async function handleRegister(businessId) {
-    await connectionService.requestConnection(businessId)
-    setRequested(prev => ({ ...prev, [businessId]: true }))
-    setNearby(prev => prev.filter(b => b._id !== businessId))
+  async function handleRegister(id) {
+    await connectionService.requestConnection(id)
+    setRequested(p => ({ ...p, [id]: true }))
+    setNearby(p => p.filter(b => b._id !== id))
   }
 
-  async function handleDismiss(businessId) {
-    await connectionService.dismissBusiness(businessId)
-    setNearby(prev => prev.filter(b => b._id !== businessId))
+  async function handleDismiss(id) {
+    await connectionService.dismissBusiness(id)
+    setNearby(p => p.filter(b => b._id !== id))
   }
 
   return (
-    <div className={styles.container}>
-      <h1>Welcome, {user?.name}</h1>
+    <div className={styles.page}>
 
-      <div className={styles.cards}>
-        <Link to="/patron/stores" className={styles.card}>
-          <span>🏪</span>
-          <h3>My Stores</h3>
-          <p>View your connected businesses</p>
-        </Link>
-        <Link to="/patron/products" className={styles.card}>
-          <span>🛍️</span>
-          <h3>Products</h3>
-          <p>Browse and vote on products</p>
-        </Link>
-        <Link to="/patron/requests" className={styles.card}>
-          <span>📋</span>
-          <h3>Promotions & Sales</h3>
-          <p>See deals from your stores</p>
-        </Link>
-      </div>
+      {/* ── Greeting ── */}
+      <header className={styles.greeting}>
+        <h1>Hey, {user?.name?.split(' ')[0]} 👋</h1>
+        <p>Here's what's happening around you.</p>
+      </header>
 
+      {/* ── Quick-link cards ── */}
+      <section className={styles.cardGrid}>
+        {QUICK_LINKS.map(({ to, emoji, label, sub }) => (
+          <Link key={to} to={to} className={styles.card}>
+            <span className={styles.cardEmoji}>{emoji}</span>
+            <div>
+              <h3 className={styles.cardLabel}>{label}</h3>
+              <p className={styles.cardSub}>{sub}</p>
+            </div>
+            <span className={styles.cardArrow}>›</span>
+          </Link>
+        ))}
+      </section>
+
+      {/* ── Businesses near you ── */}
       <section className={styles.nearby}>
-        <h2>Businesses Near You</h2>
-        {loading && <p>Loading…</p>}
-        {!loading && nearby.length === 0 && (
-          <p className={styles.empty}>No new businesses in your area right now.</p>
+        <div className={styles.sectionHeader}>
+          <h2>Businesses Near You</h2>
+          {nearby.length > 0 && (
+            <span className={styles.badge}>{nearby.length} new</span>
+          )}
+        </div>
+
+        {loading && (
+          <div className={styles.skeletonWrap}>
+            {[1,2,3].map(n => <div key={n} className={styles.skeleton} />)}
+          </div>
         )}
-        <div className={styles.businessList}>
+
+        {!loading && nearby.length === 0 && (
+          <div className={styles.emptyState}>
+            <span>📍</span>
+            <p>No new businesses in your area right now. Check back soon.</p>
+          </div>
+        )}
+
+        <div className={styles.bizList}>
           {nearby.map(b => (
-            <div key={b._id} className={styles.businessCard}>
-              <div className={styles.bizInfo}>
-                <h4>{b.displayName || b.profile?.name}</h4>
-                {b.businessType && <span className={styles.type}>{b.businessType}</span>}
-                {b.address && <p className={styles.address}>📍 {b.address}</p>}
-                {b.location?.zip && <p className={styles.zip}>📮 {b.location.zip}</p>}
+            <div key={b._id} className={styles.bizCard}>
+              <div className={styles.bizLeft}>
+                <div className={styles.bizAvatar}>
+                  {b.photos?.[0]
+                    ? <img src={b.photos[0]} alt={b.displayName} />
+                    : <span>{(b.displayName || b.profile?.name || '?')[0].toUpperCase()}</span>
+                  }
+                </div>
+                <div className={styles.bizInfo}>
+                  <h4>{b.displayName || b.profile?.name}</h4>
+                  {b.businessType && <span className={styles.typeBadge}>{b.businessType}</span>}
+                  {b.address && <p className={styles.bizAddress}>📍 {b.address}</p>}
+                </div>
               </div>
-              <div className={styles.actions}>
+
+              <div className={styles.bizActions}>
                 {requested[b._id] ? (
-                  <span className={styles.requested}>✓ Requested</span>
+                  <span className={styles.requestedLabel}>✓ Requested</span>
                 ) : (
                   <button className={styles.registerBtn} onClick={() => handleRegister(b._id)}>
                     Register

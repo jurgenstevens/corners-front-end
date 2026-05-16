@@ -1,196 +1,45 @@
-.dashboardLayout {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 100px;
 }
 
-/* LEFT SIDE DASHBOARD */
+.loading { padding: 60px; text-align: center; color: var(--text-muted); }
 
-.container {
-  flex: 1;
-  padding: 32px 20px 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+.greeting { margin-bottom: 32px; }
+.greeting h1 { font-size: 1.8rem; font-weight: 800; margin: 0 0 4px; }
+.greeting p  { font-size: 0.95rem; color: var(--text-muted); margin: 0; }
 
-/* =========================
-   Welcome Header
-========================= */
-
-.welcome {
-  text-align: center;
-  margin-bottom: 40px;
-  font-weight: 600;
-}
-
-/* =========================
-   Grid Layout
-========================= */
-
-.grid {
-  width: 100%;
-  max-width: 900px;
+.cardGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 56px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
-
-/* Tablet */
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .card {
-    padding: 18px;
-  }
-}
-
-/* =========================
-   Dashboard Card
-========================= */
 
 .card {
-  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 22px;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-/* Header */
-
-.cardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
-
-.cardHeader h6 {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.caretCircle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.caret {
-  font-size: 0.7rem;
-  color: var(--muted);
-}
-
-/* =========================
-   Icon Circle
-========================= */
-
-.iconWrapper {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  transition: transform 0.15s ease;
-}
-
-.iconWrapper img {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-}
-
-.card:hover .iconWrapper {
-  transform: scale(1.05);
-}
-
-/* =========================
-   Bottom Feed Section
-========================= */
-
-.feedSection {
-  width: 100%;
-  max-width: 900px;
-  margin-top: 40px;
-}
-
-.feedSection h4 {
-  margin-bottom: 14px;
-}
-
-.feedCard {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 16px;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-/* =========================
-   RIGHT PANEL
-========================= */
-
-.panelArea {
-  width: 520px;
-  border-left: 1px solid var(--border);
-  background: var(--bg);
-  position: relative;
-}
-
-.closePanel {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  border: none;
-  background: var(--border);
+  padding: 20px 18px;
+  text-decoration: none;
   color: var(--text);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  text-decoration: none;
 }
 
-.closePanel:hover {
-  background: var(--button-hover);
-}
+.cardEmoji { font-size: 2rem; flex-shrink: 0; }
+.cardLabel  { font-size: 0.95rem; font-weight: 700; margin: 0 0 2px; }
+.cardSub    { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
+.cardArrow  { margin-left: auto; font-size: 1.4rem; color: var(--text-muted); flex-shrink: 0; }
 
-/* MOBILE */
-
-@media (max-width: 900px) {
-  .dashboardLayout {
-    display: block;
-  }
-
-  .panelArea {
-    display: none;
-  }
+@media (max-width: 600px) {
+  .cardGrid { grid-template-columns: 1fr; }
+  .greeting h1 { font-size: 1.4rem; }
 }

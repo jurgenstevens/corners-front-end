@@ -1,14 +1,19 @@
-.container { padding:24px 20px 80px; max-width:700px; margin:0 auto; }
-.container h2 { font-size:1.4rem; margin-bottom:20px; }
-.empty { color:var(--text-muted,#888); font-size:0.88rem; }
-.list { display:flex; flex-direction:column; gap:10px; }
-.card { background:var(--bg-secondary,#1a1a1a); border:1px solid var(--border-color,#333); border-radius:10px; padding:12px 14px; display:flex; align-items:center; gap:12px; }
-.dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-.info { flex:1; }
-.info h4 { margin:0 0 3px; font-size:0.95rem; }
-.brand { font-size:0.75rem; color:var(--text-muted,#888); }
-.right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; min-width:90px; }
-.status { font-size:0.72rem; text-transform:capitalize; color:var(--text-muted,#888); }
-.tally span { font-size:0.7rem; color:var(--text-muted,#888); }
-.bar { width:80px; height:5px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; margin-top:2px; }
-.fill { height:100%; background:#f59e0b; border-radius:3px; }
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 100px; }
+.container h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; }
+.empty { color: var(--text-muted); font-size: 0.88rem; }
+.list  { display: flex; flex-direction: column; gap: 10px; }
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.info { flex: 1; min-width: 0; }
+.info h4 { margin: 0 0 3px; font-size: 0.95rem; font-weight: 700; }
+.brand  { font-size: 0.75rem; color: var(--text-muted); }
+.right  { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 90px; }
+.status { font-size: 0.72rem; text-transform: capitalize; color: var(--text-muted); }
+.tally span { font-size: 0.7rem; color: var(--text-muted); }
+.bar  { width: 80px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 2px; }
+.fill { height: 100%; background: var(--accent); border-radius: 3px; }

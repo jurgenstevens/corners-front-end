@@ -1,171 +1,164 @@
-.container {
-  padding: 32px 20px 80px;
-  max-width: 1100px;
+/* ── Page wrapper ── */
+.page {
+  max-width: 960px;
   margin: 0 auto;
+  padding: 32px 20px 100px;
 }
 
-/* =========================
-   Welcome Header
-========================= */
+/* ── Greeting ── */
+.greeting { margin-bottom: 32px; }
+.greeting h1 { font-size: 1.8rem; font-weight: 800; margin: 0 0 4px; }
+.greeting p  { font-size: 0.95rem; color: var(--text-muted); margin: 0; }
 
-.welcome {
-  text-align: center;
-  margin-bottom: 40px;
-  font-weight: 600;
-}
-
-/* =========================
-   Grid Layout
-========================= */
-
-.grid {
+/* ── Quick-link card grid ── */
+.cardGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 56px;
+  gap: 16px;
+  margin-bottom: 48px;
 }
-
-/* Tablet */
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .card {
-    padding: 18px;
-  }
-}
-
-/* =========================
-   Dashboard Card
-========================= */
 
 .card {
-  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 22px;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 18px 16px;
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  text-decoration: none;
 }
 
-.cardHeader {
+.cardEmoji { font-size: 1.8rem; flex-shrink: 0; }
+.cardLabel  { font-size: 0.95rem; font-weight: 700; margin: 0 0 2px; }
+.cardSub    { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
+.cardArrow  { margin-left: auto; font-size: 1.4rem; color: var(--text-muted); flex-shrink: 0; }
+
+/* ── Section header ── */
+.sectionHeader {
   display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sectionHeader h2 { font-size: 1.15rem; font-weight: 700; margin: 0; }
+
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-text);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+/* ── Skeleton loader ── */
+.skeletonWrap { display: flex; flex-direction: column; gap: 12px; }
+.skeleton {
+  height: 76px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Empty state ── */
+.emptyState {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 20px 18px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.emptyState span { font-size: 1.6rem; }
+
+/* ── Business list ── */
+.bizList { display: flex; flex-direction: column; gap: 12px; }
+
+.bizCard {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
 }
 
-.cardHeader h6 {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
+.bizLeft { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
 
-/* Caret circle */
-
-.caretCircle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+.bizAvatar {
+  width: 48px; height: 48px;
+  border-radius: 12px;
   background: var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 700; color: var(--text-muted);
+}
+.bizAvatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.bizInfo { min-width: 0; }
+.bizInfo h4 { margin: 0 0 4px; font-size: 0.95rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.typeBadge {
+  display: inline-block;
+  font-size: 0.68rem; font-weight: 600;
+  background: rgba(245,158,11,0.12);
+  color: var(--accent);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-bottom: 3px;
 }
 
-.caret {
-  font-size: 0.7rem;
-  color: var(--muted);
-}
+.bizAddress { margin: 0; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* =========================
-   Icon Circle
-========================= */
+.bizActions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
 
-.iconWrapper {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: #ffffff; /* Always white */
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  transition: transform 0.15s ease;
-}
-
-.iconWrapper img {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-}
-
-.card:hover .iconWrapper {
-  transform: scale(1.05);
-}
-
-/* =========================
-   Bottom Feed Section
-========================= */
-
-.feedSection {
-  margin-top: 40px;
-}
-
-.feedSection h4 {
-  margin-bottom: 14px;
-}
-
-.feedCard {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 16px;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-.nearby { margin-top: 40px; }
-.nearby h2 { font-size: 1.2rem; margin-bottom: 16px; }
-.empty { color: var(--text-muted, #888); font-size: 0.9rem; }
-.businessList { display: flex; flex-direction: column; gap: 12px; }
-.businessCard {
-  display: flex; justify-content: space-between; align-items: center;
-  background: var(--bg-secondary, #1a1a1a);
-  border: 1px solid var(--border-color, #333);
-  border-radius: 10px; padding: 14px 16px; gap: 12px;
-}
-.bizInfo { flex: 1; }
-.bizInfo h4 { margin: 0 0 4px; font-size: 1rem; }
-.type {
-  display: inline-block; font-size: 0.72rem;
-  background: rgba(245,158,11,0.15); color: #f59e0b;
-  border-radius: 4px; padding: 2px 8px; margin-bottom: 4px;
-}
-.address, .zip { margin: 2px 0; font-size: 0.82rem; color: var(--text-muted, #888); }
-.actions { display: flex; flex-direction: column; gap: 6px; }
 .registerBtn {
-  background: #f59e0b; color: #000; border: none; border-radius: 6px;
-  padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: 0.82rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none; border-radius: 8px;
+  padding: 7px 16px; cursor: pointer;
+  font-size: 0.82rem; font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.15s;
 }
+.registerBtn:hover { opacity: 0.85; }
+
 .dismissBtn {
-  background: transparent; color: var(--text-muted, #888);
-  border: 1px solid var(--border-color, #333); border-radius: 6px;
-  padding: 6px 14px; cursor: pointer; font-size: 0.82rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 16px; cursor: pointer;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  transition: border-color 0.15s;
 }
-.requested { font-size: 0.82rem; color: #22c55e; font-weight: 600; }
+.dismissBtn:hover { border-color: var(--text-muted); }
+
+.requestedLabel { font-size: 0.82rem; color: var(--success); font-weight: 700; }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .cardGrid { grid-template-columns: 1fr; gap: 10px; }
+  .card { padding: 14px 12px; }
+  .greeting h1 { font-size: 1.4rem; }
+  .bizCard { flex-direction: column; align-items: flex-start; }
+  .bizActions { flex-direction: row; width: 100%; }
+  .registerBtn, .dismissBtn { flex: 1; text-align: center; }
+}
