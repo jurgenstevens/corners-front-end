@@ -1,130 +1,125 @@
+/* ── Layout ── */
 .container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 40px 16px 80px;
   background-color: var(--bg);
   color: var(--text);
 }
 
 .header {
-  font-size: 42px;
+  font-size: 2rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .message {
   text-align: center;
   color: #dd1b16;
   font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.rolePicker {
-  width: 100%;
+  margin-bottom: 12px;
   max-width: 420px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
-.roleButton {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  padding: 14px 0;
-  margin: 8px 0;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.05s ease;
-}
-
-.roleButton:hover {
-  background-color: var(--button-hover);
-}
-
+/* ── Form ── */
 .form {
   width: 100%;
   max-width: 420px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-.roleLabel {
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-.input {
-  padding: 14px 12px;
-  font-size: 16px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background-color: var(--card-bg);
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
   color: var(--text);
+}
+
+.optional {
+  font-weight: 400;
+  font-size: 0.78rem;
+  opacity: 0.6;
+}
+
+/* ── Inputs: always white bg + black border + black text ── */
+.input {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1.5px solid #333;
+  background-color: #ffffff;
+  color: #000000;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--text);
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
 }
 
-.fileInput {
-  margin-bottom: 12px;
-}
-
-.button {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  padding: 14px 0;
-  margin-top: 10px;
-  border-radius: 8px;
-  font-size: 18px;
+/* ── Submit button — Bootstrap btn-primary style ── */
+.submitBtn {
+  margin-top: 6px;
+  padding: 10px 20px;
+  font-size: 1rem;
   font-weight: 600;
-  border: none;
+  color: #ffffff;
+  background-color: #0d6efd;
+  border: 1px solid #0d6efd;
+  border-radius: 6px;
   cursor: pointer;
-  transition: transform 0.05s ease, opacity 0.15s ease,
-    background-color 0.15s ease;
+  text-align: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
 }
 
-.button:hover:not(:disabled) {
-  background-color: var(--button-hover);
+.submitBtn:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
 }
 
-.button:disabled {
-  opacity: 0.4;
+.submitBtn:active {
+  background-color: #0a58ca;
+  transform: scale(0.99);
+}
+
+.submitBtn:disabled {
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
-.button:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.secondaryButton {
-  margin-top: 10px;
-  background: transparent;
-  border: 1px solid var(--button-bg);
-  color: var(--button-bg);
-  padding: 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.05s ease;
-}
-
-.secondaryButton:hover {
-  background-color: var(--button-hover);
-  color: var(--button-text);
-}
-
-.link {
+/* ── Footer link ── */
+.loginLink {
   text-align: center;
   margin-top: 16px;
-  text-decoration: underline;
+  font-size: 0.9rem;
   color: var(--text);
+}
+
+.loginLink a {
+  color: #0d6efd;
+  text-decoration: underline;
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .header {
+    font-size: 1.6rem;
+  }
+
+  .form {
+    max-width: 100%;
+  }
 }
