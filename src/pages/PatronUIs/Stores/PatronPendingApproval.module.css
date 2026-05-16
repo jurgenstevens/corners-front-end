@@ -1,0 +1,6 @@
+.container { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:12px; padding:40px 20px; text-align:center; }
+.icon { font-size:3.5rem; }
+.container h2 { margin:0; font-size:1.4rem; }
+.container p { color:var(--text-muted,#888); max-width:320px; }
+.reason { font-style:italic; }
+.container button { background:#f59e0b; color:#000; border:none; border-radius:8px; padding:10px 24px; cursor:pointer; font-weight:600; margin-top:8px; }

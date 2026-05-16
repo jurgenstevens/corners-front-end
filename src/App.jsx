@@ -1,4 +1,3 @@
-// npm modules
 import { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 
@@ -18,9 +17,17 @@ import BusinessInventory from './pages/BusinessUIs/Inventory/BusinessInventory'
 import BusinessAnalytics from './pages/BusinessUIs/Analytics/BusinessAnalytics'
 import BusinessSettings from './pages/BusinessUIs/Settings/BusinessSettings'
 import BusinessPatronRequests from './pages/BusinessUIs/PatronRequests/BusinessPatronRequests'
+import BusinessSetup from './pages/BusinessUIs/Setup/BusinessSetup'
+// patron pages
+import PatronMyStores from './pages/PatronUIs/Stores/PatronMyStores'
+import PatronStoreDetail from './pages/PatronUIs/Stores/PatronStoreDetail'
+import PatronPendingApproval from './pages/PatronUIs/Stores/PatronPendingApproval'
+import PatronProducts from './pages/PatronUIs/Products/PatronProducts'
+import PatronRequests from './pages/PatronUIs/Requests/PatronRequests'
 
 // components
 import NavBar from './components/NavBar/NavBar'
+import MobileBottomNav from './components/MobileBottomNav/MobileBottomNav'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
 // services
@@ -44,114 +51,41 @@ function App() {
   }
 
   useEffect(() => {
-  setUser(authService.getUser())
-}, [])
-
+    setUser(authService.getUser())
+  }, [])
 
   return (
     <>
       <NavBar user={user} handleLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Landing user={user} />} />
-        <Route
-          path="/profiles"
-          element={
-            <ProtectedRoute user={user}>
-              <Profiles />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/auth/signup"
-          element={<Signup handleAuthEvt={handleAuthEvt} />}
-        />
-        <Route
-          path="/auth/login"
-          element={<Login handleAuthEvt={handleAuthEvt} />}
-        />
-        <Route
-          path="/auth/change-password"
-          element={
-            <ProtectedRoute user={user}>
-              <ChangePassword handleAuthEvt={handleAuthEvt} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/patron"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Patron']}>
-              <PatronDashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* Business Pages */}
-        <Route
-          path="/dashboard/business"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/business/products"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessProducts />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/business/promotions"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessPromotions />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/business/inventory"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessInventory />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/business/analytics"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessAnalytics />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/business/settings"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/business/patronRequests"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Business']}>
-              <BusinessPatronRequests />
-            </ProtectedRoute>
-          }
-        />
-        {/* Distributor Pages */}
-        <Route
-          path="/dashboard/distributor"
-          element={
-            <ProtectedRoute user={user} allowedRoles={['Distributor']}>
-              <DistributorDashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/profiles" element={<ProtectedRoute user={user}><Profiles /></ProtectedRoute>} />
+        <Route path="/auth/signup" element={<Signup handleAuthEvt={handleAuthEvt} />} />
+        <Route path="/auth/login" element={<Login handleAuthEvt={handleAuthEvt} />} />
+        <Route path="/auth/change-password" element={<ProtectedRoute user={user}><ChangePassword handleAuthEvt={handleAuthEvt} /></ProtectedRoute>} />
+
+        {/* Patron routes */}
+        <Route path="/dashboard/patron" element={<ProtectedRoute user={user}><PatronDashboard user={user} /></ProtectedRoute>} />
+        <Route path="/patron/stores" element={<ProtectedRoute user={user}><PatronMyStores user={user} /></ProtectedRoute>} />
+        <Route path="/patron/stores/pending/:businessId" element={<ProtectedRoute user={user}><PatronPendingApproval user={user} /></ProtectedRoute>} />
+        <Route path="/patron/stores/:id" element={<ProtectedRoute user={user}><PatronStoreDetail user={user} /></ProtectedRoute>} />
+        <Route path="/patron/products" element={<ProtectedRoute user={user}><PatronProducts user={user} /></ProtectedRoute>} />
+        <Route path="/patron/requests" element={<ProtectedRoute user={user}><PatronRequests user={user} /></ProtectedRoute>} />
+
+        {/* Business routes */}
+        <Route path="/dashboard/business" element={<ProtectedRoute user={user}><BusinessDashboard user={user} /></ProtectedRoute>} />
+        <Route path="/dashboard/business/setup" element={<ProtectedRoute user={user}><BusinessSetup user={user} /></ProtectedRoute>} />
+        <Route path="/dashboard/business/products" element={<ProtectedRoute user={user}><BusinessProducts /></ProtectedRoute>} />
+        <Route path="/dashboard/business/promotions" element={<ProtectedRoute user={user}><BusinessPromotions /></ProtectedRoute>} />
+        <Route path="/dashboard/business/inventory" element={<ProtectedRoute user={user}><BusinessInventory /></ProtectedRoute>} />
+        <Route path="/dashboard/business/analytics" element={<ProtectedRoute user={user}><BusinessAnalytics /></ProtectedRoute>} />
+        <Route path="/dashboard/business/settings" element={<ProtectedRoute user={user}><BusinessSettings /></ProtectedRoute>} />
+        <Route path="/dashboard/business/patron-requests" element={<ProtectedRoute user={user}><BusinessPatronRequests /></ProtectedRoute>} />
+
+        {/* Distributor */}
+        <Route path="/dashboard/distributor" element={<ProtectedRoute user={user}><DistributorDashboard /></ProtectedRoute>} />
       </Routes>
+      <MobileBottomNav user={user} />
     </>
   )
 }

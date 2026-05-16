@@ -139,3 +139,33 @@
   color: var(--muted);
   font-size: 0.95rem;
 }
+
+.nearby { margin-top: 40px; }
+.nearby h2 { font-size: 1.2rem; margin-bottom: 16px; }
+.empty { color: var(--text-muted, #888); font-size: 0.9rem; }
+.businessList { display: flex; flex-direction: column; gap: 12px; }
+.businessCard {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bg-secondary, #1a1a1a);
+  border: 1px solid var(--border-color, #333);
+  border-radius: 10px; padding: 14px 16px; gap: 12px;
+}
+.bizInfo { flex: 1; }
+.bizInfo h4 { margin: 0 0 4px; font-size: 1rem; }
+.type {
+  display: inline-block; font-size: 0.72rem;
+  background: rgba(245,158,11,0.15); color: #f59e0b;
+  border-radius: 4px; padding: 2px 8px; margin-bottom: 4px;
+}
+.address, .zip { margin: 2px 0; font-size: 0.82rem; color: var(--text-muted, #888); }
+.actions { display: flex; flex-direction: column; gap: 6px; }
+.registerBtn {
+  background: #f59e0b; color: #000; border: none; border-radius: 6px;
+  padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: 0.82rem;
+}
+.dismissBtn {
+  background: transparent; color: var(--text-muted, #888);
+  border: 1px solid var(--border-color, #333); border-radius: 6px;
+  padding: 6px 14px; cursor: pointer; font-size: 0.82rem;
+}
+.requested { font-size: 0.82rem; color: #22c55e; font-weight: 600; }
