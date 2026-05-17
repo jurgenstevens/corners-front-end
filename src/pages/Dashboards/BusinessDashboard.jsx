@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as businessService from '../../services/businessService'
 import styles from './BusinessDashboard.module.css'
+import productsImg  from '../assets/products.png'
+import patronsImg   from '../assets/patrons.jpg'
+import analyticsImg from '../assets/analytics.png'
+import settingsImg  from '../assets/settings.png'
 
 const NAV_CARDS = [
-  { to: '/dashboard/business/products',       emoji: '📦', label: 'Products',       sub: 'Manage your catalog'        },
-  { to: '/dashboard/business/patron-requests', emoji: '👥', label: 'Patron Requests', sub: 'Approve or deny patrons'    },
-  { to: '/dashboard/business/analytics',       emoji: '📊', label: 'Analytics',      sub: 'View your business stats'   },
-  { to: '/dashboard/business/setup',           emoji: '⚙️', label: 'Settings',       sub: 'Update your business info'  },
+  { to: '/dashboard/business/products',        icon: productsImg,  label: 'Products',        sub: 'Manage your catalog'       },
+  { to: '/dashboard/business/patron-requests', icon: patronsImg,   label: 'Patron Requests', sub: 'Approve or deny patrons'   },
+  { to: '/dashboard/business/analytics',       icon: analyticsImg, label: 'Analytics',       sub: 'View your business stats'  },
+  { to: '/dashboard/business/setup',           icon: settingsImg,  label: 'Settings',        sub: 'Update your business info' },
 ]
 
 export default function BusinessDashboard({ user }) {
@@ -38,9 +42,9 @@ export default function BusinessDashboard({ user }) {
       </header>
 
       <section className={styles.cardGrid}>
-        {NAV_CARDS.map(({ to, emoji, label, sub }) => (
+        {NAV_CARDS.map(({ to, icon, label, sub }) => (
           <Link key={to} to={to} className={styles.card}>
-            <span className={styles.cardEmoji}>{emoji}</span>
+            <div className={styles.iconWrapper}><img src={icon} alt={label} /></div>
             <div>
               <h3 className={styles.cardLabel}>{label}</h3>
               <p className={styles.cardSub}>{sub}</p>

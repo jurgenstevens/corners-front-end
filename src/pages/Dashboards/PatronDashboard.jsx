@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import * as connectionService from '../../services/connectionService'
 import styles from './PatronDashboard.module.css'
+import storesImg   from '../assets/stores.png'
+import productsImg from '../assets/products.png'
+import requestsImg from '../assets/requests.png'
 
 const QUICK_LINKS = [
-  { to: '/patron/stores',   emoji: '🏪', label: 'My Stores',  sub: 'Your connected businesses' },
-  { to: '/patron/products', emoji: '🛍️', label: 'Products',   sub: 'Browse & vote on items'    },
-  { to: '/patron/requests', emoji: '📋', label: 'My Requests', sub: 'Track what you've asked for' },
+  { to: '/patron/stores',   icon: storesImg,   label: 'My Stores',   sub: 'Your connected businesses'   },
+  { to: '/patron/products', icon: productsImg, label: 'Products',    sub: 'Browse & vote on items'      },
+  { to: '/patron/requests', icon: requestsImg, label: 'My Requests', sub: 'Track what you\'ve asked for' },
 ]
 
 export default function PatronDashboard({ user }) {
@@ -42,9 +45,9 @@ export default function PatronDashboard({ user }) {
 
       {/* ── Quick-link cards ── */}
       <section className={styles.cardGrid}>
-        {QUICK_LINKS.map(({ to, emoji, label, sub }) => (
+        {QUICK_LINKS.map(({ to, icon, label, sub }) => (
           <Link key={to} to={to} className={styles.card}>
-            <span className={styles.cardEmoji}>{emoji}</span>
+            <div className={styles.iconWrapper}><img src={icon} alt={label} /></div>
             <div>
               <h3 className={styles.cardLabel}>{label}</h3>
               <p className={styles.cardSub}>{sub}</p>

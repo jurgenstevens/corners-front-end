@@ -27,9 +27,17 @@
 
 .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
 .tab {
-  background: transparent; border: 1px solid var(--border);
-  border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 0.82rem; color: var(--text);
+  background: transparent;
+  border: 1.5px solid var(--text-muted);
+  border-radius: 20px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: border-color 0.15s, color 0.15s;
 }
+.tab:hover { border-color: var(--text); }
 .tab.active { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 700; }
 
 .list  { display: flex; flex-direction: column; gap: 12px; }

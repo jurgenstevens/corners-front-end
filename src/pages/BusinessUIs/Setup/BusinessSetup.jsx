@@ -11,6 +11,14 @@ const BUSINESS_TYPES = [
 
 const DAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
 
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
+  'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
+  'MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+  'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
+  'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY',
+]
+
 export default function BusinessSetup() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
@@ -118,7 +126,10 @@ export default function BusinessSetup() {
             <input name="city" value={form.city} onChange={handleChange} />
           </label>
           <label>State
-            <input name="state" value={form.state} onChange={handleChange} maxLength={2} />
+            <select name="state" value={form.state} onChange={handleChange}>
+              <option value="">Select state…</option>
+              {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
           </label>
           <label>Phone
             <input name="phone" value={form.phone} onChange={handleChange} />
