@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 
 // pages
 import Signup from './pages/Signup/Signup'
@@ -36,6 +36,13 @@ import * as authService from './services/authService'
 // styles
 import './App.css'
 
+function getDashboard(user) {
+  if (!user) return '/'
+  if (user.authorizationLevel >= 500) return '/dashboard/distributor'
+  if (user.authorizationLevel >= 250) return '/dashboard/business'
+  return '/dashboard/patron'
+}
+
 function App() {
   const [user, setUser] = useState(authService.getUser())
   const navigate = useNavigate()
@@ -58,7 +65,7 @@ function App() {
     <>
       <NavBar user={user} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={<Landing user={user} />} />
+        <Route path="/" element={user ? <Navigate to={getDashboard(user)} replace /> : <Landing />} />
         <Route path="/profiles" element={<ProtectedRoute user={user}><Profiles /></ProtectedRoute>} />
         <Route path="/auth/signup" element={<Signup handleAuthEvt={handleAuthEvt} />} />
         <Route path="/auth/login" element={<Login handleAuthEvt={handleAuthEvt} />} />

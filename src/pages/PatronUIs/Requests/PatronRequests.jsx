@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import * as productService from '../../../services/productService'
+import BackButton from '../../../components/BackButton/BackButton'
 import styles from './PatronRequests.module.css'
 
 const STATUS_COLORS = {
@@ -12,10 +13,11 @@ export default function PatronRequests({ user }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const profileId = user?.profileId
     productService.getPatronProducts()
       .then(data => {
         if (Array.isArray(data)) {
-          const mine = data.filter(p => p.requestedBy === user?._id || p.requestedBy?._id === user?._id)
+          const mine = data.filter(p => p.requestedBy === profileId || p.requestedBy?._id === profileId)
           setRequests(mine)
         }
       })
@@ -24,12 +26,14 @@ export default function PatronRequests({ user }) {
 
   return (
     <div className={styles.container}>
+      <BackButton />
       <h2>My Requests</h2>
       {loading && <p>Loading…</p>}
       {!loading && requests.length === 0 && <p className={styles.empty}>You haven't requested any products yet.</p>}
       <div className={styles.list}>
         {requests.map(p => (
           <div key={p._id} className={styles.card}>
+            {p.image && <img src={p.image} alt={p.name} className={styles.thumb} />}
             <div className={styles.dot} style={{ background: STATUS_COLORS[p.status] || '#888' }} />
             <div className={styles.info}>
               <h4>{p.name}</h4>

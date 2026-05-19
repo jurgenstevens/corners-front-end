@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as connectionService from '../../../services/connectionService'
+import BackButton from '../../../components/BackButton/BackButton'
 import styles from './PatronMyStores.module.css'
 
 export default function PatronMyStores() {
@@ -27,6 +28,7 @@ export default function PatronMyStores() {
 
   return (
     <div className={styles.container}>
+      <BackButton />
       <h2>My Stores</h2>
       <div className={styles.list}>
         {stores.map(b => (
