@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import * as productService from '../../../services/productService'
 import * as connectionService from '../../../services/connectionService'
-import BackButton from '../../../components/BackButton/BackButton'
 import styles from './PatronProducts.module.css'
 
 const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '', price: '', tallyGoal: 10 }
@@ -110,7 +109,6 @@ export default function PatronProducts({ user }) {
 
   return (
     <div className={styles.container}>
-      <BackButton />
 
       <div className={styles.header}>
         <h2>Products</h2>

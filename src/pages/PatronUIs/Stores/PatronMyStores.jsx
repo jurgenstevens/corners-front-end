@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as connectionService from '../../../services/connectionService'
-import BackButton from '../../../components/BackButton/BackButton'
 import styles from './PatronMyStores.module.css'
 
 export default function PatronMyStores() {
@@ -56,7 +55,6 @@ export default function PatronMyStores() {
 
   return (
     <div className={styles.page}>
-      <BackButton />
 
       {/* Search */}
       <div className={styles.searchBar}>
@@ -141,7 +139,7 @@ export default function PatronMyStores() {
                   {b._connected ? (
                     <button
                       className={styles.viewBtn}
-                      onClick={() => navigate(`/patron/stores/${b._id}`)}
+                      onClick={() => navigate(`/dashboard/patron/stores/${b._id}`)}
                     >
                       View Store
                     </button>

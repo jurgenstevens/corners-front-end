@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import * as productService from '../../../services/productService'
-import BackButton from '../../../components/BackButton/BackButton'
 import styles from './PatronRequests.module.css'
 
 const STATUS_COLORS = {
@@ -26,7 +25,6 @@ export default function PatronRequests({ user }) {
 
   return (
     <div className={styles.container}>
-      <BackButton />
       <h2>My Requests</h2>
       {loading && <p>Loading…</p>}
       {!loading && requests.length === 0 && <p className={styles.empty}>You haven't requested any products yet.</p>}

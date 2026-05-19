@@ -33,13 +33,13 @@ export default function MobileBottomNav({ user }) {
           <NavLink to="/dashboard/patron" end className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🏠</span><span className={styles.label}>Home</span>
           </NavLink>
-          <NavLink to="/patron/stores" className={({ isActive }) => isActive ? styles.active : ''}>
+          <NavLink to="/dashboard/patron/stores" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🏪</span><span className={styles.label}>Stores</span>
           </NavLink>
-          <NavLink to="/patron/products" className={({ isActive }) => isActive ? styles.active : ''}>
+          <NavLink to="/dashboard/patron/products" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🛍️</span><span className={styles.label}>Products</span>
           </NavLink>
-          <NavLink to="/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
+          <NavLink to="/dashboard/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🏷️</span><span className={styles.label}>Promotions</span>
           </NavLink>
           <NavLink to="/profiles" className={({ isActive }) => isActive ? styles.active : ''}>
