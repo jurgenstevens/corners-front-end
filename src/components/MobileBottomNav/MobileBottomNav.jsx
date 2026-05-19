@@ -4,7 +4,7 @@ import styles from './MobileBottomNav.module.css'
 export default function MobileBottomNav({ user }) {
   if (!user) return null
 
-  const isPatron = user.authorizationLevel >= 150 && user.authorizationLevel < 250
+  const isPatron   = user.authorizationLevel >= 150 && user.authorizationLevel < 250
   const isBusiness = user.authorizationLevel >= 250 && user.authorizationLevel < 500
 
   return (
@@ -34,10 +34,13 @@ export default function MobileBottomNav({ user }) {
             <span>🏠</span><span className={styles.label}>Home</span>
           </NavLink>
           <NavLink to="/patron/stores" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🏪</span><span className={styles.label}>My Stores</span>
+            <span>🏪</span><span className={styles.label}>Stores</span>
           </NavLink>
           <NavLink to="/patron/products" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🛍️</span><span className={styles.label}>Products</span>
+          </NavLink>
+          <NavLink to="/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🏷️</span><span className={styles.label}>Promotions</span>
           </NavLink>
           <NavLink to="/profiles" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>👤</span><span className={styles.label}>Profile</span>
