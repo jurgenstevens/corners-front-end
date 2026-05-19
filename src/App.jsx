@@ -24,11 +24,13 @@ import PatronStoreDetail from './pages/PatronUIs/Stores/PatronStoreDetail'
 import PatronPendingApproval from './pages/PatronUIs/Stores/PatronPendingApproval'
 import PatronProducts from './pages/PatronUIs/Products/PatronProducts'
 import PatronRequests from './pages/PatronUIs/Requests/PatronRequests'
+import PatronPromotions from './pages/PatronUIs/Promotions/PatronPromotions'
 
 // components
 import NavBar from './components/NavBar/NavBar'
 import MobileBottomNav from './components/MobileBottomNav/MobileBottomNav'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import SidePanel from './components/SidePanel/SidePanel'
 
 // services
 import * as authService from './services/authService'
@@ -53,13 +55,9 @@ function App() {
     navigate('/')
   }
 
-  const handleAuthEvt = (user) => {
-    setUser(user)
-  }
+  const handleAuthEvt = (user) => { setUser(user) }
 
-  useEffect(() => {
-    setUser(authService.getUser())
-  }, [])
+  useEffect(() => { setUser(authService.getUser()) }, [])
 
   return (
     <>
@@ -73,11 +71,28 @@ function App() {
 
         {/* Patron routes */}
         <Route path="/dashboard/patron" element={<ProtectedRoute user={user}><PatronDashboard user={user} /></ProtectedRoute>} />
-        <Route path="/patron/stores" element={<ProtectedRoute user={user}><PatronMyStores user={user} /></ProtectedRoute>} />
+        <Route path="/patron/stores" element={
+          <ProtectedRoute user={user}>
+            <SidePanel><PatronMyStores user={user} /></SidePanel>
+          </ProtectedRoute>
+        } />
         <Route path="/patron/stores/pending/:businessId" element={<ProtectedRoute user={user}><PatronPendingApproval user={user} /></ProtectedRoute>} />
         <Route path="/patron/stores/:id" element={<ProtectedRoute user={user}><PatronStoreDetail user={user} /></ProtectedRoute>} />
-        <Route path="/patron/products" element={<ProtectedRoute user={user}><PatronProducts user={user} /></ProtectedRoute>} />
-        <Route path="/patron/requests" element={<ProtectedRoute user={user}><PatronRequests user={user} /></ProtectedRoute>} />
+        <Route path="/patron/products" element={
+          <ProtectedRoute user={user}>
+            <SidePanel><PatronProducts user={user} /></SidePanel>
+          </ProtectedRoute>
+        } />
+        <Route path="/patron/requests" element={
+          <ProtectedRoute user={user}>
+            <SidePanel><PatronRequests user={user} /></SidePanel>
+          </ProtectedRoute>
+        } />
+        <Route path="/patron/promotions" element={
+          <ProtectedRoute user={user}>
+            <SidePanel><PatronPromotions user={user} /></SidePanel>
+          </ProtectedRoute>
+        } />
 
         {/* Business routes */}
         <Route path="/dashboard/business" element={<ProtectedRoute user={user}><BusinessDashboard user={user} /></ProtectedRoute>} />

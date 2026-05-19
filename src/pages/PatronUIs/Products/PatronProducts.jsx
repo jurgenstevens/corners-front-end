@@ -4,31 +4,41 @@ import * as connectionService from '../../../services/connectionService'
 import BackButton from '../../../components/BackButton/BackButton'
 import styles from './PatronProducts.module.css'
 
-const TABS = ['All', 'My Requests', 'Approved']
 const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '', price: '', tallyGoal: 10 }
+
+function timeAgo(date) {
+  if (!date) return ''
+  const diff = Date.now() - new Date(date).getTime()
+  const d = Math.floor(diff / 86400000)
+  const h = Math.floor(diff / 3600000)
+  const m = Math.floor(diff / 60000)
+  if (d > 0) return `${d}d`
+  if (h > 0) return `${h}h`
+  if (m > 0) return `${m}m`
+  return 'now'
+}
 
 export default function PatronProducts({ user }) {
   const [products, setProducts]     = useState([])
-  const [tab, setTab]               = useState('All')
+  const [stores, setStores]         = useState([])
+  const [activeTab, setActiveTab]   = useState('all')
   const [myVotes, setMyVotes]       = useState({})
   const [loading, setLoading]       = useState(true)
-  const [stores, setStores]         = useState([])
   const [showModal, setShowModal]   = useState(false)
   const [form, setForm]             = useState(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
   const [reqError, setReqError]     = useState('')
 
   async function load() {
-    const data = await productService.getPatronProducts()
-    if (Array.isArray(data)) setProducts(data)
+    const [prods, strs] = await Promise.all([
+      productService.getPatronProducts(),
+      connectionService.getMyStores(),
+    ])
+    if (Array.isArray(prods)) setProducts(prods)
+    if (Array.isArray(strs)) setStores(strs)
   }
 
-  useEffect(() => {
-    load().finally(() => setLoading(false))
-    connectionService.getMyStores().then(data => {
-      if (Array.isArray(data)) setStores(data)
-    })
-  }, [])
+  useEffect(() => { load().finally(() => setLoading(false)) }, [])
 
   async function handleVote(id) {
     const updated = await productService.voteForProduct(id)
@@ -43,12 +53,8 @@ export default function PatronProducts({ user }) {
     setReqError('')
     setShowModal(true)
   }
-
   function closeModal() { setShowModal(false); setReqError('') }
-
-  function handleChange(e) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  function handleChange(e) { setForm(prev => ({ ...prev, [e.target.name]: e.target.value })) }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -63,19 +69,43 @@ export default function PatronProducts({ user }) {
       tallyGoal: Number(rest.tallyGoal) || 10,
     })
     setSubmitting(false)
-    if (result.err) {
-      setReqError(result.err)
-    } else {
-      setShowModal(false)
-      load()
-    }
+    if (result.err) { setReqError(result.err) } else { setShowModal(false); load() }
   }
+
+  // Map Profile._id → store display name (products.business is populated Profile)
+  const storeNameMap = {}
+  stores.forEach(s => {
+    const pid = (s.profile?._id || s.profile)?.toString()
+    if (pid) storeNameMap[pid] = s.displayName || s.profile?.name || ''
+  })
+  function getStoreName(p) {
+    const bizId = (p.business?._id || p.business)?.toString()
+    return storeNameMap[bizId] || p.business?.name || ''
+  }
+
+  function getSubtitle(p) {
+    const store = getStoreName(p)
+    const at = store ? ` @ ${store}` : ''
+    if (p.status === 'pending')        return `Pending Request${at}`
+    if (p.status === 'approved')       return `Request Approved${at}`
+    if (p.status === 'rejected')       return `Request Rejected${at}`
+    if (p.status === 'ready_to_stock') return `${p.currentTally} Total Votes${at}`
+    if (p.status === 'stocked')        return `Now In Stock${at}`
+    return `${p.currentTally} Total Votes${at}`
+  }
+
+  // Tabs: all | per-store (Profile._id) | votes
+  const storeTabs = stores.map(s => ({
+    id: (s.profile?._id || s.profile)?.toString(),
+    label: s.displayName || s.profile?.name || 'Store',
+  }))
 
   const profileId = user?.profileId
   const filtered = products.filter(p => {
-    if (tab === 'My Requests') return p.requestedBy === profileId || p.requestedBy?._id === profileId
-    if (tab === 'Approved') return p.status === 'approved' || p.status === 'ready_to_stock'
-    return true
+    if (activeTab === 'votes') return (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
+    if (activeTab === 'all')   return true
+    const bizId = (p.business?._id || p.business)?.toString()
+    return bizId === activeTab
   })
 
   return (
@@ -85,43 +115,82 @@ export default function PatronProducts({ user }) {
       <div className={styles.header}>
         <h2>Products</h2>
         {stores.length > 0 && (
-          <button className={styles.requestBtn} onClick={openModal}>+ Request Product</button>
+          <button className={styles.requestBtn} onClick={openModal}>+ Request</button>
         )}
       </div>
 
-      <div className={styles.tabs}>
-        {TABS.map(t => (
-          <button key={t} className={`${styles.tab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>{t}</button>
-        ))}
+      {/* Store tabs — horizontal scroll */}
+      <div className={styles.tabsWrap}>
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${activeTab === 'all' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('all')}
+          >All Stores</button>
+          {storeTabs.map(t => (
+            <button
+              key={t.id}
+              className={`${styles.tab} ${activeTab === t.id ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab(t.id)}
+            >{t.label}</button>
+          ))}
+          <button
+            className={`${styles.tab} ${activeTab === 'votes' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('votes')}
+          >Votes</button>
+        </div>
       </div>
 
-      {loading && <p>Loading…</p>}
-      <div className={styles.list}>
-        {!loading && filtered.length === 0 && <p className={styles.empty}>No products here.</p>}
-        {filtered.map(p => (
-          <div key={p._id} className={styles.card}>
-            {p.image && <img src={p.image} alt={p.name} className={styles.thumb} />}
-            <div className={styles.info}>
-              <h4>{p.name}</h4>
-              {p.brand && <span className={styles.brand}>{p.brand}</span>}
-              {p.description && <p className={styles.desc}>{p.description}</p>}
-            </div>
-            <div className={styles.right}>
-              <span className={`${styles.badge} ${styles[p.status]}`}>{p.status.replace(/_/g,' ')}</span>
-              <div className={styles.tally}>
-                <span>{p.currentTally}/{p.tallyGoal}</span>
-                <div className={styles.bar}><div className={styles.fill} style={{ width:`${Math.min(100,(p.currentTally/p.tallyGoal)*100)}%` }} /></div>
+      {/* Skeletons */}
+      {loading && (
+        <div className={styles.skeletons}>
+          {[1,2,3,4].map(n => <div key={n} className={styles.skItem} />)}
+        </div>
+      )}
+
+      {/* Activity feed */}
+      <div className={styles.feed}>
+        {!loading && filtered.length === 0 && (
+          <p className={styles.empty}>Nothing here yet.</p>
+        )}
+        {filtered.map(p => {
+          const canVote = (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
+          const hasVoted = myVotes[p._id]
+
+          return (
+            <div key={p._id} className={styles.feedItem}>
+              <span className={`${styles.dot} ${styles[p.status]}`} />
+
+              <div className={styles.avatar}>
+                {p.image
+                  ? <img src={p.image} alt={p.name} />
+                  : <span>{p.name?.[0]?.toUpperCase() || '?'}</span>
+                }
               </div>
-              {!myVotes[p._id] && (p.status === 'approved' || p.status === 'ready_to_stock') && (
-                <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1 Vote</button>
-              )}
-              {myVotes[p._id] && <span className={styles.voted}>✓ Voted</span>}
+
+              <div className={styles.content}>
+                <div className={styles.titleRow}>
+                  <span className={styles.productName}>{p.name}</span>
+                  <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
+                </div>
+                <p className={styles.subtitle}>{getSubtitle(p)}</p>
+                {p.brand && <p className={styles.brand}>{p.brand}</p>}
+              </div>
+
+              <div className={styles.action}>
+                {canVote && (
+                  <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
+                )}
+                {hasVoted && <span className={styles.voted}>✓</span>}
+                {p.image && !canVote && !hasVoted && (
+                  <img src={p.image} alt={p.name} className={styles.thumb} />
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
-      {/* ── Request product modal ── */}
+      {/* ── Request modal ── */}
       {showModal && (
         <div className={styles.overlay} onClick={closeModal}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -129,10 +198,8 @@ export default function PatronProducts({ user }) {
               <h3>Request a Product</h3>
               <button className={styles.closeBtn} onClick={closeModal}>✕</button>
             </div>
-
             <form onSubmit={handleSubmit} className={styles.modalForm}>
-              <label>
-                Store *
+              <label>Store *
                 <select name="businessId" value={form.businessId} onChange={handleChange} required>
                   <option value="">Select a store…</option>
                   {stores.map(s => (
@@ -140,41 +207,28 @@ export default function PatronProducts({ user }) {
                   ))}
                 </select>
               </label>
-
-              <label>
-                Product Name *
+              <label>Product Name *
                 <input name="name" value={form.name} onChange={handleChange} placeholder="e.g. Takis Fuego" required />
               </label>
-
-              <label>
-                Brand
+              <label>Brand
                 <input name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. Barcel" />
               </label>
-
-              <label>
-                Description
+              <label>Description
                 <textarea name="description" value={form.description} onChange={handleChange} rows={2} placeholder="Short description (optional)" />
               </label>
-
-              <label>
-                Image URL
+              <label>Image URL
                 <input name="image" value={form.image} onChange={handleChange} placeholder="https://i.imgur.com/…" />
-                <span className={styles.hint}>Paste an Imgur or direct image link. The store owner can update this later.</span>
+                <span className={styles.hint}>Imgur or direct image link. Store owner can update later.</span>
               </label>
-
-              <div className={styles.row}>
-                <label>
-                  Price ($)
+              <div className={styles.formRow}>
+                <label>Price ($)
                   <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} placeholder="0.00" />
                 </label>
-                <label>
-                  Tally Goal
+                <label>Tally Goal
                   <input name="tallyGoal" type="number" min="1" value={form.tallyGoal} onChange={handleChange} />
                 </label>
               </div>
-
               {reqError && <p className={styles.error}>{reqError}</p>}
-
               <div className={styles.modalActions}>
                 <button type="button" className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
                 <button type="submit" className={styles.submitBtn} disabled={submitting}>
