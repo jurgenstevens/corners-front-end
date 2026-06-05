@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as connectionService from '../../../services/connectionService'
 import styles from './PatronMyStores.module.css'
@@ -12,6 +12,14 @@ export default function PatronMyStores() {
   const [filter, setFilter]         = useState('all')
   const [sortBy, setSortBy]         = useState('name')
   const navigate = useNavigate()
+  const debounceRef = useRef(null)
+
+  function fetchNearby(zip) {
+    setLoading(true)
+    connectionService.getNearbyBusinesses(zip || undefined)
+      .then(nb => { if (Array.isArray(nb)) setNearby(nb) })
+      .finally(() => setLoading(false))
+  }
 
   useEffect(() => {
     Promise.all([
@@ -22,6 +30,13 @@ export default function PatronMyStores() {
       if (Array.isArray(cn)) setConnected(cn)
     }).finally(() => setLoading(false))
   }, [])
+
+  function handleZipChange(e) {
+    const val = e.target.value
+    setZipSearch(val)
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => fetchNearby(val), 500)
+  }
 
   async function handlePatronize(id) {
     await connectionService.requestConnection(id)
@@ -41,11 +56,6 @@ export default function PatronMyStores() {
       if (filter === 'new') return !b._connected
       return true
     })
-    .filter(b => {
-      if (!zipSearch.trim()) return true
-      const zip = b.location?.zip || b.address || ''
-      return zip.includes(zipSearch.trim())
-    })
     .sort((a, b) => {
       if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0)
       const nameA = (a.displayName || a.profile?.name || '').toLowerCase()
@@ -63,10 +73,10 @@ export default function PatronMyStores() {
           className={styles.searchInput}
           placeholder="Search by zip code…"
           value={zipSearch}
-          onChange={e => setZipSearch(e.target.value)}
+          onChange={handleZipChange}
         />
         {zipSearch && (
-          <button className={styles.clearBtn} onClick={() => setZipSearch('')}>✕</button>
+          <button className={styles.clearBtn} onClick={() => { setZipSearch(''); fetchNearby('') }}>✕</button>
         )}
       </div>
 
