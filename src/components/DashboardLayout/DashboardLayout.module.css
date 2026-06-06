@@ -1,0 +1,84 @@
+.root { min-height: 100vh; }
+
+/* ── Mobile: sidebar takes over full screen ── */
+.main  { display: block; }
+.backdrop { display: none; }
+
+.sidebar {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 300;
+  overflow-y: auto;
+  padding-bottom: 80px; /* space for mobile bottom nav */
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 1;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.closeBtn:hover { background: var(--border); color: var(--text); }
+
+.sidebarInner {
+  /* Pages handle their own internal padding */
+}
+
+/* ── Desktop (≥ 900px): dashboard stays visible, sidebar overlays on right ── */
+@media (min-width: 900px) {
+  /* Hide mobile full-screen mode: dashboard is always shown */
+  .main.dimmed { display: block; }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.32);
+    z-index: 200;
+    cursor: pointer;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 600px;
+    max-width: 55vw;
+    background: var(--bg);
+    z-index: 201;
+    box-shadow: -8px 0 40px rgba(0, 0, 0, 0.15);
+    padding-bottom: 0;
+    animation: slideIn 0.22s ease-out;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+  }
+
+  .sidebarHeader {
+    padding: 18px 24px;
+  }
+
+  .sidebarInner {
+    height: calc(100% - 57px); /* sidebar height minus header */
+    overflow-y: auto;
+  }
+}

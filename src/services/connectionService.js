@@ -8,8 +8,11 @@ function authHeaders() {
   return { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` }
 }
 
-export async function getNearbyBusinesses() {
-  const res = await fetch(`${BASE}/api/connections/nearby`, { headers: authHeaders() })
+export async function getNearbyBusinesses(zip) {
+  const url = zip
+    ? `${BASE}/api/connections/nearby?zip=${encodeURIComponent(zip)}`
+    : `${BASE}/api/connections/nearby`
+  const res = await fetch(url, { headers: authHeaders() })
   return res.json()
 }
 
