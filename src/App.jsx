@@ -83,8 +83,6 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* index: no sidebar, just shows dashboard */}
-          <Route index element={null} />
           <Route path="stores"                       element={<PatronMyStores user={user} />} />
           <Route path="stores/pending/:businessId"   element={<PatronPendingApproval user={user} />} />
           <Route path="stores/:id"                   element={<PatronStoreDetail user={user} />} />
@@ -106,7 +104,6 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={null} />
           <Route path="setup"            element={<BusinessSetup user={user} />} />
           <Route path="products"         element={<BusinessProducts />} />
           <Route path="promotions"       element={<BusinessPromotions />} />

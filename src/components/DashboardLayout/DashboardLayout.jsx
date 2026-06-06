@@ -5,7 +5,7 @@ export default function DashboardLayout({ Dashboard, user, homePath }) {
   const outlet   = useOutlet()
   const navigate = useNavigate()
 
-  function close() { navigate(-1) }
+  function close() { navigate(homePath) }
 
   return (
     <div className={styles.root}>
