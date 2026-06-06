@@ -1,0 +1,13 @@
+.container {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 60vh; gap: 14px; padding: 40px 20px; text-align: center;
+}
+.icon { font-size: 3.5rem; }
+.container h2 { margin: 0; font-size: 1.4rem; }
+.container p  { color: var(--text-muted); max-width: 320px; margin: 0; }
+.reason { font-style: italic; }
+.container button {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px;
+  padding: 10px 24px; cursor: pointer; font-weight: 700; margin-top: 8px;
+}

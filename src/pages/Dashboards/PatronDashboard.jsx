@@ -1,91 +1,37 @@
+import { Link } from 'react-router-dom'
 import styles from './PatronDashboard.module.css'
-import { useNavigate } from 'react-router-dom'
+import storesImg     from '../assets/stores.png'
+import productsImg   from '../assets/products.png'
+import requestsImg   from '../assets/requests.png'
+import promotionsImg from '../assets/promotions.png'
 
-// Temporary placeholder images
-import storesIcon from '../assets/stores.png'
-import productsIcon from '../assets/products.png'
-import promotionsIcon from '../assets/promotions.png'
-import requestsIcon from '../assets/requests.png'
-import favoritesIcon from '../assets/favorites.png'
-import settingsIcon from '../assets/settings.png'
+const QUICK_LINKS = [
+  { to: '/dashboard/patron/stores',     icon: storesImg,     label: 'My Stores',   sub: 'Browse & discover businesses' },
+  { to: '/dashboard/patron/products',   icon: productsImg,   label: 'Products',    sub: 'Browse & vote on items'       },
+  { to: '/dashboard/patron/requests',   icon: requestsImg,   label: 'My Requests', sub: 'Track what you\'ve asked for' },
+  { to: '/dashboard/patron/promotions', icon: promotionsImg, label: 'Promotions',  sub: 'Deals & sales near you'       },
+]
 
-const DashboardCard = ({ title, icon, onClick }) => {
+export default function PatronDashboard({ user }) {
   return (
-    <div className={styles.card} onClick={onClick}>
-      <div className={styles.cardHeader}>
-        <h6>{title}</h6>
-        <div className={styles.caretCircle}>
-          <span className={styles.caret}>&gt;</span>
-        </div>
-      </div>
+    <div className={styles.page}>
+      <header className={styles.greeting}>
+        <h1>Hey, {user?.name?.split(' ')[0]} 👋</h1>
+        <p>Here's what's happening around you.</p>
+      </header>
 
-      <div className={styles.iconWrapper}>
-        <img src={icon} alt={title} />
-      </div>
+      <section className={styles.cardGrid}>
+        {QUICK_LINKS.map(({ to, icon, label, sub }) => (
+          <Link key={to} to={to} className={styles.card}>
+            <div className={styles.iconWrapper}><img src={icon} alt={label} /></div>
+            <div>
+              <h3 className={styles.cardLabel}>{label}</h3>
+              <p className={styles.cardSub}>{sub}</p>
+            </div>
+            <span className={styles.cardArrow}>›</span>
+          </Link>
+        ))}
+      </section>
     </div>
   )
 }
-
-const PatronDashboard = ({ user }) => {
-  const navigate = useNavigate()
-
-  const patronName = user?.name || 'Patron'
-
-  return (
-    <div className={styles.container}>
-      {/* Welcome Header */}
-      <h2 className={styles.welcome}>
-        Welcome, {patronName}!
-      </h2>
-
-      {/* Dashboard Grid */}
-      <div className={styles.grid}>
-        <DashboardCard
-          title="My Stores"
-          icon={storesIcon}
-          onClick={() => navigate('/patron/stores')}
-        />
-        <DashboardCard
-          title="Products"
-          icon={productsIcon}
-          onClick={() => navigate('/patron/products')}
-        />
-        <DashboardCard
-          title="Promotions / Sales"
-          icon={promotionsIcon}
-          onClick={() => navigate('/patron/promotions')}
-        />
-        <DashboardCard
-          title="Requests"
-          icon={requestsIcon}
-          onClick={() => navigate('/patron/requests')}
-        />
-        <DashboardCard
-          title="Favorites"
-          icon={favoritesIcon}
-          onClick={() => navigate('/patron/favorites')}
-        />
-        <DashboardCard
-          title="Settings"
-          icon={settingsIcon}
-          onClick={() => navigate('/patron/settings')}
-        />
-      </div>
-
-      {/* Bottom Section */}
-      <div className={styles.feedSection}>
-        <h4>Neighborhood Updates</h4>
-        <div className={styles.feedCard}>
-          <p>
-            Discover new stores in your area, seasonal promotions,
-            local events, and community announcements. Soon, this
-            section will also highlight trending products and
-            personalized recommendations near you.
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default PatronDashboard

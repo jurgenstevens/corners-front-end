@@ -1,156 +1,58 @@
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import * as businessService from '../../services/businessService'
 import styles from './BusinessDashboard.module.css'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import productsImg  from '../assets/products.png'
+import patronsImg   from '../assets/patrons.jpg'
+import analyticsImg from '../assets/analytics.png'
+import settingsImg  from '../assets/settings.png'
 
-import productsIcon from '../assets/products.png'
-import promotionsIcon from '../assets/promotions.png'
-import inventoryIcon from '../assets/inventory.png'
-import analyticsIcon from '../assets/analytics.png'
-import settingsIcon from '../assets/settings.png'
-import requestsIcon from '../assets/requests.svg'
+const NAV_CARDS = [
+  { to: '/dashboard/business/products',        icon: productsImg,  label: 'Products',        sub: 'Manage your catalog'       },
+  { to: '/dashboard/business/patron-requests', icon: patronsImg,   label: 'Patron Requests', sub: 'Approve or deny patrons'   },
+  { to: '/dashboard/business/analytics',       icon: analyticsImg, label: 'Analytics',       sub: 'View your business stats'  },
+  { to: '/dashboard/business/setup',           icon: settingsImg,  label: 'Settings',        sub: 'Update your business info' },
+]
 
-import BusinessProducts from '../BusinessUIs/Products/BusinessProducts'
-import BusinessPromotions from '../BusinessUIs/Promotions/BusinessPromotions'
-import BusinessInventory from '../BusinessUIs/Inventory/BusinessInventory'
-import BusinessAnalytics from '../BusinessUIs/Analytics/BusinessAnalytics'
-import BusinessSettings from '../BusinessUIs/Settings/BusinessSettings'
-import BusinessPatronRequests from '../BusinessUIs/PatronRequests/BusinessPatronRequests'
-
-const DashboardCard = ({ title, icon, onClick }) => {
-  return (
-    <div className={styles.card} onClick={onClick}>
-      <div className={styles.cardHeader}>
-        <h6>{title}</h6>
-        <div className={styles.caretCircle}>
-          <span className={styles.caret}>&gt;</span>
-        </div>
-      </div>
-
-      <div className={styles.iconWrapper}>
-        <img src={icon} alt={title} />
-      </div>
-    </div>
-  )
-}
-
-const BusinessDashboard = ({ user }) => {
+export default function BusinessDashboard({ user }) {
   const navigate = useNavigate()
-  const businessName = user?.name || 'Business'
-  const isDesktop = window.innerWidth >= 900
-  const [activePanel, setActivePanel] = useState(null)
+  const [business, setBusiness] = useState(null)
+  const [loading, setLoading]   = useState(true)
+
+  useEffect(() => {
+    businessService.getMyBusiness()
+      .then(data => {
+        if (data?.err || !data?.businessType || !data?.location?.zip) {
+          navigate('/dashboard/business/setup')
+          return
+        }
+        setBusiness(data)
+      })
+      .catch(() => navigate('/dashboard/business/setup'))
+      .finally(() => setLoading(false))
+  }, [navigate])
+
+  if (loading) return <div className={styles.loading}>Loading…</div>
 
   return (
-    <div className={styles.dashboardLayout}>
+    <div className={styles.page}>
+      <header className={styles.greeting}>
+        <h1>Welcome back{business?.displayName ? `, ${business.displayName}` : ''} 👋</h1>
+        {business?.businessType && <p>{business.businessType}</p>}
+      </header>
 
-      {/* LEFT SIDE DASHBOARD */}
-      <div className={styles.container}>
-
-        <h2 className={styles.welcome}>
-          Welcome, {businessName}!
-        </h2>
-
-        <div className={styles.grid}>
-
-          <DashboardCard
-            title="Products"
-            icon={productsIcon}
-            onClick={() =>
-              isDesktop
-                ? setActivePanel("products")
-                : navigate("/dashboard/business/products")
-            }
-          />
-
-          <DashboardCard
-            title="Promotions"
-            icon={promotionsIcon}
-            onClick={() =>
-              isDesktop
-                ? setActivePanel("promotions")
-                : navigate("/dashboard/business/promotions")
-            }
-          />
-
-          <DashboardCard
-            title="Inventory"
-            icon={inventoryIcon}
-            onClick={() =>
-              isDesktop
-                ? setActivePanel("inventory")
-                : navigate("/dashboard/business/inventory")
-            }
-          />
-
-          <DashboardCard
-            title="Analytics"
-            icon={analyticsIcon}
-            onClick={() =>
-              isDesktop
-                ? setActivePanel("analytics")
-                : navigate("/dashboard/business/analytics")
-            }
-          />
-
-          <DashboardCard
-            title="Settings"
-            icon={settingsIcon}
-            onClick={() =>
-              isDesktop
-                ? setActivePanel("settings")
-                : navigate("/dashboard/business/settings")
-            }
-          />
-          {/* this should be changed to Patrons and inside it should have patron requests. It should look like the IG feed like Products */}
-          <DashboardCard
-            title="Patron Requests"
-            icon={requestsIcon}
-            onClick={() =>
-              isDesktop
-                ? setActivePanel("patronRequests")
-                : navigate("/dashboard/business/requests")
-            }
-          />
-
-        </div>
-
-        {/* Neighborhood Updates */}
-        <div className={styles.feedSection}>
-          <h4>Neighborhood Updates</h4>
-          <div className={styles.feedCard}>
-            <p>
-              Stay informed about local grants, city business programs,
-              seasonal events, and health department updates. This area
-              will evolve into real-time business insights and activity.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-
-      {/* RIGHT SIDE PANEL (MUST BE OUTSIDE container) */}
-      {activePanel && isDesktop && (
-        <div className={styles.panelArea}>
-
-          <button
-            className={styles.closePanel}
-            onClick={() => setActivePanel(null)}
-          >
-            ×
-          </button>
-
-          {activePanel === "products" && <BusinessProducts />}
-          {activePanel === "promotions" && <BusinessPromotions />}
-          {activePanel === "inventory" && <BusinessInventory />}
-          {activePanel === "analytics" && <BusinessAnalytics />}
-          {activePanel === "patronRequests" && <BusinessPatronRequests />}
-          {activePanel === "settings" && <BusinessSettings />}
-
-        </div>
-      )}
-
+      <section className={styles.cardGrid}>
+        {NAV_CARDS.map(({ to, icon, label, sub }) => (
+          <Link key={to} to={to} className={styles.card}>
+            <div className={styles.iconWrapper}><img src={icon} alt={label} /></div>
+            <div>
+              <h3 className={styles.cardLabel}>{label}</h3>
+              <p className={styles.cardSub}>{sub}</p>
+            </div>
+            <span className={styles.cardArrow}>›</span>
+          </Link>
+        ))}
+      </section>
     </div>
   )
 }
-
-export default BusinessDashboard

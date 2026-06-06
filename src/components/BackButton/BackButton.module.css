@@ -1,0 +1,15 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 0.15s;
+}
+.btn:hover { color: var(--text); }

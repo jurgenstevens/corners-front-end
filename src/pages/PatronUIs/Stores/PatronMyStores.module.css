@@ -1,0 +1,150 @@
+.page { max-width: 640px; margin: 0 auto; padding: 24px 16px 100px; }
+
+/* ── Search ── */
+.searchBar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.searchIcon { font-size: 1.1rem; color: var(--text-muted); }
+.searchInput {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-size: 0.95rem;
+}
+.clearBtn {
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; font-size: 0.85rem; padding: 0;
+}
+
+/* ── Controls ── */
+.controls {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px; gap: 10px;
+}
+.controlBtns { display: flex; gap: 8px; }
+.controlBtn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.82rem; font-weight: 600; color: var(--text);
+  cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.resultCount { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+
+/* ── Map placeholder ── */
+.mapBox {
+  position: relative;
+  height: 200px;
+  background: #e8ead6;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+:global([data-theme='dark']) .mapBox { background: #1e2318; }
+
+.mapGrid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+:global([data-theme='dark']) .mapGrid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+
+/* Pin positions */
+.mapPin {
+  position: absolute;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.68rem; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+:global([data-theme='dark']) .mapPin { background: #f59e0b; color: #000; }
+.p0 { top: 40%;  left: 32%; }
+.p1 { top: 20%;  left: 58%; }
+.p2 { top: 60%;  left: 62%; }
+.p3 { top: 30%;  left: 12%; }
+.p4 { top: 70%;  left: 20%; }
+.mapEmpty {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 0.85rem;
+}
+
+/* ── Skeletons ── */
+.skeletons { display: flex; flex-direction: column; gap: 12px; }
+.skeleton {
+  height: 180px; border-radius: 16px;
+  background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── Business cards ── */
+.list { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cardTop {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; padding: 16px 16px 12px;
+}
+.cardInfo { flex: 1; min-width: 0; }
+.bizName { font-size: 1.05rem; font-weight: 800; margin: 0 0 6px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.rating, .dist { font-size: 0.78rem; color: var(--text-muted); }
+.price { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); }
+
+.cardAction { flex-shrink: 0; padding-top: 2px; }
+.patronizeBtn {
+  background: var(--text);
+  color: var(--bg);
+  border: none; border-radius: 8px;
+  padding: 8px 18px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.patronizeBtn:hover { opacity: 0.85; }
+
+.viewBtn {
+  background: transparent;
+  border: 1.5px solid var(--text-muted);
+  border-radius: 8px;
+  padding: 8px 16px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--text); white-space: nowrap;
+}
+.viewBtn:hover { border-color: var(--text); }
+
+.pendingLabel { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+
+.cardPhoto {
+  width: 100%; height: 160px; object-fit: cover; display: block;
+}
+.cardPhotoPlaceholder {
+  width: 100%; height: 140px;
+  background: linear-gradient(135deg, var(--border) 0%, var(--bg) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; font-weight: 800; color: var(--text-muted);
+}
+
+.empty { padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 0.9rem; }

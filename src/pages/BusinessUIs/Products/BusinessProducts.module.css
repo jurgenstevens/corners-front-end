@@ -1,195 +1,72 @@
-.pageWrapper {
-  min-height: 100vh;
-  background: var(--bg);
-}
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 100px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.header h2 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 
-.feedContainer {
-  width: 100%;
-  max-width: 600px;
-  padding: 24px;
-  margin: 0 auto;
-  background: var(--card-bg);
-}
-
-.headerRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.header {
-  font-size: 1.5rem;
-  margin: 0;
-}
-
-.addButton {
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.error {
-  color: #ef4444;
-  font-size: 0.9rem;
-  margin-bottom: 12px;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: var(--muted);
+.addBtn {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 8px 18px;
+  cursor: pointer; font-weight: 700; font-size: 0.88rem;
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 16px;
-  background: var(--bg);
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px; margin-bottom: 20px;
+  display: flex; flex-direction: column; gap: 10px;
 }
-
 .form input {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--card-bg);
-  color: var(--text);
-  font-size: 0.9rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px; color: var(--text); font-size: 0.9rem;
+}
+.tallyRow { display: flex; align-items: center; gap: 10px; }
+.tallyRow input { width: 80px; }
+.form button {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 8px 20px;
+  cursor: pointer; font-weight: 700; align-self: flex-start;
 }
 
-.submitButton {
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.filterRow {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.filterButton {
-  border: none;
-  padding: 6px 14px;
+.tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab {
+  background: transparent;
+  border: 1.5px solid var(--text-muted);
   border-radius: 20px;
-  background: var(--border);
-  color: var(--text);
+  padding: 6px 16px;
   cursor: pointer;
   font-size: 0.85rem;
-}
-
-.activeFilter {
-  background: var(--button-bg);
-  color: var(--button-text);
-}
-
-.feedList {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.empty {
-  color: var(--muted);
-  text-align: center;
-  padding: 30px 0;
-}
-
-.productItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-
-.productImage {
-  width: 56px;
-  height: 56px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.imagePlaceholder {
-  width: 56px;
-  height: 56px;
-  border-radius: 8px;
-  background: var(--border);
-  flex-shrink: 0;
-}
-
-.productInfo {
-  flex: 1;
-}
-
-.productInfo h4 {
-  margin: 0 0 2px;
-  font-size: 0.95rem;
-}
-
-.brand {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
-.price {
-  margin: 2px 0 0;
-  font-size: 0.9rem;
   font-weight: 600;
+  color: var(--text);
+  transition: border-color 0.15s, color 0.15s;
 }
+.tab:hover { border-color: var(--text); }
+.tab.active { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 700; }
 
-.statusBadge {
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: 10px;
+.list  { display: flex; flex-direction: column; gap: 12px; }
+.empty { color: var(--text-muted); font-size: 0.9rem; }
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 16px;
+  display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap;
 }
+.info { flex: 1; min-width: 160px; }
+.info h4 { margin: 0 0 4px; font-size: 0.95rem; font-weight: 700; }
+.brand   { font-size: 0.75rem; color: var(--text-muted); }
+.desc    { font-size: 0.82rem; margin: 4px 0 0; }
+.price   { font-size: 0.9rem; font-weight: 700; margin-top: 4px; }
 
-.statusBadge.active { background: #d1fae5; color: #065f46; }
-.statusBadge.inactive { background: var(--border); color: var(--muted); }
+.tally { min-width: 120px; }
+.tallyCounts { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
+.bar   { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.fill  { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
+.readyBadge { font-size: 0.72rem; color: var(--success); font-weight: 700; margin-top: 4px; display: block; }
 
-.activityItem {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+.actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.approveBtn, .rejectBtn, .stockBtn, .editBtn, .deleteBtn {
+  border: none; border-radius: 6px; padding: 5px 12px;
+  cursor: pointer; font-size: 0.78rem; font-weight: 700;
 }
-
-.leftIndicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.activityContent { flex: 1; }
-.activityContent h4 { margin: 0; font-size: 0.95rem; }
-.activityContent p { margin: 4px 0; font-size: 0.85rem; color: var(--muted); }
-
-.time { font-size: 0.75rem; color: var(--muted); text-transform: capitalize; }
-
-.actions { display: flex; gap: 8px; }
-
-.approve, .editBtn { background: black; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
-.reject, .deleteBtn { background: var(--border); color: var(--text); border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
-
-@media (max-width: 768px) {
-  .feedContainer { padding-bottom: 80px; }
-}
+.approveBtn { background: var(--success);  color: #000; }
+.rejectBtn  { background: var(--danger);   color: #fff; }
+.stockBtn   { background: var(--info);     color: #fff; }
+.editBtn    { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.deleteBtn  { background: transparent; border: 1px solid var(--danger); color: var(--danger); }

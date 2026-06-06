@@ -1,46 +1,52 @@
 import { NavLink } from 'react-router-dom'
 import styles from './MobileBottomNav.module.css'
 
-const AUTH_LEVELS = { PATRON: 150, BUSINESS: 250 }
-
-const NavItem = ({ to, label, icon }) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}
-    end
-  >
-    <span className={styles.icon}>{icon}</span>
-    <span className={styles.label}>{label}</span>
-  </NavLink>
-)
-
-const MobileBottomNav = ({ user }) => {
+export default function MobileBottomNav({ user }) {
   if (!user) return null
 
-  if (user.authorizationLevel === AUTH_LEVELS.BUSINESS) {
-    return (
-      <nav className={styles.nav}>
-        <NavItem to="/dashboard/business" icon="🏠" label="Home" />
-        <NavItem to="/dashboard/business/products" icon="🛍️" label="Products" />
-        <NavItem to="/dashboard/business/patronRequests" icon="📋" label="Requests" />
-        <NavItem to="/dashboard/business/analytics" icon="📊" label="Analytics" />
-        <NavItem to="/dashboard/business/settings" icon="⚙️" label="Settings" />
-      </nav>
-    )
-  }
+  const isPatron   = user.authorizationLevel >= 150 && user.authorizationLevel < 250
+  const isBusiness = user.authorizationLevel >= 250 && user.authorizationLevel < 500
 
-  if (user.authorizationLevel === AUTH_LEVELS.PATRON) {
-    return (
-      <nav className={styles.nav}>
-        <NavItem to="/dashboard/patron" icon="🏠" label="Home" />
-        <NavItem to="/patron/products" icon="🔍" label="Browse" />
-        <NavItem to="/patron/requests" icon="📋" label="Requests" />
-        <NavItem to="/profiles" icon="👤" label="Profile" />
-      </nav>
-    )
-  }
-
-  return null
+  return (
+    <nav className={styles.nav}>
+      {isBusiness && (
+        <>
+          <NavLink to="/dashboard/business" end className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🏠</span><span className={styles.label}>Home</span>
+          </NavLink>
+          <NavLink to="/dashboard/business/products" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>📦</span><span className={styles.label}>Products</span>
+          </NavLink>
+          <NavLink to="/dashboard/business/patron-requests" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>👥</span><span className={styles.label}>Patrons</span>
+          </NavLink>
+          <NavLink to="/dashboard/business/analytics" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>📊</span><span className={styles.label}>Analytics</span>
+          </NavLink>
+          <NavLink to="/dashboard/business/settings" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>⚙️</span><span className={styles.label}>Settings</span>
+          </NavLink>
+        </>
+      )}
+      {isPatron && (
+        <>
+          <NavLink to="/dashboard/patron" end className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🏠</span><span className={styles.label}>Home</span>
+          </NavLink>
+          <NavLink to="/dashboard/patron/stores" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🏪</span><span className={styles.label}>Stores</span>
+          </NavLink>
+          <NavLink to="/dashboard/patron/products" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🛍️</span><span className={styles.label}>Products</span>
+          </NavLink>
+          <NavLink to="/dashboard/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🏷️</span><span className={styles.label}>Promotions</span>
+          </NavLink>
+          <NavLink to="/profiles" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>👤</span><span className={styles.label}>Profile</span>
+          </NavLink>
+        </>
+      )}
+    </nav>
+  )
 }
-
-export default MobileBottomNav

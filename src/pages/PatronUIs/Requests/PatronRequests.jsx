@@ -1,50 +1,52 @@
 import { useState, useEffect } from 'react'
+import * as productService from '../../../services/productService'
 import styles from './PatronRequests.module.css'
-import * as requestService from '../../../services/requestService'
 
-const STATUS_COLOR = { open: '#f59e0b', fulfilled: '#10b981', cancelled: '#9ca3af' }
+const STATUS_COLORS = {
+  pending: '#f59e0b', approved: '#22c55e', rejected: '#ef4444',
+  ready_to_stock: '#3b82f6', stocked: '#a855f7'
+}
 
-const PatronRequests = () => {
+export default function PatronRequests({ user }) {
   const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
-    requestService.getMyRequests()
-      .then(setRequests)
-      .catch(err => setError(err.message))
+    const profileId = user?.profileId
+    productService.getPatronProducts()
+      .then(data => {
+        if (Array.isArray(data)) {
+          const mine = data.filter(p => p.requestedBy === profileId || p.requestedBy?._id === profileId)
+          setRequests(mine)
+        }
+      })
       .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return <div className={styles.page}><p className={styles.loading}>Loading...</p></div>
+  }, [user])
 
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <h2>My Requests</h2>
-        {error && <p className={styles.error}>{error}</p>}
-        {requests.length === 0
-          ? <p className={styles.empty}>You haven't made any requests yet.</p>
-          : (
-            <div className={styles.list}>
-              {requests.map(req => (
-                <div key={req._id} className={styles.card}>
-                  <div className={styles.dot} style={{ background: STATUS_COLOR[req.status] || '#888' }} />
-                  <div className={styles.info}>
-                    <h4>{req.productName}</h4>
-                    {req.brand && <p className={styles.brand}>{req.brand}</p>}
-                    {req.business?.name && <p className={styles.store}>@ {req.business.name}</p>}
-                    <span className={styles.date}>{new Date(req.createdAt).toLocaleDateString()}</span>
-                  </div>
-                  <span className={`${styles.badge} ${styles[req.status]}`}>{req.status}</span>
-                </div>
-              ))}
+    <div className={styles.container}>
+      <h2>My Requests</h2>
+      {loading && <p>Loading…</p>}
+      {!loading && requests.length === 0 && <p className={styles.empty}>You haven't requested any products yet.</p>}
+      <div className={styles.list}>
+        {requests.map(p => (
+          <div key={p._id} className={styles.card}>
+            {p.image && <img src={p.image} alt={p.name} className={styles.thumb} />}
+            <div className={styles.dot} style={{ background: STATUS_COLORS[p.status] || '#888' }} />
+            <div className={styles.info}>
+              <h4>{p.name}</h4>
+              {p.brand && <span className={styles.brand}>{p.brand}</span>}
             </div>
-          )
-        }
+            <div className={styles.right}>
+              <span className={styles.status}>{p.status.replace(/_/g,' ')}</span>
+              <div className={styles.tally}>
+                <span>{p.currentTally}/{p.tallyGoal}</span>
+                <div className={styles.bar}><div className={styles.fill} style={{ width:`${Math.min(100,(p.currentTally/p.tallyGoal)*100)}%` }} /></div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )
 }
-
-export default PatronRequests

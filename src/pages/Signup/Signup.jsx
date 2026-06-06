@@ -1,198 +1,127 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as authService from '../../services/authService'
 import styles from './Signup.module.css'
 import { redirectByRole } from '../../utils/redirectByRole'
 
-const ROLE_OPTIONS = ['Patron', 'Business', 'Distributor']
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
+  'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
+  'MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+  'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
+  'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
+]
 
-const Signup = ({ handleAuthEvt }) => {
+const BUSINESS_TYPES = [
+  'Convenience Store','Mini Mart','Hardware Store','Pharmacy','Grocery',
+  'Skate Shop','Clothing Boutique','Coffee Shop','Bakery','Auto Parts',
+  'Electronics','Pet Store','Book Store','Toy Store','Sporting Goods'
+]
+
+export default function Signup({ handleAuthEvt }) {
   const navigate = useNavigate()
-  const imgInputRef = useRef(null)
-
-  const [message, setMessage] = useState('')
-  const [role, setRole] = useState(null)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    passwordConf: '',
+    name: '', email: '', password: '', photo: '',
+    role: 'Patron',
+    zip: '', city: '', state: '',
+    businessType: '', visibility: 'public',
   })
+  const [error, setError] = useState('')
 
-  const [photoData, setPhotoData] = useState({ photo: null })
-
-  const handleChange = evt => {
-    setMessage('')
-    setFormData({ ...formData, [evt.target.name]: evt.target.value })
+  function handleChange(e) {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleRoleSelect = selectedRole => {
-    setRole(selectedRole)
-  }
-
-  const handleChangePhoto = evt => {
-    const file = evt.target.files[0]
-    if (!file) return
-
-    const validFormats = ['gif', 'jpeg', 'jpg', 'png', 'svg', 'webp']
-    const photoFormat = file.name.split('.').at(-1)
-
-    if (file.size >= 10485760) {
-      setMessage('Image must be smaller than 10.4MB')
-      imgInputRef.current.value = null
-      return
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    if (formData.role === 'Patron' && !formData.zip) {
+      return setError('Zip code is required for patrons.')
     }
-
-    if (!validFormats.includes(photoFormat)) {
-      setMessage('Invalid image format')
-      imgInputRef.current.value = null
-      return
+    if (formData.role === 'Business' && !formData.businessType) {
+      return setError('Business type is required.')
     }
-
-    setPhotoData({ photo: file })
-  }
-
-  const handleSubmit = async evt => {
-    evt.preventDefault()
     try {
-      setIsSubmitted(true)
-
-      const user = await authService.signup(
-        { ...formData, role },
-        photoData.photo
-      )
-
+      const user = await authService.signup(formData)
+      if (user.err) return setError(user.err)
       handleAuthEvt(user)
-      redirectByRole(user, navigate)
+      navigate(redirectByRole(user))
     } catch (err) {
-      console.log(err)
-      setMessage(err.message)
-      setIsSubmitted(false)
+      setError(err.message || 'Signup failed')
     }
   }
-
-  const {
-    name,
-    email,
-    password,
-    passwordConf,
-  } = formData
-
-  const isFormInvalid = () => {
-    if (!(name && email && password && password === passwordConf && role)) {
-      return true
-    }
-    return false
-  }
-
-  const getNamePlaceholder = () => {
-    switch (role) {
-      case 'Patron':
-        return 'Full Name'
-      case 'Business':
-        return 'Business Name'
-      case 'Distributor':
-        return 'Distributor Name'
-      default:
-        return 'Name'
-    }
-  }
-
 
   return (
-    <main className={styles.container}>
-      <h1 className={styles.header}>Sign Up</h1>
+    <div className={styles.container}>
+      <h2 className={styles.header}>Create Account</h2>
 
-      {message && <p className={styles.message}>{message}</p>}
+      {error && <p className={styles.message}>{error}</p>}
 
-      {!role && (
-        <div className={styles.rolePicker}>
-          {ROLE_OPTIONS.map(r => (
-            <button
-              key={r}
-              type='button'
-              className={styles.roleButton}
-              onClick={() => handleRoleSelect(r)}
-            >
-              Sign Up As {r}
-            </button>
-          ))}
-        </div>
-      )}
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <label className={styles.fieldLabel}>Role
+          <select name="role" value={formData.role} onChange={handleChange} className={styles.input}>
+            <option value="Patron">Patron</option>
+            <option value="Business">Business Owner</option>
+            <option value="Distributor">Distributor</option>
+          </select>
+        </label>
 
-      {role && (
-        <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
-          <p className={styles.roleLabel}>
-            Role: <strong>{role}</strong>
-          </p>
+        <label className={styles.fieldLabel}>Name
+          <input name="name" value={formData.name} onChange={handleChange} required className={styles.input} />
+        </label>
 
-          <input
-            className={styles.input}
-            placeholder={getNamePlaceholder()}
-            name="name"
-            value={name}
-            onChange={handleChange}
-          />
+        <label className={styles.fieldLabel}>Email
+          <input type="email" name="email" value={formData.email} onChange={handleChange} required className={styles.input} />
+        </label>
 
-          <input
-            className={styles.input}
-            placeholder="Email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-          />
+        <label className={styles.fieldLabel}>Password
+          <input type="password" name="password" value={formData.password} onChange={handleChange} required minLength={6} className={styles.input} />
+        </label>
 
-          <input
-            className={styles.input}
-            placeholder="Password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-          />
+        <label className={styles.fieldLabel}>Photo URL <span className={styles.optional}>(optional)</span>
+          <input name="photo" value={formData.photo} onChange={handleChange} className={styles.input} />
+        </label>
 
-          <input
-            className={styles.input}
-            placeholder="Confirm Password"
-            type="password"
-            name="passwordConf"
-            value={passwordConf}
-            onChange={handleChange}
-          />
+        {formData.role === 'Patron' && (
+          <>
+            <label className={styles.fieldLabel}>Zip Code *
+              <input name="zip" value={formData.zip} onChange={handleChange} maxLength={10} required className={styles.input} />
+            </label>
+            <label className={styles.fieldLabel}>City
+              <input name="city" value={formData.city} onChange={handleChange} className={styles.input} />
+            </label>
+            <label className={styles.fieldLabel}>State
+              <select name="state" value={formData.state} onChange={handleChange} className={styles.input}>
+                <option value="">Select state…</option>
+                {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </label>
+          </>
+        )}
 
-          {/* Role-specific fields */}
-          <input
-            ref={imgInputRef}
-            className={styles.fileInput}
-            type="file"
-            name="photo"
-            onChange={handleChangePhoto}
-          />
+        {formData.role === 'Business' && (
+          <>
+            <label className={styles.fieldLabel}>Business Type *
+              <select name="businessType" value={formData.businessType} onChange={handleChange} required className={styles.input}>
+                <option value="">Select a type…</option>
+                {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </label>
+            <label className={styles.fieldLabel}>Visibility
+              <select name="visibility" value={formData.visibility} onChange={handleChange} className={styles.input}>
+                <option value="public">Public (auto-approve patrons)</option>
+                <option value="private">Private (approve manually)</option>
+              </select>
+            </label>
+          </>
+        )}
 
-          <button
-            className={styles.button}
-            disabled={isFormInvalid() || isSubmitted}
-          >
-            {!isSubmitted ? 'Create Account' : '🚀 Sending...'}
-          </button>
+        <button type="submit" className={styles.submitBtn}>Sign Up</button>
+      </form>
 
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={() => setRole(null)}
-          >
-            Change Role
-          </button>
-
-          <Link to="/" className={styles.link}>
-            Cancel
-          </Link>
-        </form>
-      )}
-    </main>
+      <p className={styles.loginLink}>
+        Already have an account? <Link to="/auth/login">Log in</Link>
+      </p>
+    </div>
   )
 }
-
-export default Signup

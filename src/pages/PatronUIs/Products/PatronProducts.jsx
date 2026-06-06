@@ -1,114 +1,242 @@
 import { useState, useEffect } from 'react'
-import styles from './PatronProducts.module.css'
 import * as productService from '../../../services/productService'
-import * as requestService from '../../../services/requestService'
+import * as connectionService from '../../../services/connectionService'
+import styles from './PatronProducts.module.css'
 
-const PatronProducts = () => {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [requestedIds, setRequestedIds] = useState(new Set())
-  const [showCustomForm, setShowCustomForm] = useState(false)
-  const [customForm, setCustomForm] = useState({ productName: '', brand: '' })
-  const [submitMsg, setSubmitMsg] = useState('')
+const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '', price: '', tallyGoal: 10 }
 
-  useEffect(() => {
-    productService.getAllProducts()
-      .then(setProducts)
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+function timeAgo(date) {
+  if (!date) return ''
+  const diff = Date.now() - new Date(date).getTime()
+  const d = Math.floor(diff / 86400000)
+  const h = Math.floor(diff / 3600000)
+  const m = Math.floor(diff / 60000)
+  if (d > 0) return `${d}d`
+  if (h > 0) return `${h}h`
+  if (m > 0) return `${m}m`
+  return 'now'
+}
 
-  async function handleRequest(product) {
-    if (requestedIds.has(product._id)) return
-    try {
-      await requestService.createRequest({
-        productName: product.name,
-        brand: product.brand,
-        business: product.business?._id || product.business,
-      })
-      setRequestedIds(prev => new Set([...prev, product._id]))
-    } catch (err) {
-      setError(err.message)
+export default function PatronProducts() {
+  const [products, setProducts]     = useState([])
+  const [stores, setStores]         = useState([])
+  const [activeTab, setActiveTab]   = useState('all')
+  const [myVotes, setMyVotes]       = useState({})
+  const [loading, setLoading]       = useState(true)
+  const [showModal, setShowModal]   = useState(false)
+  const [form, setForm]             = useState(EMPTY_FORM)
+  const [submitting, setSubmitting] = useState(false)
+  const [reqError, setReqError]     = useState('')
+
+  async function load() {
+    const [prods, strs] = await Promise.all([
+      productService.getPatronProducts(),
+      connectionService.getMyStores(),
+    ])
+    if (Array.isArray(prods)) setProducts(prods)
+    if (Array.isArray(strs)) setStores(strs)
+  }
+
+  useEffect(() => { load().finally(() => setLoading(false)) }, [])
+
+  async function handleVote(id) {
+    const updated = await productService.voteForProduct(id)
+    if (!updated.err) {
+      setMyVotes(prev => ({ ...prev, [id]: true }))
+      setProducts(prev => prev.map(p => p._id === id ? updated : p))
     }
   }
 
-  async function handleCustomRequest(e) {
+  function openModal() {
+    setForm({ ...EMPTY_FORM, businessId: stores[0]?._id || '' })
+    setReqError('')
+    setShowModal(true)
+  }
+  function closeModal() { setShowModal(false); setReqError('') }
+  function handleChange(e) { setForm(prev => ({ ...prev, [e.target.name]: e.target.value })) }
+
+  async function handleSubmit(e) {
     e.preventDefault()
-    try {
-      await requestService.createRequest(customForm)
-      setSubmitMsg('Request submitted!')
-      setCustomForm({ productName: '', brand: '' })
-      setShowCustomForm(false)
-    } catch (err) {
-      setError(err.message)
-    }
+    if (!form.businessId) return setReqError('Please select a store.')
+    if (!form.name.trim()) return setReqError('Product name is required.')
+    setSubmitting(true)
+    setReqError('')
+    const { businessId, ...rest } = form
+    const result = await productService.requestProduct(businessId, {
+      ...rest,
+      price: rest.price ? Number(rest.price) : undefined,
+      tallyGoal: Number(rest.tallyGoal) || 10,
+    })
+    setSubmitting(false)
+    if (result.err) { setReqError(result.err) } else { setShowModal(false); load() }
   }
 
-  if (loading) return <div className={styles.page}><p className={styles.loading}>Loading products...</p></div>
+  // Map Profile._id → store display name (products.business is populated Profile)
+  const storeNameMap = {}
+  stores.forEach(s => {
+    const pid = (s.profile?._id || s.profile)?.toString()
+    if (pid) storeNameMap[pid] = s.displayName || s.profile?.name || ''
+  })
+  function getStoreName(p) {
+    const bizId = (p.business?._id || p.business)?.toString()
+    return storeNameMap[bizId] || p.business?.name || ''
+  }
+
+  function getSubtitle(p) {
+    const store = getStoreName(p)
+    const at = store ? ` @ ${store}` : ''
+    if (p.status === 'pending')        return `Pending Request${at}`
+    if (p.status === 'approved')       return `Request Approved${at}`
+    if (p.status === 'rejected')       return `Request Rejected${at}`
+    if (p.status === 'ready_to_stock') return `${p.currentTally} Total Votes${at}`
+    if (p.status === 'stocked')        return `Now In Stock${at}`
+    return `${p.currentTally} Total Votes${at}`
+  }
+
+  // Tabs: all | per-store (Profile._id) | votes
+  const storeTabs = stores.map(s => ({
+    id: (s.profile?._id || s.profile)?.toString(),
+    label: s.displayName || s.profile?.name || 'Store',
+  }))
+
+  // const profileId = user?.profileId
+  const filtered = products.filter(p => {
+    if (activeTab === 'votes') return (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
+    if (activeTab === 'all')   return true
+    const bizId = (p.business?._id || p.business)?.toString()
+    return bizId === activeTab
+  })
 
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <div className={styles.headerRow}>
-          <h2>Browse Products</h2>
-          <button className={styles.customBtn} onClick={() => setShowCustomForm(!showCustomForm)}>
-            + Request
-          </button>
-        </div>
+    <div className={styles.container}>
 
-        {error && <p className={styles.error}>{error}</p>}
-        {submitMsg && <p className={styles.success}>{submitMsg}</p>}
-
-        {showCustomForm && (
-          <form className={styles.form} onSubmit={handleCustomRequest}>
-            <h4>Can't find what you're looking for?</h4>
-            <input
-              placeholder="Product name *"
-              value={customForm.productName}
-              onChange={e => setCustomForm({ ...customForm, productName: e.target.value })}
-              required
-            />
-            <input
-              placeholder="Brand (optional)"
-              value={customForm.brand}
-              onChange={e => setCustomForm({ ...customForm, brand: e.target.value })}
-            />
-            <button type="submit">Submit Request</button>
-          </form>
+      <div className={styles.header}>
+        <h2>Products</h2>
+        {stores.length > 0 && (
+          <button className={styles.requestBtn} onClick={openModal}>+ Request</button>
         )}
+      </div>
 
-        {products.length === 0
-          ? <p className={styles.empty}>No products available yet.</p>
-          : (
-            <div className={styles.list}>
-              {products.map(product => (
-                <div key={product._id} className={styles.card}>
-                  {product.image
-                    ? <img src={product.image} alt={product.name} className={styles.productImage} />
-                    : <div className={styles.imagePlaceholder} />
-                  }
-                  <div className={styles.info}>
-                    <h4>{product.name}</h4>
-                    {product.brand && <p className={styles.brand}>{product.brand}</p>}
-                    <p className={styles.price}>${Number(product.price).toFixed(2)}</p>
-                    {product.business?.name && <p className={styles.store}>@ {product.business.name}</p>}
-                  </div>
-                  <button
-                    className={`${styles.requestBtn} ${requestedIds.has(product._id) ? styles.requested : ''}`}
-                    onClick={() => handleRequest(product)}
-                    disabled={requestedIds.has(product._id)}
-                  >
-                    {requestedIds.has(product._id) ? 'Requested ✓' : 'Request'}
-                  </button>
+      {/* Store tabs — horizontal scroll */}
+      <div className={styles.tabsWrap}>
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${activeTab === 'all' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('all')}
+          >All Stores</button>
+          {storeTabs.map(t => (
+            <button
+              key={t.id}
+              className={`${styles.tab} ${activeTab === t.id ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab(t.id)}
+            >{t.label}</button>
+          ))}
+          <button
+            className={`${styles.tab} ${activeTab === 'votes' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('votes')}
+          >Votes</button>
+        </div>
+      </div>
+
+      {/* Skeletons */}
+      {loading && (
+        <div className={styles.skeletons}>
+          {[1,2,3,4].map(n => <div key={n} className={styles.skItem} />)}
+        </div>
+      )}
+
+      {/* Activity feed */}
+      <div className={styles.feed}>
+        {!loading && filtered.length === 0 && (
+          <p className={styles.empty}>Nothing here yet.</p>
+        )}
+        {filtered.map(p => {
+          const canVote = (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
+          const hasVoted = myVotes[p._id]
+
+          return (
+            <div key={p._id} className={styles.feedItem}>
+              <span className={`${styles.dot} ${styles[p.status]}`} />
+
+              <div className={styles.avatar}>
+                {p.image
+                  ? <img src={p.image} alt={p.name} />
+                  : <span>{p.name?.[0]?.toUpperCase() || '?'}</span>
+                }
+              </div>
+
+              <div className={styles.content}>
+                <div className={styles.titleRow}>
+                  <span className={styles.productName}>{p.name}</span>
+                  <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
                 </div>
-              ))}
+                <p className={styles.subtitle}>{getSubtitle(p)}</p>
+                {p.brand && <p className={styles.brand}>{p.brand}</p>}
+              </div>
+
+              <div className={styles.action}>
+                {canVote && (
+                  <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
+                )}
+                {hasVoted && <span className={styles.voted}>✓</span>}
+                {p.image && !canVote && !hasVoted && (
+                  <img src={p.image} alt={p.name} className={styles.thumb} />
+                )}
+              </div>
             </div>
           )
-        }
+        })}
       </div>
+
+      {/* ── Request modal ── */}
+      {showModal && (
+        <div className={styles.overlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Request a Product</h3>
+              <button className={styles.closeBtn} onClick={closeModal}>✕</button>
+            </div>
+            <form onSubmit={handleSubmit} className={styles.modalForm}>
+              <label>Store *
+                <select name="businessId" value={form.businessId} onChange={handleChange} required>
+                  <option value="">Select a store…</option>
+                  {stores.map(s => (
+                    <option key={s._id} value={s._id}>{s.displayName || s.profile?.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label>Product Name *
+                <input name="name" value={form.name} onChange={handleChange} placeholder="e.g. Takis Fuego" required />
+              </label>
+              <label>Brand
+                <input name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. Barcel" />
+              </label>
+              <label>Description
+                <textarea name="description" value={form.description} onChange={handleChange} rows={2} placeholder="Short description (optional)" />
+              </label>
+              <label>Image URL
+                <input name="image" value={form.image} onChange={handleChange} placeholder="https://i.imgur.com/…" />
+                <span className={styles.hint}>Imgur or direct image link. Store owner can update later.</span>
+              </label>
+              <div className={styles.formRow}>
+                <label>Price ($)
+                  <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} placeholder="0.00" />
+                </label>
+                <label>Tally Goal
+                  <input name="tallyGoal" type="number" min="1" value={form.tallyGoal} onChange={handleChange} />
+                </label>
+              </div>
+              {reqError && <p className={styles.error}>{reqError}</p>}
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
+                <button type="submit" className={styles.submitBtn} disabled={submitting}>
+                  {submitting ? 'Sending…' : 'Send Request'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-
-export default PatronProducts
