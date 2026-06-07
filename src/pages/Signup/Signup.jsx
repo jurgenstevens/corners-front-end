@@ -24,7 +24,7 @@ export default function Signup({ handleAuthEvt }) {
     name: '', email: '', password: '', photo: '',
     role: 'Patron',
     zip: '', city: '', state: '',
-    businessType: '', visibility: 'public',
+    businessType: '',
   })
   const [error, setError] = useState('')
 
@@ -45,7 +45,11 @@ export default function Signup({ handleAuthEvt }) {
       const user = await authService.signup(formData)
       if (user.err) return setError(user.err)
       handleAuthEvt(user)
-      navigate(redirectByRole(user))
+      if (formData.role === 'Business') {
+        navigate('/dashboard/business/setup')
+      } else {
+        redirectByRole(user, navigate)
+      }
     } catch (err) {
       setError(err.message || 'Signup failed')
     }
@@ -100,20 +104,12 @@ export default function Signup({ handleAuthEvt }) {
         )}
 
         {formData.role === 'Business' && (
-          <>
-            <label className={styles.fieldLabel}>Business Type *
-              <select name="businessType" value={formData.businessType} onChange={handleChange} required className={styles.input}>
-                <option value="">Select a type…</option>
-                {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </label>
-            <label className={styles.fieldLabel}>Visibility
-              <select name="visibility" value={formData.visibility} onChange={handleChange} className={styles.input}>
-                <option value="public">Public (auto-approve patrons)</option>
-                <option value="private">Private (approve manually)</option>
-              </select>
-            </label>
-          </>
+          <label className={styles.fieldLabel}>Business Type *
+            <select name="businessType" value={formData.businessType} onChange={handleChange} required className={styles.input}>
+              <option value="">Select a type…</option>
+              {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </label>
         )}
 
         <button type="submit" className={styles.submitBtn}>Sign Up</button>
