@@ -9,6 +9,11 @@ export async function getBusinessProducts() {
   return res.json()
 }
 
+export async function getProductsByBusiness(businessId) {
+  const res = await fetch(`${BASE}/api/products/by-business/${businessId}`, { headers: authHeaders() })
+  return res.json()
+}
+
 export async function getPatronProducts() {
   const res = await fetch(`${BASE}/api/products/patron`, { headers: authHeaders() })
   return res.json()

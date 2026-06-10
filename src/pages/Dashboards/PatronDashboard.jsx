@@ -4,12 +4,14 @@ import storesImg     from '../assets/stores.png'
 import productsImg   from '../assets/products.png'
 import requestsImg   from '../assets/requests.png'
 import promotionsImg from '../assets/promotions.png'
+import settingsImg   from '../assets/settings.png'
 
 const QUICK_LINKS = [
   { to: '/dashboard/patron/stores',     icon: storesImg,     label: 'My Stores',   sub: 'Browse & discover businesses' },
   { to: '/dashboard/patron/products',   icon: productsImg,   label: 'Products',    sub: 'Browse & vote on items'       },
   { to: '/dashboard/patron/requests',   icon: requestsImg,   label: 'My Requests', sub: 'Track what you\'ve asked for' },
   { to: '/dashboard/patron/promotions', icon: promotionsImg, label: 'Promotions',  sub: 'Deals & sales near you'       },
+  { to: '/dashboard/patron/settings',   icon: settingsImg,   label: 'Settings',    sub: 'Update your profile & location' },
 ]
 
 export default function PatronDashboard({ user }) {

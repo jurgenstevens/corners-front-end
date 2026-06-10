@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import * as businessService from '../../../services/businessService'
 import * as productService from '../../../services/productService'
+import * as connectionService from '../../../services/connectionService'
 import styles from './PatronStoreDetail.module.css'
 
 const DAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
@@ -16,10 +17,13 @@ export default function PatronStoreDetail({ user }) {
   const [reqForm, setReqForm] = useState({ name:'', brand:'', description:'' })
   const [submitting, setSubmitting] = useState(false)
   const [myVotes, setMyVotes] = useState({})
+  const [disconnecting, setDisconnecting] = useState(false)
+
+  console.log("This is user from PatronStoreDetail.jsx: ", user)
 
   useEffect(() => {
     businessService.getBusinessById(id).then(data => { if (!data.err) setBusiness(data) })
-    productService.getPatronProducts().then(data => { if (Array.isArray(data)) setProducts(data.filter(Boolean)) })
+    productService.getProductsByBusiness(id).then(data => { if (Array.isArray(data)) setProducts(data.filter(Boolean)) })
   }, [id])
 
   const photos = business?.photos?.length ? business.photos : []
@@ -28,9 +32,12 @@ export default function PatronStoreDetail({ user }) {
     e.preventDefault()
     setSubmitting(true)
     try {
-      await productService.requestProduct(id, reqForm)
+      const newProduct = await productService.requestProduct(id, reqForm)
+      if (!newProduct.err) {
+        setProducts(prev => [newProduct, ...prev])
+      }
       setReqForm({ name:'', brand:'', description:'' })
-      setActiveTab(null)
+      setActiveTab('requests')
     } finally {
       setSubmitting(false)
     }
@@ -41,6 +48,17 @@ export default function PatronStoreDetail({ user }) {
     if (!updated.err) {
       setMyVotes(prev => ({ ...prev, [productId]: true }))
       setProducts(prev => prev.map(p => p._id === productId ? updated : p))
+    }
+  }
+
+  async function handleDisconnect() {
+    if (!window.confirm('Disconnect from this store? You will need to re-register to access it again.')) return
+    setDisconnecting(true)
+    try {
+      await connectionService.disconnectFromBusiness(id)
+      navigate('/dashboard/patron/stores')
+    } finally {
+      setDisconnecting(false)
     }
   }
 
@@ -158,6 +176,16 @@ export default function PatronStoreDetail({ user }) {
             <p>No active sales or specials right now. Check back soon!</p>
           </div>
         )}
+
+        <div className={styles.dangerZone}>
+          <button
+            className={styles.disconnectBtn}
+            onClick={handleDisconnect}
+            disabled={disconnecting}
+          >
+            {disconnecting ? 'Disconnecting…' : 'Disconnect from Store'}
+          </button>
+        </div>
       </div>
     </div>
   )

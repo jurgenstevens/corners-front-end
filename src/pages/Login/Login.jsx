@@ -8,6 +8,7 @@ const LoginPage = ({ handleAuthEvt }) => {
   const navigate = useNavigate()
 
   const [message, setMessage] = useState('')
+  const [showPw, setShowPw] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -52,14 +53,24 @@ const LoginPage = ({ handleAuthEvt }) => {
           onChange={handleChange}
         />
 
-        <input
-          className={styles.input}
-          placeholder="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={handleChange}
-        />
+        <div className={styles.passwordWrap}>
+          <input
+            className={styles.input}
+            placeholder="Password"
+            type={showPw ? 'text' : 'password'}
+            name="password"
+            value={password}
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className={styles.eyeBtn}
+            onClick={() => setShowPw(p => !p)}
+            aria-label={showPw ? 'Hide password' : 'Show password'}
+          >
+            {showPw ? 'Hide' : 'Show'}
+          </button>
+        </div>
 
         <button
           className={styles.button}

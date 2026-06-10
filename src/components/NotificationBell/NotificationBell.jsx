@@ -13,7 +13,9 @@ export default function NotificationBell({ user }) {
     try {
       const data = await notificationService.getNotifications()
       if (Array.isArray(data)) setNotifications(data)
-    } catch {}
+    } catch {
+      console.log("notifications not loading")
+    }
   }
 
   useEffect(() => {
@@ -36,13 +38,14 @@ export default function NotificationBell({ user }) {
     setNotifications(prev => prev.map(x => x._id === n._id ? { ...x, read: true } : x))
     setOpen(false)
     const routes = {
-      connection_request: '/dashboard/business/patron-requests',
-      connection_approved: '/patron/stores',
-      connection_denied: '/patron/stores',
-      connection_blocked: '/patron/stores',
-      product_approved: '/patron/products',
-      product_rejected: '/patron/products',
-      product_ready: '/patron/products',
+      connection_request:  '/dashboard/business/patron-requests',
+      connection_approved: '/dashboard/patron/stores',
+      connection_denied:   '/dashboard/patron/stores',
+      connection_blocked:  '/dashboard/patron/stores',
+      product_request:     '/dashboard/business/products',
+      product_approved:    '/dashboard/patron/products',
+      product_rejected:    '/dashboard/patron/products',
+      product_ready:       '/dashboard/patron/products',
     }
     if (routes[n.type]) navigate(routes[n.type])
   }
