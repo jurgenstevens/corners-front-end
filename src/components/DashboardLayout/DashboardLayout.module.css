@@ -10,7 +10,7 @@
   background: var(--bg);
   z-index: 300;
   overflow-y: auto;
-  padding-bottom: 80px; /* space for mobile bottom nav */
+  padding-bottom: 80px;
 }
 
 .sidebarHeader {
@@ -44,7 +44,6 @@
 
 /* ── Desktop (≥ 900px): dashboard stays visible, sidebar overlays on right ── */
 @media (min-width: 900px) {
-  /* Hide mobile full-screen mode: dashboard is always shown */
   .main.dimmed { display: block; }
 
   .backdrop {
@@ -58,7 +57,7 @@
 
   .sidebar {
     position: fixed;
-    top: 0; right: 0; bottom: 0;
+    top: 0; right: 0; bottom: 0; left: auto;
     width: 600px;
     max-width: 55vw;
     background: var(--bg);
@@ -78,7 +77,7 @@
   }
 
   .sidebarInner {
-    height: calc(100% - 57px); /* sidebar height minus header */
+    height: calc(100% - 57px);
     overflow-y: auto;
   }
 }

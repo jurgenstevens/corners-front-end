@@ -67,8 +67,9 @@ input:focus, select:focus, textarea:focus {
 }
 .back:hover { border-color: var(--text); }
 
-/* Mobile: prevent iOS zoom on select/input focus */
+/* Mobile: prevent iOS zoom; restore native select picker (avoids upper-left glitch) */
 @media (max-width: 600px) {
   input, select, textarea { font-size: 16px; }
   select option { font-size: 16px; }
+  select { -webkit-appearance: menulist; appearance: auto; }
 }

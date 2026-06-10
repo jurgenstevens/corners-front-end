@@ -108,6 +108,40 @@
   transform: scale(0.98);
 }
 
+/* Password field with show/hide toggle */
+
+.passwordWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.passwordWrap .input {
+  margin-bottom: 0;
+  padding-right: 60px;
+  width: 100%;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 4px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eyeBtn:hover {
+  color: var(--text);
+}
+
 /* Mobile */
 
 @media (max-width: 480px) {

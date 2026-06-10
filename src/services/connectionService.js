@@ -47,6 +47,15 @@ export async function getPendingConnections() {
   return res.json()
 }
 
+export async function disconnectFromBusiness(businessId) {
+  console.log('connectionService.disconnectFromBusiness — businessId:', businessId)
+  const res = await fetch(`${BASE}/api/connections/disconnect/${businessId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  })
+  return res.json()
+}
+
 export async function updateConnectionStatus(connectionId, status, denialReason) {
   const res = await fetch(`${BASE}/api/connections/${connectionId}/status`, {
     method: 'PUT',

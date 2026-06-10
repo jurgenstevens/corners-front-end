@@ -75,6 +75,7 @@
   cursor: pointer; font-weight: 700; align-self: flex-start;
 }
 .reqForm button:disabled { opacity: 0.5; }
+.reqError { color: var(--danger, #dc3545); font-size: 0.85rem; font-weight: 600; margin: 0; }
 
 /* ── Requests list ── */
 .requestList h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
@@ -106,4 +107,33 @@
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 10px; padding: 24px; text-align: center;
   font-size: 0.85rem; color: var(--text-muted);
+}
+
+.dangerZone {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.disconnectBtn {
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: 1.5px solid var(--danger);
+  color: var(--danger);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.disconnectBtn:hover:not(:disabled) {
+  background: var(--danger);
+  color: #fff;
+}
+
+.disconnectBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

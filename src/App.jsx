@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 
+// pages
 import Signup from './pages/Signup/Signup'
 import Login from './pages/Login/Login'
 import Landing from './pages/Landing/Landing'
@@ -9,6 +10,7 @@ import PatronDashboard from './pages/Dashboards/PatronDashboard'
 import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
 import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
+// business pages
 import BusinessProducts from './pages/BusinessUIs/Products/BusinessProducts'
 import BusinessPromotions from './pages/BusinessUIs/Promotions/BusinessPromotions'
 import BusinessInventory from './pages/BusinessUIs/Inventory/BusinessInventory'
@@ -23,6 +25,7 @@ import PatronPendingApproval from './pages/PatronUIs/Stores/PatronPendingApprova
 import PatronProducts from './pages/PatronUIs/Products/PatronProducts'
 import PatronRequests from './pages/PatronUIs/Requests/PatronRequests'
 import PatronPromotions from './pages/PatronUIs/Promotions/PatronPromotions'
+import PatronSettings from './pages/PatronUIs/Settings/PatronSettings'
 
 // layout + components
 import DashboardLayout from './components/DashboardLayout/DashboardLayout'
@@ -30,7 +33,10 @@ import NavBar from './components/NavBar/NavBar'
 import MobileBottomNav from './components/MobileBottomNav/MobileBottomNav'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
+// services
 import * as authService from './services/authService'
+
+// styles
 import './App.css'
 
 function getDashboard(user) {
@@ -84,6 +90,7 @@ function App() {
           <Route path="products"                     element={<PatronProducts user={user} />} />
           <Route path="requests"                     element={<PatronRequests user={user} />} />
           <Route path="promotions"                   element={<PatronPromotions user={user} />} />
+          <Route path="settings"                     element={<PatronSettings user={user} />} />
         </Route>
 
         {/* ── Business (nested under /dashboard/business) ── */}

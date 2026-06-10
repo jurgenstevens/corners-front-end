@@ -113,6 +113,37 @@
   text-decoration: underline;
 }
 
+/* ── Password field with show/hide toggle ── */
+.passwordWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrap .input {
+  padding-right: 60px;
+  width: 100%;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #555;
+  padding: 4px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eyeBtn:hover {
+  color: #000;
+}
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .header {
