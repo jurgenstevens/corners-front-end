@@ -75,6 +75,7 @@
   cursor: pointer; font-weight: 700; align-self: flex-start;
 }
 .reqForm button:disabled { opacity: 0.5; }
+.reqError { color: var(--danger, #dc3545); font-size: 0.85rem; font-weight: 600; margin: 0; }
 
 /* ── Requests list ── */
 .requestList h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }

@@ -18,26 +18,45 @@ export default function PatronStoreDetail({ user }) {
   const [submitting, setSubmitting] = useState(false)
   const [myVotes, setMyVotes] = useState({})
   const [disconnecting, setDisconnecting] = useState(false)
+  const [reqError, setReqError] = useState('')
 
-  console.log("This is user from PatronStoreDetail.jsx: ", user)
+  console.log("reqError data to prevent linting error: ", reqError)
 
   useEffect(() => {
-    businessService.getBusinessById(id).then(data => { if (!data.err) setBusiness(data) })
-    productService.getProductsByBusiness(id).then(data => { if (Array.isArray(data)) setProducts(data.filter(Boolean)) })
+  businessService.getBusinessById(id).then(data => { if (!data.err) setBusiness(data) })
+  productService.getProductsByBusiness(id).then(data => {
+    if (Array.isArray(data)) {
+      const filtered = data.filter(Boolean)
+      setProducts(filtered)
+      if (user?.profileId) {
+        const votes = {}
+        filtered.forEach(p => {
+          if (p.votedBy?.some(v => v.toString() === user.profileId.toString())) votes[p._id] = true
+        })
+        setMyVotes(votes)
+      }
+    }
+  })
   }, [id])
 
   const photos = business?.photos?.length ? business.photos : []
 
   async function handleRequest(e) {
     e.preventDefault()
+    setReqError('')
     setSubmitting(true)
     try {
       const newProduct = await productService.requestProduct(id, reqForm)
-      if (!newProduct.err) {
-        setProducts(prev => [newProduct, ...prev])
+      if (newProduct.err) {
+        setReqError(newProduct.err)
+        return
       }
+      setProducts(prev => [newProduct, ...prev])
+      setMyVotes(prev => ({ ...prev, [newProduct._id]: true }))
       setReqForm({ name:'', brand:'', description:'' })
       setActiveTab('requests')
+    } catch {
+      setReqError('Failed to submit request. Please try again.')
     } finally {
       setSubmitting(false)
     }
