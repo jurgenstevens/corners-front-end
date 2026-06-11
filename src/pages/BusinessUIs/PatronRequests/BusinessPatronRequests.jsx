@@ -22,6 +22,12 @@ function statusText(status) {
   return ''
 }
 
+function showStatusText(filter, status) {
+  if (status === 'pending') return true
+  if (status === 'approved') return filter === 'Approved'
+  return filter === 'Rejected'
+}
+
 export default function BusinessPatronRequests() {
   const [connections, setConnections] = useState([])
   const [filter, setFilter]           = useState('All')
@@ -47,6 +53,18 @@ export default function BusinessPatronRequests() {
     load()
   }
 
+  async function handleRemove(id) {
+    if (!window.confirm('Remove this patron from your store?')) return
+    await connectionService.updateConnectionStatus(id, 'denied', '')
+    load()
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm('Permanently delete this patron from your list? This cannot be undone.')) return
+    await connectionService.deleteConnection(id)
+    load()
+  }
+
   async function toggleVisibility() {
     const next = isPublic ? 'private' : 'public'
     setIsPublic(!isPublic)
@@ -57,7 +75,7 @@ export default function BusinessPatronRequests() {
     if (filter === 'Requests') return c.status === 'pending'
     if (filter === 'Approved') return c.status === 'approved'
     if (filter === 'Rejected') return c.status === 'denied' || c.status === 'blocked'
-    return true
+    return c.status !== 'denied' && c.status !== 'blocked'
   })
 
   return (
@@ -109,7 +127,7 @@ export default function BusinessPatronRequests() {
               <p className={styles.text}>
                 <strong>{c.patron?.name || 'Unknown'}</strong>{' '}
                 <span className={c.status === 'pending' ? '' : styles.resolvedText}>
-                  {statusText(c.status)}
+                  {showStatusText(filter, c.status) ? statusText(c.status) : ''}
                 </span>
               </p>
               <span className={styles.time}>{timeAgo(c.createdAt)}</span>
@@ -121,8 +139,13 @@ export default function BusinessPatronRequests() {
                   <button className={styles.acceptBtn} onClick={() => handleStatus(c._id, 'approved')}>✓</button>
                   <button className={styles.rejectBtn} onClick={() => handleStatus(c._id, 'denied')}>✕</button>
                 </div>
-              ) : c.patron?.photo ? (
-                <img src={c.patron.photo} alt="" className={styles.thumb} />
+              ) : c.status === 'approved' ? (
+                <button className={styles.removeBtn} onClick={() => handleRemove(c._id)}>Remove</button>
+              ) : filter === 'Rejected' ? (
+                <div className={styles.actions}>
+                  <button className={styles.acceptBtn} onClick={() => handleStatus(c._id, 'approved')}>✓</button>
+                  <button className={styles.deleteBtn} onClick={() => handleDelete(c._id)}>Delete</button>
+                </div>
               ) : null}
             </div>
           </div>

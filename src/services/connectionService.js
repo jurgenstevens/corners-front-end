@@ -56,6 +56,14 @@ export async function disconnectFromBusiness(businessId) {
   return res.json()
 }
 
+export async function deleteConnection(connectionId) {
+  const res = await fetch(`${BASE}/api/connections/${connectionId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  })
+  return res.json()
+}
+
 export async function updateConnectionStatus(connectionId, status, denialReason) {
   const res = await fetch(`${BASE}/api/connections/${connectionId}/status`, {
     method: 'PUT',
