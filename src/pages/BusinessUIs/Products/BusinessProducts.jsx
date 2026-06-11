@@ -1,16 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import * as productService from '../../../services/productService'
 import styles from './BusinessProducts.module.css'
 
-const TABS = ['Requests', 'Approved', 'In Store']
-const STATUS_MAP = { 'Requests': ['pending','ready_to_stock'], 'Approved': ['approved'], 'In Store': ['stocked'] }
+const TABS = ['All', 'Requests', 'Approved', 'In Store']
+const STATUS_MAP = {
+  'All': ['pending', 'ready_to_stock', 'approved', 'stocked'],
+  'Requests': ['pending', 'ready_to_stock'],
+  'Approved': ['approved'],
+  'In Store': ['stocked'],
+}
 
 export default function BusinessProducts() {
   const [products, setProducts] = useState([])
-  const [tab, setTab] = useState('Requests')
+  const [tab, setTab] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState(null)
   const [form, setForm] = useState({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
+  const [canScrollLeft, setCanScrollLeft]   = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
+  const tabsScrollRef = useRef(null)
 
   async function load() {
     const data = await productService.getBusinessProducts()
@@ -18,6 +26,24 @@ export default function BusinessProducts() {
   }
 
   useEffect(() => { load() }, [])
+
+  useEffect(() => {
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [])
+
+  function checkScroll() {
+    const el = tabsScrollRef.current
+    if (!el) return
+    setCanScrollLeft(el.scrollLeft > 0)
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1)
+  }
+
+  function scrollTabs(dir) {
+    tabsScrollRef.current?.scrollBy({ left: dir * 150, behavior: 'smooth' })
+    setTimeout(checkScroll, 200)
+  }
 
   const filtered = products.filter(p => STATUS_MAP[tab].includes(p.status))
 
@@ -84,12 +110,22 @@ export default function BusinessProducts() {
         </form>
       )}
 
-      <div className={styles.tabs}>
-        {TABS.map(t => (
-          <button key={t} className={`${styles.tab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
-            {t}
-          </button>
-        ))}
+      <div className={styles.tabsWrap}>
+        {canScrollLeft && (
+          <button className={styles.tabArrow} onClick={() => scrollTabs(-1)}>‹</button>
+        )}
+        <div className={styles.tabsScroll} ref={tabsScrollRef} onScroll={checkScroll}>
+          <div className={styles.tabs}>
+            {TABS.map(t => (
+              <button key={t} className={`${styles.tab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+        {canScrollRight && (
+          <button className={styles.tabArrow} onClick={() => scrollTabs(1)}>›</button>
+        )}
       </div>
 
       <div className={styles.list}>
