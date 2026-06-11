@@ -39,8 +39,19 @@ export default function PatronMyStores() {
   }
 
   async function handlePatronize(id) {
-    await connectionService.requestConnection(id)
-    setRequested(p => ({ ...p, [id]: true }))
+    const conn = await connectionService.requestConnection(id)
+    if (conn?.status === 'approved') {
+      // public store — auto-approved; show "Accepted" briefly then reveal "View Store"
+      setRequested(p => ({ ...p, [id]: 'accepted' }))
+      setTimeout(() => {
+        const biz = nearby.find(b => b._id === id)
+        if (biz) setConnected(prev => [...prev, biz])
+        setRequested(p => { const n = { ...p }; delete n[id]; return n })
+      }, 1500)
+    } else {
+      // private store — awaiting business approval
+      setRequested(p => ({ ...p, [id]: 'pending' }))
+    }
   }
 
   const connectedIds = new Set(connected.map(s => s._id))
@@ -153,7 +164,9 @@ export default function PatronMyStores() {
                     >
                       View Store
                     </button>
-                  ) : requested[b._id] ? (
+                  ) : requested[b._id] === 'accepted' ? (
+                    <span className={styles.acceptedLabel}>Accepted</span>
+                  ) : requested[b._id] === 'pending' ? (
                     <span className={styles.pendingLabel}>Pending…</span>
                   ) : (
                     <button
