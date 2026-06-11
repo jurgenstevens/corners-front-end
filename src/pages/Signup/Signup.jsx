@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import * as authService from '../../services/authService'
 import styles from './Signup.module.css'
 import { redirectByRole } from '../../utils/redirectByRole'
@@ -20,9 +20,13 @@ const BUSINESS_TYPES = [
 
 export default function Signup({ handleAuthEvt }) {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const initialRole = ['Patron', 'Business', 'Distributor'].includes(searchParams.get('role'))
+    ? searchParams.get('role')
+    : 'Patron'
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', photo: '',
-    role: 'Patron',
+    role: initialRole,
     zip: '', city: '', state: '',
     businessType: '',
   })

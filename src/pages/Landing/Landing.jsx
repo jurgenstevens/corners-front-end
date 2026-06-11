@@ -1,26 +1,29 @@
+import { useNavigate } from 'react-router-dom'
 import styles from './Landing.module.css'
 
-const Landing = ({ onPatronSignUp, onBusinessSignUp, onLogin }) => {
+const Landing = () => {
+  const navigate = useNavigate()
+
   return (
     <main className={styles.container}>
       {/* Hero */}
       <section className={styles.hero}>
         <h1 className={styles.header}>CORNERS</h1>
         <p className={styles.tagline}>
-          Discover local products. Support real businesses.  
+          Discover local products. Support real businesses.
           Build stronger communities.
         </p>
 
         <div className={styles.heroButtons}>
-          <button className={styles.primaryButton} onClick={onPatronSignUp}>
+          <button className={styles.primaryButton} onClick={() => navigate('/auth/signup?role=Patron')}>
             Join as a Patron
           </button>
-          <button className={styles.secondaryButton} onClick={onBusinessSignUp}>
+          <button className={styles.secondaryButton} onClick={() => navigate('/auth/signup?role=Business')}>
             List Your Business
           </button>
         </div>
 
-        <button className={styles.linkButton} onClick={onLogin}>
+        <button className={styles.linkButton} onClick={() => navigate('/auth/login')}>
           Already have an account? Log in →
         </button>
       </section>
@@ -74,7 +77,7 @@ const Landing = ({ onPatronSignUp, onBusinessSignUp, onLogin }) => {
       {/* CTA */}
       <section className={styles.cta}>
         <h2>Ready to join your local marketplace?</h2>
-        <button className={styles.primaryButton} onClick={onPatronSignUp}>
+        <button className={styles.primaryButton} onClick={() => navigate('/auth/signup?role=Patron')}>
           Get Started
         </button>
       </section>
