@@ -100,6 +100,10 @@ export default function BusinessProducts() {
               <h4>{p.name}</h4>
               {p.brand && <span className={styles.brand}>{p.brand}</span>}
               {p.description && <p className={styles.desc}>{p.description}</p>}
+              {/* show the patron who submitted this request, if any */}
+              {p.requestedBy?.name && (
+                <p className={styles.requestedBy}>Requested by: {p.requestedBy.name}.</p>
+              )}
               {p.price != null && <p className={styles.price}>${p.price}</p>}
             </div>
             <div className={styles.tally}>
