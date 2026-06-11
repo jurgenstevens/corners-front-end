@@ -19,8 +19,7 @@ export default function PatronStoreDetail({ user }) {
   const [myVotes, setMyVotes] = useState({})
   const [disconnecting, setDisconnecting] = useState(false)
   const [reqError, setReqError] = useState('')
-
-  console.log("reqError data to prevent linting error: ", reqError)
+  const [reqSuccess, setReqSuccess] = useState(false)
 
   useEffect(() => {
   businessService.getBusinessById(id).then(data => { if (!data.err) setBusiness(data) })
@@ -55,6 +54,7 @@ export default function PatronStoreDetail({ user }) {
       setMyVotes(prev => ({ ...prev, [newProduct._id]: true }))
       setReqForm({ name:'', brand:'', description:'' })
       setActiveTab('requests')
+      setReqSuccess(true)
     } catch {
       setReqError('Failed to submit request. Please try again.')
     } finally {
@@ -154,9 +154,20 @@ export default function PatronStoreDetail({ user }) {
           </button>
         </div>
 
+        {/* success toast — shown after a request is submitted successfully */}
+        {reqSuccess && (
+          <div className={styles.toast}>
+            <span className={styles.toastIcon}>✓</span>
+            Item Request Submitted
+            <button className={styles.toastClose} onClick={() => setReqSuccess(false)}>✕</button>
+          </div>
+        )}
+
         {activeTab === 'request' && (
           <form className={styles.reqForm} onSubmit={handleRequest}>
             <h3>Request a Product</h3>
+            {/* show API error inline so the patron knows if the request failed */}
+            {reqError && <p className={styles.reqError}>{reqError}</p>}
             <input placeholder="Product name *" value={reqForm.name} onChange={e => setReqForm(p => ({...p, name: e.target.value}))} required />
             <input placeholder="Brand" value={reqForm.brand} onChange={e => setReqForm(p => ({...p, brand: e.target.value}))} />
             <textarea placeholder="Description / notes" rows={2} value={reqForm.description} onChange={e => setReqForm(p => ({...p, description: e.target.value}))} />
