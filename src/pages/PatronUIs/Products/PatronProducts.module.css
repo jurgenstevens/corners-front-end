@@ -9,9 +9,19 @@
 }
 
 /* ── Tabs ── */
-.tabsWrap { overflow-x: auto; scrollbar-width: none; margin-bottom: 16px; }
-.tabsWrap::-webkit-scrollbar { display: none; }
+.tabsWrap { display: flex; align-items: center; gap: 4px; margin-bottom: 16px; }
+.tabsScroll { overflow-x: auto; scrollbar-width: none; flex: 1; }
+.tabsScroll::-webkit-scrollbar { display: none; }
 .tabs { display: flex; gap: 8px; width: max-content; padding-bottom: 2px; }
+.tabArrow {
+  flex-shrink: 0; background: transparent;
+  border: 1.5px solid var(--text-muted); border-radius: 50%;
+  width: 26px; height: 26px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.1rem; color: var(--text);
+  transition: all 0.15s;
+}
+.tabArrow:hover { border-color: var(--text); }
 .tab {
   flex-shrink: 0;
   background: transparent;

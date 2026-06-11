@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import * as productService from '../../../services/productService'
 import * as connectionService from '../../../services/connectionService'
 import styles from './PatronProducts.module.css'
 
-const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '', price: '', tallyGoal: 10 }
+const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '' }
 
 function timeAgo(date) {
   if (!date) return ''
@@ -27,6 +27,9 @@ export default function PatronProducts() {
   const [form, setForm]             = useState(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
   const [reqError, setReqError]     = useState('')
+  const [canScrollLeft, setCanScrollLeft]   = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
+  const tabsScrollRef = useRef(null)
 
   async function load() {
     const [prods, strs] = await Promise.all([
@@ -39,12 +42,22 @@ export default function PatronProducts() {
 
   useEffect(() => { load().finally(() => setLoading(false)) }, [])
 
-  async function handleVote(id) {
-    const updated = await productService.voteForProduct(id)
-    if (!updated.err) {
-      setMyVotes(prev => ({ ...prev, [id]: true }))
-      setProducts(prev => prev.map(p => p._id === id ? updated : p))
-    }
+  useEffect(() => {
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [stores])
+
+  function checkScroll() {
+    const el = tabsScrollRef.current
+    if (!el) return
+    setCanScrollLeft(el.scrollLeft > 0)
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1)
+  }
+
+  function scrollTabs(dir) {
+    tabsScrollRef.current?.scrollBy({ left: dir * 150, behavior: 'smooth' })
+    setTimeout(checkScroll, 200)
   }
 
   function openModal() {
@@ -62,11 +75,7 @@ export default function PatronProducts() {
     setSubmitting(true)
     setReqError('')
     const { businessId, ...rest } = form
-    const result = await productService.requestProduct(businessId, {
-      ...rest,
-      price: rest.price ? Number(rest.price) : undefined,
-      tallyGoal: Number(rest.tallyGoal) || 10,
-    })
+    const result = await productService.requestProduct(businessId, rest)
     setSubmitting(false)
     if (result.err) { setReqError(result.err) } else { setShowModal(false); load() }
   }
@@ -117,25 +126,33 @@ export default function PatronProducts() {
         )}
       </div>
 
-      {/* Store tabs — horizontal scroll */}
+      {/* Store tabs — horizontal scroll with carousel arrows */}
       <div className={styles.tabsWrap}>
-        <div className={styles.tabs}>
-          <button
-            className={`${styles.tab} ${activeTab === 'all' ? styles.activeTab : ''}`}
-            onClick={() => setActiveTab('all')}
-          >All Stores</button>
-          {storeTabs.map(t => (
+        {canScrollLeft && (
+          <button className={styles.tabArrow} onClick={() => scrollTabs(-1)}>‹</button>
+        )}
+        <div className={styles.tabsScroll} ref={tabsScrollRef} onScroll={checkScroll}>
+          <div className={styles.tabs}>
             <button
-              key={t.id}
-              className={`${styles.tab} ${activeTab === t.id ? styles.activeTab : ''}`}
-              onClick={() => setActiveTab(t.id)}
-            >{t.label}</button>
-          ))}
-          <button
-            className={`${styles.tab} ${activeTab === 'votes' ? styles.activeTab : ''}`}
-            onClick={() => setActiveTab('votes')}
-          >Votes</button>
+              className={`${styles.tab} ${activeTab === 'all' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('all')}
+            >All Stores</button>
+            {storeTabs.map(t => (
+              <button
+                key={t.id}
+                className={`${styles.tab} ${activeTab === t.id ? styles.activeTab : ''}`}
+                onClick={() => setActiveTab(t.id)}
+              >{t.label}</button>
+            ))}
+            <button
+              className={`${styles.tab} ${activeTab === 'votes' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('votes')}
+            >Votes</button>
+          </div>
         </div>
+        {canScrollRight && (
+          <button className={styles.tabArrow} onClick={() => scrollTabs(1)}>›</button>
+        )}
       </div>
 
       {/* Skeletons */}
@@ -150,42 +167,33 @@ export default function PatronProducts() {
         {!loading && filtered.length === 0 && (
           <p className={styles.empty}>Nothing here yet.</p>
         )}
-        {filtered.map(p => {
-          const canVote = (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
-          const hasVoted = myVotes[p._id]
+        {filtered.map(p => (
+          <div key={p._id} className={styles.feedItem}>
+            <span className={`${styles.dot} ${styles[p.status]}`} />
 
-          return (
-            <div key={p._id} className={styles.feedItem}>
-              <span className={`${styles.dot} ${styles[p.status]}`} />
-
-              <div className={styles.avatar}>
-                {p.image
-                  ? <img src={p.image} alt={p.name} />
-                  : <span>{p.name?.[0]?.toUpperCase() || '?'}</span>
-                }
-              </div>
-
-              <div className={styles.content}>
-                <div className={styles.titleRow}>
-                  <span className={styles.productName}>{p.name}</span>
-                  <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
-                </div>
-                <p className={styles.subtitle}>{getSubtitle(p)}</p>
-                {p.brand && <p className={styles.brand}>{p.brand}</p>}
-              </div>
-
-              <div className={styles.action}>
-                {canVote && (
-                  <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
-                )}
-                {hasVoted && <span className={styles.voted}>✓</span>}
-                {p.image && !canVote && !hasVoted && (
-                  <img src={p.image} alt={p.name} className={styles.thumb} />
-                )}
-              </div>
+            <div className={styles.avatar}>
+              {p.image
+                ? <img src={p.image} alt={p.name} />
+                : <span>{p.name?.[0]?.toUpperCase() || '?'}</span>
+              }
             </div>
-          )
-        })}
+
+            <div className={styles.content}>
+              <div className={styles.titleRow}>
+                <span className={styles.productName}>{p.name}</span>
+                <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
+              </div>
+              <p className={styles.subtitle}>{getSubtitle(p)}</p>
+              {p.brand && <p className={styles.brand}>{p.brand}</p>}
+            </div>
+
+            {p.image && (
+              <div className={styles.action}>
+                <img src={p.image} alt={p.name} className={styles.thumb} />
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* ── Request modal ── */}
@@ -218,14 +226,6 @@ export default function PatronProducts() {
                 <input name="image" value={form.image} onChange={handleChange} placeholder="https://i.imgur.com/…" />
                 <span className={styles.hint}>Imgur or direct image link. Store owner can update later.</span>
               </label>
-              <div className={styles.formRow}>
-                <label>Price ($)
-                  <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} placeholder="0.00" />
-                </label>
-                <label>Tally Goal
-                  <input name="tallyGoal" type="number" min="1" value={form.tallyGoal} onChange={handleChange} />
-                </label>
-              </div>
               {reqError && <p className={styles.error}>{reqError}</p>}
               <div className={styles.modalActions}>
                 <button type="button" className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
