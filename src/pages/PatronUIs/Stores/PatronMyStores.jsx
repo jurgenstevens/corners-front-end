@@ -69,6 +69,8 @@ export default function PatronMyStores() {
     })
     .sort((a, b) => {
       if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0)
+      // sort by distance field attached by the backend's nearby endpoint; nulls go last
+      if (sortBy === 'nearby') return (a.distance ?? Infinity) - (b.distance ?? Infinity)
       const nameA = (a.displayName || a.profile?.name || '').toLowerCase()
       const nameB = (b.displayName || b.profile?.name || '').toLowerCase()
       return nameA.localeCompare(nameB)
@@ -94,14 +96,16 @@ export default function PatronMyStores() {
       {/* Controls row */}
       <div className={styles.controls}>
         <div className={styles.controlBtns}>
+          {/* label reflects the active filter so the user always knows what they're viewing */}
           <select className={styles.controlBtn} value={filter} onChange={e => setFilter(e.target.value)}>
-            <option value="all">Filter</option>
-            <option value="connected">Connected</option>
-            <option value="new">Discover</option>
+            <option value="all">Filter: All</option>
+            <option value="connected">Filter: Connected</option>
+            <option value="new">Filter: Discover</option>
           </select>
           <select className={styles.controlBtn} value={sortBy} onChange={e => setSortBy(e.target.value)}>
             <option value="name">Sort: Name</option>
             <option value="rating">Sort: Rating</option>
+            <option value="nearby">Sort: Nearby</option>
           </select>
         </div>
         {!loading && (
