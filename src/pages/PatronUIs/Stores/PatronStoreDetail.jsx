@@ -18,6 +18,7 @@ export default function PatronStoreDetail({ user }) {
   const [submitting, setSubmitting] = useState(false)
   const [myVotes, setMyVotes] = useState({})
   const [disconnecting, setDisconnecting] = useState(false)
+  const [showDisconnectModal, setShowDisconnectModal] = useState(false)
   const [reqError, setReqError] = useState('')
   const [reqSuccess, setReqSuccess] = useState(false)
 
@@ -71,13 +72,13 @@ export default function PatronStoreDetail({ user }) {
   }
 
   async function handleDisconnect() {
-    if (!window.confirm('Disconnect from this store? You will need to re-register to access it again.')) return
     setDisconnecting(true)
     try {
       await connectionService.disconnectFromBusiness(id)
       navigate('/dashboard/patron/stores')
     } finally {
       setDisconnecting(false)
+      setShowDisconnectModal(false)
     }
   }
 
@@ -210,12 +211,39 @@ export default function PatronStoreDetail({ user }) {
         <div className={styles.dangerZone}>
           <button
             className={styles.disconnectBtn}
-            onClick={handleDisconnect}
+            onClick={() => setShowDisconnectModal(true)}
             disabled={disconnecting}
           >
-            {disconnecting ? 'Disconnecting…' : 'Disconnect from Store'}
+            Disconnect from Store
           </button>
         </div>
+
+        {/* confirmation modal — shown when patron clicks Disconnect from Store */}
+        {showDisconnectModal && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modal}>
+              <p className={styles.modalMsg}>
+                Are you sure you want to disconnect from this store? You will need to re-register to access it again.
+              </p>
+              <div className={styles.modalActions}>
+                <button
+                  className={styles.modalCancel}
+                  onClick={() => setShowDisconnectModal(false)}
+                  disabled={disconnecting}
+                >
+                  Cancel
+                </button>
+                <button
+                  className={styles.modalDisconnect}
+                  onClick={handleDisconnect}
+                  disabled={disconnecting}
+                >
+                  {disconnecting ? 'Disconnecting…' : 'Disconnect'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

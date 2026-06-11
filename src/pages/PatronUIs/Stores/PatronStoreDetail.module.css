@@ -163,3 +163,59 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ── Disconnect confirmation modal ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  max-width: 360px;
+  width: 100%;
+}
+.modalMsg {
+  margin: 0 0 24px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.modalCancel {
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.modalCancel:hover:not(:disabled) { background: var(--border); }
+.modalDisconnect {
+  background: none;
+  border: 1.5px solid var(--danger);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.modalDisconnect:hover:not(:disabled) { background: var(--danger); color: #fff; }
+.modalCancel:disabled, .modalDisconnect:disabled { opacity: 0.5; cursor: not-allowed; }
