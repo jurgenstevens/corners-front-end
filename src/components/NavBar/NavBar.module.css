@@ -9,6 +9,14 @@
   justify-content: space-between;
 }
 
+/* applied on every page except the landing page so the bar stays visible while scrolling;
+   z-index 100 keeps it below the DashboardLayout sidebar (201–300) so panels never go under it */
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
 /* LEFT */
 
 .left {
