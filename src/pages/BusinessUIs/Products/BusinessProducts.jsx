@@ -106,13 +106,16 @@ export default function BusinessProducts() {
               )}
               {p.price != null && <p className={styles.price}>${p.price}</p>}
             </div>
-            <div className={styles.tally}>
-              <div className={styles.tallyCounts}>{p.currentTally} / {p.tallyGoal} votes</div>
-              <div className={styles.bar}>
-                <div className={styles.fill} style={{ width: `${Math.min(100, (p.currentTally / p.tallyGoal) * 100)}%` }} />
+            {/* only patron-requested products have a vote tally; owner-added products skip this */}
+            {p.requestedBy && (
+              <div className={styles.tally}>
+                <div className={styles.tallyCounts}>{p.currentTally} / {p.tallyGoal} votes</div>
+                <div className={styles.bar}>
+                  <div className={styles.fill} style={{ width: `${Math.min(100, (p.currentTally / p.tallyGoal) * 100)}%` }} />
+                </div>
+                {p.status === 'ready_to_stock' && <span className={styles.readyBadge}>🎯 Ready to Stock</span>}
               </div>
-              {p.status === 'ready_to_stock' && <span className={styles.readyBadge}>🎯 Ready to Stock</span>}
-            </div>
+            )}
             <div className={styles.actions}>
               {(p.status === 'pending' || p.status === 'ready_to_stock') && (
                 <>
