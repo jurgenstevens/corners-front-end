@@ -17,7 +17,7 @@ function timeAgo(date) {
   return 'now'
 }
 
-export default function PatronProducts() {
+export default function PatronProducts({ user }) {
   const [products, setProducts]     = useState([])
   const [stores, setStores]         = useState([])
   const [activeTab, setActiveTab]   = useState('all')
@@ -36,7 +36,16 @@ export default function PatronProducts() {
       productService.getPatronProducts(),
       connectionService.getMyStores(),
     ])
-    if (Array.isArray(prods)) setProducts(prods)
+    if (Array.isArray(prods)) {
+      setProducts(prods)
+      if (user?.profileId) {
+        const votes = {}
+        prods.forEach(p => {
+          if (p.votedBy?.some(v => v.toString() === user.profileId.toString())) votes[p._id] = true
+        })
+        setMyVotes(votes)
+      }
+    }
     if (Array.isArray(strs)) setStores(strs)
   }
 
@@ -58,6 +67,14 @@ export default function PatronProducts() {
   function scrollTabs(dir) {
     tabsScrollRef.current?.scrollBy({ left: dir * 150, behavior: 'smooth' })
     setTimeout(checkScroll, 200)
+  }
+
+  async function handleVote(id) {
+    const updated = await productService.voteForProduct(id)
+    if (!updated.err) {
+      setMyVotes(prev => ({ ...prev, [id]: true }))
+      setProducts(prev => prev.map(p => p._id === id ? updated : p))
+    }
   }
 
   function openModal() {
@@ -167,33 +184,43 @@ export default function PatronProducts() {
         {!loading && filtered.length === 0 && (
           <p className={styles.empty}>Nothing here yet.</p>
         )}
-        {filtered.map(p => (
-          <div key={p._id} className={styles.feedItem}>
-            <span className={`${styles.dot} ${styles[p.status]}`} />
+        {filtered.map(p => {
+          const votable = (p.status === 'approved' || p.status === 'ready_to_stock')
+            && !myVotes[p._id]
+            && p.requestedBy?.toString() !== user?.profileId?.toString()
 
-            <div className={styles.avatar}>
-              {p.image
-                ? <img src={p.image} alt={p.name} />
-                : <span>{p.name?.[0]?.toUpperCase() || '?'}</span>
-              }
-            </div>
+          return (
+            <div key={p._id} className={styles.feedItem}>
+              <span className={`${styles.dot} ${styles[p.status]}`} />
 
-            <div className={styles.content}>
-              <div className={styles.titleRow}>
-                <span className={styles.productName}>{p.name}</span>
-                <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
+              <div className={styles.avatar}>
+                {p.image
+                  ? <img src={p.image} alt={p.name} />
+                  : <span>{p.name?.[0]?.toUpperCase() || '?'}</span>
+                }
               </div>
-              <p className={styles.subtitle}>{getSubtitle(p)}</p>
-              {p.brand && <p className={styles.brand}>{p.brand}</p>}
-            </div>
 
-            {p.image && (
+              <div className={styles.content}>
+                <div className={styles.titleRow}>
+                  <span className={styles.productName}>{p.name}</span>
+                  <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
+                </div>
+                <p className={styles.subtitle}>{getSubtitle(p)}</p>
+                {p.brand && <p className={styles.brand}>{p.brand}</p>}
+              </div>
+
               <div className={styles.action}>
-                <img src={p.image} alt={p.name} className={styles.thumb} />
+                {votable && (
+                  <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
+                )}
+                {myVotes[p._id] && <span className={styles.voted}>✓</span>}
+                {p.image && !votable && !myVotes[p._id] && (
+                  <img src={p.image} alt={p.name} className={styles.thumb} />
+                )}
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          )
+        })}
       </div>
 
       {/* ── Request modal ── */}
