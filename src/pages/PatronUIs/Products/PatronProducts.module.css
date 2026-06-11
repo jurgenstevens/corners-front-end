@@ -51,7 +51,7 @@
 .empty { color: var(--text-muted); font-size: 0.88rem; padding: 24px 0; }
 
 .feedItem {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: flex-start; gap: 12px;
   padding: 13px 4px;
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -87,7 +87,12 @@
 .subtitle { font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .brand    { font-size: 0.72rem; color: var(--text-muted); margin: 1px 0 0; }
 
-.action { flex-shrink: 0; display: flex; align-items: center; }
+.tally { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+.tallyBar { flex: 1; max-width: 110px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.tallyFill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+.tallyNums { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+
+.action { flex-shrink: 0; display: flex; align-items: center; padding-top: 2px; }
 .voteBtn {
   background: var(--text); color: var(--bg);
   border: none; border-radius: 8px;

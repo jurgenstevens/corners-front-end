@@ -207,6 +207,17 @@ export default function PatronProducts({ user }) {
                 </div>
                 <p className={styles.subtitle}>{getSubtitle(p)}</p>
                 {p.brand && <p className={styles.brand}>{p.brand}</p>}
+                {p.tallyGoal > 0 && (p.status === 'approved' || p.status === 'ready_to_stock') && (
+                  <div className={styles.tally}>
+                    <div className={styles.tallyBar}>
+                      <div
+                        className={styles.tallyFill}
+                        style={{ width: `${Math.min(100, (p.currentTally / p.tallyGoal) * 100)}%` }}
+                      />
+                    </div>
+                    <span className={styles.tallyNums}>{p.currentTally} / {p.tallyGoal}</span>
+                  </div>
+                )}
               </div>
 
               <div className={styles.action}>
