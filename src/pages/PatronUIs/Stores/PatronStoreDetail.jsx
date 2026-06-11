@@ -192,7 +192,11 @@ export default function PatronStoreDetail({ user }) {
                   <div className={styles.miniBar}>
                     <div className={styles.miniFill} style={{ width: `${Math.min(100,(p.currentTally/p.tallyGoal)*100)}%` }} />
                   </div>
-                  {!myVotes[p._id] && p.status === 'approved' && (
+                  {/* hide vote button if patron already voted or if they are the one who requested this product */}
+                  {!myVotes[p._id]
+                    && p.status === 'approved'
+                    && p.requestedBy?.toString() !== user?.profileId?.toString()
+                    && (
                     <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1 Vote</button>
                   )}
                   {myVotes[p._id] && <span className={styles.voted}>✓ Voted</span>}
