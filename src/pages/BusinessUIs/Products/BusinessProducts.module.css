@@ -90,14 +90,84 @@
 :global([data-theme='dark']) .needsInfoBadge { color: #fbbf24; background: #451a03; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.approveBtn, .rejectBtn, .stockBtn, .infoBtn, .editBtn, .deleteBtn {
+.approveBtn, .rejectBtn, .stockBtn, .promoBtn, .infoBtn, .editBtn, .deleteBtn {
   border: none; border-radius: 6px; padding: 5px 12px;
   cursor: pointer; font-size: 0.78rem; font-weight: 700;
 }
 .approveBtn { background: var(--success);  color: #000; }
 .rejectBtn  { background: var(--danger);   color: #fff; }
 .stockBtn   { background: var(--info);     color: #fff; }
+.promoBtn   { background: #f59e0b; color: #000; }
 .infoBtn    { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
 .infoBtn:hover { border-color: var(--text); color: var(--text); }
 .editBtn    { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .deleteBtn  { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+
+/* ── Pricing ── */
+.priceRow { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.originalPrice { font-size: 0.82rem; color: var(--text-muted); text-decoration: line-through; }
+.salePrice  { font-size: 0.95rem; font-weight: 700; color: var(--success); }
+.discountBadge {
+  font-size: 0.7rem; font-weight: 700;
+  background: var(--success); color: #000;
+  border-radius: 4px; padding: 2px 6px;
+}
+
+/* ── Promo modal ── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px;
+}
+.modal {
+  background: var(--bg-card); border-radius: 16px;
+  width: 100%; max-width: 400px; padding: 24px 20px 28px;
+}
+.modalHeader {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.modalHeader h3 { font-size: 1rem; font-weight: 800; margin: 0; }
+.closeBtn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); padding: 0; }
+.closeBtn:hover { color: var(--text); }
+.originalPriceNote { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 14px; }
+
+.modeToggle { display: flex; gap: 0; margin-bottom: 18px; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+.modeBtn {
+  flex: 1; background: transparent; border: none; padding: 8px;
+  cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+.modeBtnActive { background: var(--accent); color: var(--accent-text); }
+
+.modalForm { display: flex; flex-direction: column; gap: 14px; }
+.modalForm label { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; font-weight: 600; }
+.inputRow {
+  display: flex; align-items: center; gap: 0;
+  border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.inputRow input {
+  flex: 1; background: transparent; border: none; padding: 9px 10px;
+  font-size: 1rem; color: var(--text); outline: none;
+}
+.inputPrefix, .inputSuffix {
+  padding: 9px 10px; font-size: 0.9rem; font-weight: 700;
+  color: var(--text-muted); background: var(--border);
+}
+
+.promoPreview {
+  display: flex; align-items: baseline; gap: 8px;
+  background: rgba(34,197,94,0.08); border-radius: 8px; padding: 10px 12px;
+}
+.previewSale { font-size: 1.3rem; font-weight: 800; color: var(--success); }
+.previewOff  { font-size: 0.82rem; color: var(--text-muted); }
+.promoError  { color: var(--danger); font-size: 0.82rem; margin: 0; }
+
+.modalActions { display: flex; gap: 10px; margin-top: 4px; }
+.cancelBtn {
+  flex: 1; background: transparent; border: 1.5px solid var(--text-muted);
+  border-radius: 8px; padding: 10px; cursor: pointer; color: var(--text); font-weight: 600;
+}
+.submitBtn {
+  flex: 2; background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: 700;
+}

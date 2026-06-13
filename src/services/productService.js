@@ -57,6 +57,13 @@ export async function deleteProduct(id) {
   return res.json()
 }
 
+export async function promoteProduct(id, data) {
+  const res = await fetch(`${BASE}/api/products/${id}/promote`, {
+    method: 'POST', headers: authHeaders(), body: JSON.stringify(data),
+  })
+  return res.json()
+}
+
 export async function requestMoreInfo(id) {
   const res = await fetch(`${BASE}/api/products/${id}/request-info`, { method: 'POST', headers: authHeaders() })
   return res.json()

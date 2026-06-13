@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import * as productService from '../../../services/productService'
 import styles from './BusinessProducts.module.css'
 
-const TABS = ['All', 'Requests', 'Approved', 'In Store', 'Requires Update']
+const TABS = ['All', 'Requests', 'Approved', 'In Store', 'Promotions/Sales', 'Requires Update']
 const STATUS_MAP = {
-  'All': ['pending', 'ready_to_stock', 'approved', 'stocked', 'needs_info'],
-  'Requests': ['pending', 'ready_to_stock'],
-  'Approved': ['approved'],
-  'In Store': ['stocked'],
-  'Requires Update': ['needs_info'],
+  'All':              ['pending', 'ready_to_stock', 'approved', 'stocked', 'needs_info', 'on_sale'],
+  'Requests':         ['pending', 'ready_to_stock'],
+  'Approved':         ['approved'],
+  'In Store':         ['stocked'],
+  'Promotions/Sales': ['on_sale'],
+  'Requires Update':  ['needs_info'],
 }
 
 export default function BusinessProducts() {
@@ -18,6 +19,11 @@ export default function BusinessProducts() {
   const [editId, setEditId] = useState(null)
   const [form, setForm] = useState({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
   const [expandedVoters, setExpandedVoters] = useState({})
+  const [promoProduct, setPromoProduct] = useState(null)
+  const [promoMode, setPromoMode] = useState('percent') // 'percent' | 'price'
+  const [promoPercent, setPromoPercent] = useState('')
+  const [promoPrice, setPromoPrice] = useState('')
+  const [promoError, setPromoError] = useState('')
   const [canScrollLeft, setCanScrollLeft]   = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const tabsScrollRef = useRef(null)
@@ -49,6 +55,55 @@ export default function BusinessProducts() {
 
   function toggleVoters(id) {
     setExpandedVoters(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  function openPromoModal(p) {
+    setPromoProduct(p)
+    setPromoMode('percent')
+    setPromoPercent('')
+    setPromoPrice('')
+    setPromoError('')
+  }
+  function closePromoModal() { setPromoProduct(null) }
+
+  // Derived preview values for the promotion modal
+  const originalPrice = promoProduct?.price ?? null
+  const previewSalePrice = (() => {
+    if (promoMode === 'percent' && promoPercent !== '' && originalPrice != null) {
+      return parseFloat((originalPrice * (1 - Number(promoPercent) / 100)).toFixed(2))
+    }
+    if (promoMode === 'price' && promoPrice !== '' && originalPrice != null) {
+      return parseFloat(Number(promoPrice).toFixed(2))
+    }
+    return null
+  })()
+  const previewDiscount = (() => {
+    if (promoMode === 'percent' && promoPercent !== '') return Number(promoPercent)
+    if (promoMode === 'price' && promoPrice !== '' && originalPrice != null) {
+      return parseFloat((((originalPrice - Number(promoPrice)) / originalPrice) * 100).toFixed(1))
+    }
+    return null
+  })()
+
+  async function handlePromoSubmit(e) {
+    e.preventDefault()
+    setPromoError('')
+    const payload = {}
+    if (promoMode === 'percent') {
+      const pct = Number(promoPercent)
+      if (!promoPercent || pct <= 0 || pct >= 100) return setPromoError('Enter a discount between 1% and 99%.')
+      if (originalPrice == null) return setPromoError('This product has no price set. Please edit the product price first.')
+      payload.discountPercent = pct
+    } else {
+      const sp = Number(promoPrice)
+      if (!promoPrice || sp <= 0) return setPromoError('Enter a valid sale price.')
+      if (originalPrice != null && sp >= originalPrice) return setPromoError('Sale price must be less than the original price.')
+      payload.salePrice = sp
+    }
+    const result = await productService.promoteProduct(promoProduct._id, payload)
+    if (result.err) return setPromoError(result.err)
+    closePromoModal()
+    load()
   }
 
   const filtered = products.filter(p => STATUS_MAP[tab].includes(p.status))
@@ -149,7 +204,15 @@ export default function BusinessProducts() {
               {p.requestedBy?.name && (
                 <p className={styles.requestedBy}>Requested by: {p.requestedBy.name}.</p>
               )}
-              {p.price != null && <p className={styles.price}>${p.price}</p>}
+              {p.status === 'on_sale' ? (
+                <div className={styles.priceRow}>
+                  {p.price != null && <span className={styles.originalPrice}>${p.price}</span>}
+                  {p.salePrice != null && <span className={styles.salePrice}>${p.salePrice}</span>}
+                  {p.discountPercent != null && <span className={styles.discountBadge}>-{p.discountPercent}%</span>}
+                </div>
+              ) : (
+                p.price != null && <p className={styles.price}>${p.price}</p>
+              )}
               {p.status === 'needs_info' && (
                 <span className={styles.needsInfoBadge}>Awaiting patron update</span>
               )}
@@ -167,10 +230,7 @@ export default function BusinessProducts() {
 
                 {p.votedBy?.length > 0 && (
                   <div className={styles.votersWrap}>
-                    <button
-                      className={styles.votersToggle}
-                      onClick={() => toggleVoters(p._id)}
-                    >
+                    <button className={styles.votersToggle} onClick={() => toggleVoters(p._id)}>
                       Voters {expandedVoters[p._id] ? '▲' : '▼'}
                     </button>
                     {expandedVoters[p._id] && (
@@ -195,6 +255,9 @@ export default function BusinessProducts() {
               {p.status === 'approved' && (
                 <button className={styles.stockBtn} onClick={() => handleStock(p._id)}>Mark In Store</button>
               )}
+              {p.status === 'stocked' && (
+                <button className={styles.promoBtn} onClick={() => openPromoModal(p)}>Promote</button>
+              )}
               {p.requestedBy && (p.status === 'pending' || p.status === 'ready_to_stock' || p.status === 'approved') && (
                 <button className={styles.infoBtn} onClick={() => handleRequestInfo(p._id)}>Request Info</button>
               )}
@@ -204,6 +267,83 @@ export default function BusinessProducts() {
           </div>
         ))}
       </div>
+
+      {/* ── Promotion modal ── */}
+      {promoProduct && (
+        <div className={styles.overlay} onClick={closePromoModal}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Promote "{promoProduct.name}"</h3>
+              <button className={styles.closeBtn} onClick={closePromoModal}>✕</button>
+            </div>
+
+            {originalPrice != null && (
+              <p className={styles.originalPriceNote}>Original price: <strong>${originalPrice}</strong></p>
+            )}
+
+            <div className={styles.modeToggle}>
+              <button
+                className={`${styles.modeBtn} ${promoMode === 'percent' ? styles.modeBtnActive : ''}`}
+                onClick={() => { setPromoMode('percent'); setPromoPrice('') }}
+              >% Off</button>
+              <button
+                className={`${styles.modeBtn} ${promoMode === 'price' ? styles.modeBtnActive : ''}`}
+                onClick={() => { setPromoMode('price'); setPromoPercent('') }}
+              >New Price</button>
+            </div>
+
+            <form className={styles.modalForm} onSubmit={handlePromoSubmit}>
+              {promoMode === 'percent' ? (
+                <label>
+                  Discount percentage
+                  <div className={styles.inputRow}>
+                    <input
+                      type="number" min="1" max="99" step="0.1"
+                      placeholder="e.g. 20"
+                      value={promoPercent}
+                      onChange={e => setPromoPercent(e.target.value)}
+                    />
+                    <span className={styles.inputSuffix}>%</span>
+                  </div>
+                </label>
+              ) : (
+                <label>
+                  Sale price
+                  <div className={styles.inputRow}>
+                    <span className={styles.inputPrefix}>$</span>
+                    <input
+                      type="number" min="0.01" step="0.01"
+                      placeholder="e.g. 7.99"
+                      value={promoPrice}
+                      onChange={e => setPromoPrice(e.target.value)}
+                    />
+                  </div>
+                </label>
+              )}
+
+              {/* Live preview */}
+              {previewSalePrice != null && previewDiscount != null && (
+                <div className={styles.promoPreview}>
+                  <span className={styles.previewSale}>${previewSalePrice}</span>
+                  <span className={styles.previewOff}>({previewDiscount}% off)</span>
+                </div>
+              )}
+              {previewSalePrice != null && previewDiscount == null && (
+                <div className={styles.promoPreview}>
+                  <span className={styles.previewSale}>${previewSalePrice}</span>
+                </div>
+              )}
+
+              {promoError && <p className={styles.promoError}>{promoError}</p>}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.cancelBtn} onClick={closePromoModal}>Cancel</button>
+                <button type="submit" className={styles.submitBtn}>Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
