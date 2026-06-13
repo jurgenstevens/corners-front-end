@@ -17,7 +17,7 @@ export default function BusinessProducts() {
   const [tab, setTab] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState(null)
-  const [form, setForm] = useState({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
+  const [form, setForm] = useState({ name:'', brand:'', description:'', price:'', image:'', tallyGoal: 10 })
   const [expandedVoters, setExpandedVoters] = useState({})
   const [promoProduct, setPromoProduct] = useState(null)
   const [promoMode, setPromoMode] = useState('percent') // 'percent' | 'price'
@@ -140,14 +140,14 @@ export default function BusinessProducts() {
     } else {
       await productService.createProduct({ ...form, tallyGoal: Number(form.tallyGoal) })
     }
-    setForm({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
+    setForm({ name:'', brand:'', description:'', price:'', image:'', tallyGoal: 10 })
     setEditId(null)
     setShowForm(false)
     load()
   }
 
   function startEdit(p) {
-    setForm({ name: p.name, brand: p.brand||'', description: p.description||'', price: p.price||'', tallyGoal: p.tallyGoal||10 })
+    setForm({ name: p.name, brand: p.brand||'', description: p.description||'', price: p.price||'', image: p.image||'', tallyGoal: p.tallyGoal||10 })
     setEditId(p._id)
     setShowForm(true)
   }
@@ -167,6 +167,10 @@ export default function BusinessProducts() {
           <input name="brand" placeholder="Brand" value={form.brand} onChange={handleChange} />
           <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
           <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
+          <div className={styles.imageRow}>
+            <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} />
+            {form.image && <img src={form.image} alt="preview" className={styles.imagePreview} onError={e => e.target.style.display='none'} />}
+          </div>
           <div className={styles.tallyRow}>
             <label>Tally Goal</label>
             <input name="tallyGoal" type="number" min={1} value={form.tallyGoal} onChange={handleChange} />
