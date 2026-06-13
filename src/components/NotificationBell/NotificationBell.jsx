@@ -3,6 +3,30 @@ import { useNavigate } from 'react-router-dom'
 import * as notificationService from '../../services/notificationService'
 import styles from './NotificationBell.module.css'
 
+function timeAgo(date) {
+  const s = Math.floor((Date.now() - new Date(date)) / 1000)
+  const m = Math.floor(s / 60)
+  const h = Math.floor(m / 60)
+  const d = Math.floor(h / 24)
+  if (d > 0) return `${d}d`
+  if (h > 0) return `${h}h`
+  if (m > 0) return `${m}m`
+  return 'now'
+}
+
+const ROUTES = {
+  connection_request:   '/dashboard/business/patron-requests',
+  connection_approved:  '/dashboard/patron/stores',
+  connection_denied:    '/dashboard/patron/stores',
+  connection_blocked:   '/dashboard/patron/stores',
+  product_request:      '/dashboard/business/products',
+  product_approved:     '/dashboard/patron/products',
+  product_rejected:     '/dashboard/patron/products',
+  product_ready:        '/dashboard/patron/products',
+  product_needs_info:   '/dashboard/patron/products',
+  product_updated:      '/dashboard/business/products',
+}
+
 export default function NotificationBell({ user }) {
   const [notifications, setNotifications] = useState([])
   const [open, setOpen] = useState(false)
@@ -37,17 +61,7 @@ export default function NotificationBell({ user }) {
     await notificationService.markRead(n._id)
     setNotifications(prev => prev.map(x => x._id === n._id ? { ...x, read: true } : x))
     setOpen(false)
-    const routes = {
-      connection_request:  '/dashboard/business/patron-requests',
-      connection_approved: '/dashboard/patron/stores',
-      connection_denied:   '/dashboard/patron/stores',
-      connection_blocked:  '/dashboard/patron/stores',
-      product_request:     '/dashboard/business/products',
-      product_approved:    '/dashboard/patron/products',
-      product_rejected:    '/dashboard/patron/products',
-      product_ready:       '/dashboard/patron/products',
-    }
-    if (routes[n.type]) navigate(routes[n.type])
+    if (ROUTES[n.type]) navigate(ROUTES[n.type])
   }
 
   const unread = notifications.filter(n => !n.read).length
@@ -78,7 +92,8 @@ export default function NotificationBell({ user }) {
                 className={`${styles.item} ${n.read ? styles.read : styles.unread}`}
                 onClick={() => handleNotificationClick(n)}
               >
-                {n.message}
+                <span className={styles.message}>{n.message}</span>
+                <span className={styles.time}>{timeAgo(n.createdAt)}</span>
               </div>
             ))
           )}
