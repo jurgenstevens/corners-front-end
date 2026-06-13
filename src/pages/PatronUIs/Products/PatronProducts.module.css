@@ -55,6 +55,7 @@
   padding: 13px 4px;
   border-bottom: 1px solid var(--border);
   position: relative;
+  cursor: pointer;
 }
 
 .dot {
@@ -66,6 +67,7 @@
 .rejected       { background: var(--danger); }
 .ready_to_stock { background: var(--info); }
 .stocked        { background: #a855f7; }
+.needs_info     { background: #f59e0b; }
 
 .avatar {
   width: 44px; height: 44px; border-radius: 50%;
@@ -92,7 +94,7 @@
 .tallyFill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
 .tallyNums { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
 
-.action { flex-shrink: 0; display: flex; align-items: center; padding-top: 2px; }
+.action { flex-shrink: 0; display: flex; align-items: center; padding-top: 2px; gap: 6px; }
 .voteBtn {
   background: var(--text); color: var(--bg);
   border: none; border-radius: 8px;
@@ -100,8 +102,28 @@
   cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
 }
 .voteBtn:hover { opacity: 0.8; }
+.updateBtn {
+  background: #f59e0b; color: #000;
+  border: none; border-radius: 8px;
+  padding: 6px 12px; font-size: 0.8rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
+}
+.updateBtn:hover { opacity: 0.85; }
 .voted { font-size: 0.9rem; color: var(--success); font-weight: 700; }
 .thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
+
+.updateTab { position: relative; }
+.updateBadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #f59e0b; color: #000;
+  border-radius: 10px; font-size: 0.65rem; font-weight: 800;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  margin-left: 5px; line-height: 1;
+}
+.updateNote {
+  font-size: 0.82rem; color: var(--text-muted);
+  margin: 0 0 14px; line-height: 1.4;
+}
 
 /* ── Modal ── */
 .overlay {

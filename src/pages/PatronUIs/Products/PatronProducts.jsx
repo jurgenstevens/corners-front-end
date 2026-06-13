@@ -4,6 +4,7 @@ import * as connectionService from '../../../services/connectionService'
 import styles from './PatronProducts.module.css'
 
 const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '' }
+const EMPTY_UPDATE_FORM = { name: '', brand: '', description: '', image: '' }
 
 function timeAgo(date) {
   if (!date) return ''
@@ -18,15 +19,23 @@ function timeAgo(date) {
 }
 
 export default function PatronProducts({ user }) {
-  const [products, setProducts]     = useState([])
-  const [stores, setStores]         = useState([])
-  const [activeTab, setActiveTab]   = useState('all')
-  const [myVotes, setMyVotes]       = useState({})
-  const [loading, setLoading]       = useState(true)
-  const [showModal, setShowModal]   = useState(false)
-  const [form, setForm]             = useState(EMPTY_FORM)
-  const [submitting, setSubmitting] = useState(false)
-  const [reqError, setReqError]     = useState('')
+  const [products, setProducts]         = useState([])
+  const [stores, setStores]             = useState([])
+  const [activeTab, setActiveTab]       = useState('all')
+  const [myVotes, setMyVotes]           = useState({})
+  const [loading, setLoading]           = useState(true)
+  const [showModal, setShowModal]       = useState(false)
+  const [form, setForm]                 = useState(EMPTY_FORM)
+  const [submitting, setSubmitting]     = useState(false)
+  const [reqError, setReqError]         = useState('')
+  const [updateProduct, setUpdateProduct] = useState(null)
+  const [updateForm, setUpdateForm]     = useState(EMPTY_UPDATE_FORM)
+  const [updateError, setUpdateError]   = useState('')
+  const [updating, setUpdating]         = useState(false)
+  const [seenIds, setSeenIds] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem('corners_seen_products') || '[]')) }
+    catch { return new Set() }
+  })
   const [canScrollLeft, setCanScrollLeft]   = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const tabsScrollRef = useRef(null)
@@ -97,6 +106,33 @@ export default function PatronProducts({ user }) {
     if (result.err) { setReqError(result.err) } else { setShowModal(false); load() }
   }
 
+  function markSeen(id) {
+    setSeenIds(prev => {
+      const next = new Set(prev)
+      next.add(id)
+      localStorage.setItem('corners_seen_products', JSON.stringify([...next]))
+      return next
+    })
+  }
+
+  function openUpdateModal(p) {
+    setUpdateProduct(p)
+    setUpdateForm({ name: p.name, brand: p.brand || '', description: p.description || '', image: p.image || '' })
+    setUpdateError('')
+  }
+  function closeUpdateModal() { setUpdateProduct(null); setUpdateError('') }
+  function handleUpdateChange(e) { setUpdateForm(prev => ({ ...prev, [e.target.name]: e.target.value })) }
+
+  async function handleUpdateSubmit(e) {
+    e.preventDefault()
+    if (!updateForm.name.trim()) return setUpdateError('Product name is required.')
+    setUpdating(true)
+    setUpdateError('')
+    const result = await productService.patronUpdateProduct(updateProduct._id, updateForm)
+    setUpdating(false)
+    if (result.err) { setUpdateError(result.err) } else { closeUpdateModal(); load() }
+  }
+
   // Map Profile._id → store display name (products.business is populated Profile)
   const storeNameMap = {}
   stores.forEach(s => {
@@ -111,24 +147,26 @@ export default function PatronProducts({ user }) {
   function getSubtitle(p) {
     const store = getStoreName(p)
     const at = store ? ` @ ${store}` : ''
-    if (p.status === 'pending')        return `Pending Request${at}`
-    if (p.status === 'approved')       return `Request Approved${at}`
-    if (p.status === 'rejected')       return `Request Rejected${at}`
-    if (p.status === 'ready_to_stock') return `${p.currentTally} Total Votes${at}`
-    if (p.status === 'stocked')        return `Now In Stock${at}`
+    if (p.status === 'needs_info')      return `Update Requested${at}`
+    if (p.status === 'pending')         return `Pending Request${at}`
+    if (p.status === 'approved')        return `Request Approved${at}`
+    if (p.status === 'rejected')        return `Request Rejected${at}`
+    if (p.status === 'ready_to_stock')  return `${p.currentTally} Total Votes${at}`
+    if (p.status === 'stocked')         return `Now In Stock${at}`
     return `${p.currentTally} Total Votes${at}`
   }
 
-  // Tabs: all | per-store (Profile._id) | votes
   const storeTabs = stores.map(s => ({
     id: (s.profile?._id || s.profile)?.toString(),
     label: s.displayName || s.profile?.name || 'Store',
   }))
 
-  // const profileId = user?.profileId
+  const needsUpdateCount = products.filter(p => p.status === 'needs_info').length
+
   const filtered = products.filter(p => {
-    if (activeTab === 'votes') return (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
-    if (activeTab === 'all')   return true
+    if (activeTab === 'votes')          return (p.status === 'approved' || p.status === 'ready_to_stock') && !myVotes[p._id]
+    if (activeTab === 'requires_update') return p.status === 'needs_info'
+    if (activeTab === 'all')            return true
     const bizId = (p.business?._id || p.business)?.toString()
     return bizId === activeTab
   })
@@ -165,6 +203,12 @@ export default function PatronProducts({ user }) {
               className={`${styles.tab} ${activeTab === 'votes' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('votes')}
             >Votes</button>
+            <button
+              className={`${styles.tab} ${styles.updateTab} ${activeTab === 'requires_update' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('requires_update')}
+            >
+              Requires Update{needsUpdateCount > 0 && <span className={styles.updateBadge}>{needsUpdateCount}</span>}
+            </button>
           </div>
         </div>
         {canScrollRight && (
@@ -189,9 +233,11 @@ export default function PatronProducts({ user }) {
             && !myVotes[p._id]
             && p.requestedBy?.toString() !== user?.profileId?.toString()
 
+          const unseen = !seenIds.has(p._id)
+
           return (
-            <div key={p._id} className={styles.feedItem}>
-              <span className={`${styles.dot} ${styles[p.status]}`} />
+            <div key={p._id} className={styles.feedItem} onClick={() => markSeen(p._id)}>
+              {unseen && <span className={`${styles.dot} ${styles[p.status] || ''}`} />}
 
               <div className={styles.avatar}>
                 {p.image
@@ -221,13 +267,13 @@ export default function PatronProducts({ user }) {
               </div>
 
               <div className={styles.action}>
+                {p.status === 'needs_info' && (
+                  <button className={styles.updateBtn} onClick={() => openUpdateModal(p)}>Update</button>
+                )}
                 {votable && (
                   <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
                 )}
-                {myVotes[p._id] && <span className={styles.voted}>✓</span>}
-                {p.image && !votable && !myVotes[p._id] && (
-                  <img src={p.image} alt={p.name} className={styles.thumb} />
-                )}
+                {myVotes[p._id] && unseen && p.status !== 'needs_info' && <span className={styles.voted}>✓</span>}
               </div>
             </div>
           )
@@ -269,6 +315,40 @@ export default function PatronProducts({ user }) {
                 <button type="button" className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
                 <button type="submit" className={styles.submitBtn} disabled={submitting}>
                   {submitting ? 'Sending…' : 'Send Request'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Update modal ── */}
+      {updateProduct && (
+        <div className={styles.overlay} onClick={closeUpdateModal}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Update Request</h3>
+              <button className={styles.closeBtn} onClick={closeUpdateModal}>✕</button>
+            </div>
+            <p className={styles.updateNote}>The store has requested more information. Please update your product request below.</p>
+            <form onSubmit={handleUpdateSubmit} className={styles.modalForm}>
+              <label>Product Name *
+                <input name="name" value={updateForm.name} onChange={handleUpdateChange} required />
+              </label>
+              <label>Brand
+                <input name="brand" value={updateForm.brand} onChange={handleUpdateChange} placeholder="e.g. Barcel" />
+              </label>
+              <label>Description
+                <textarea name="description" value={updateForm.description} onChange={handleUpdateChange} rows={3} placeholder="Add more details about this product…" />
+              </label>
+              <label>Image URL
+                <input name="image" value={updateForm.image} onChange={handleUpdateChange} placeholder="https://i.imgur.com/…" />
+              </label>
+              {updateError && <p className={styles.error}>{updateError}</p>}
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.cancelBtn} onClick={closeUpdateModal}>Cancel</button>
+                <button type="submit" className={styles.submitBtn} disabled={updating}>
+                  {updating ? 'Submitting…' : 'Resubmit Request'}
                 </button>
               </div>
             </form>

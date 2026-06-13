@@ -56,3 +56,15 @@ export async function deleteProduct(id) {
   const res = await fetch(`${BASE}/api/products/${id}`, { method: 'DELETE', headers: authHeaders() })
   return res.json()
 }
+
+export async function requestMoreInfo(id) {
+  const res = await fetch(`${BASE}/api/products/${id}/request-info`, { method: 'POST', headers: authHeaders() })
+  return res.json()
+}
+
+export async function patronUpdateProduct(id, data) {
+  const res = await fetch(`${BASE}/api/products/${id}/patron-update`, {
+    method: 'PUT', headers: authHeaders(), body: JSON.stringify(data),
+  })
+  return res.json()
+}

@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 import * as productService from '../../../services/productService'
 import styles from './BusinessProducts.module.css'
 
-const TABS = ['All', 'Requests', 'Approved', 'In Store']
+const TABS = ['All', 'Requests', 'Approved', 'In Store', 'Requires Update']
 const STATUS_MAP = {
-  'All': ['pending', 'ready_to_stock', 'approved', 'stocked'],
+  'All': ['pending', 'ready_to_stock', 'approved', 'stocked', 'needs_info'],
   'Requests': ['pending', 'ready_to_stock'],
   'Approved': ['approved'],
   'In Store': ['stocked'],
+  'Requires Update': ['needs_info'],
 }
 
 export default function BusinessProducts() {
@@ -16,6 +17,7 @@ export default function BusinessProducts() {
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState(null)
   const [form, setForm] = useState({ name:'', brand:'', description:'', price:'', tallyGoal: 10 })
+  const [expandedVoters, setExpandedVoters] = useState({})
   const [canScrollLeft, setCanScrollLeft]   = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const tabsScrollRef = useRef(null)
@@ -45,6 +47,10 @@ export default function BusinessProducts() {
     setTimeout(checkScroll, 200)
   }
 
+  function toggleVoters(id) {
+    setExpandedVoters(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
   const filtered = products.filter(p => STATUS_MAP[tab].includes(p.status))
 
   async function handleApprove(id) {
@@ -61,6 +67,10 @@ export default function BusinessProducts() {
   }
   async function handleDelete(id) {
     await productService.deleteProduct(id)
+    load()
+  }
+  async function handleRequestInfo(id) {
+    await productService.requestMoreInfo(id)
     load()
   }
 
@@ -136,22 +146,45 @@ export default function BusinessProducts() {
               <h4>{p.name}</h4>
               {p.brand && <span className={styles.brand}>{p.brand}</span>}
               {p.description && <p className={styles.desc}>{p.description}</p>}
-              {/* show the patron who submitted this request, if any */}
               {p.requestedBy?.name && (
                 <p className={styles.requestedBy}>Requested by: {p.requestedBy.name}.</p>
               )}
               {p.price != null && <p className={styles.price}>${p.price}</p>}
+              {p.status === 'needs_info' && (
+                <span className={styles.needsInfoBadge}>Awaiting patron update</span>
+              )}
             </div>
-            {/* only patron-requested products have a vote tally; owner-added products skip this */}
+
             {p.requestedBy && (
-              <div className={styles.tally}>
-                <div className={styles.tallyCounts}>{p.currentTally} / {p.tallyGoal} votes</div>
-                <div className={styles.bar}>
-                  <div className={styles.fill} style={{ width: `${Math.min(100, (p.currentTally / p.tallyGoal) * 100)}%` }} />
+              <div className={styles.tallyCol}>
+                <div className={styles.tally}>
+                  <div className={styles.tallyCounts}>{p.currentTally} / {p.tallyGoal} votes</div>
+                  <div className={styles.bar}>
+                    <div className={styles.fill} style={{ width: `${Math.min(100, (p.currentTally / p.tallyGoal) * 100)}%` }} />
+                  </div>
+                  {p.status === 'ready_to_stock' && <span className={styles.readyBadge}>Ready to Stock</span>}
                 </div>
-                {p.status === 'ready_to_stock' && <span className={styles.readyBadge}>🎯 Ready to Stock</span>}
+
+                {p.votedBy?.length > 0 && (
+                  <div className={styles.votersWrap}>
+                    <button
+                      className={styles.votersToggle}
+                      onClick={() => toggleVoters(p._id)}
+                    >
+                      Voters {expandedVoters[p._id] ? '▲' : '▼'}
+                    </button>
+                    {expandedVoters[p._id] && (
+                      <ul className={styles.voterList}>
+                        {p.votedBy.map(v => (
+                          <li key={v._id} className={styles.voterName}>{v.name}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
               </div>
             )}
+
             <div className={styles.actions}>
               {(p.status === 'pending' || p.status === 'ready_to_stock') && (
                 <>
@@ -161,6 +194,9 @@ export default function BusinessProducts() {
               )}
               {p.status === 'approved' && (
                 <button className={styles.stockBtn} onClick={() => handleStock(p._id)}>Mark In Store</button>
+              )}
+              {p.requestedBy && (p.status === 'pending' || p.status === 'ready_to_stock' || p.status === 'approved') && (
+                <button className={styles.infoBtn} onClick={() => handleRequestInfo(p._id)}>Request Info</button>
               )}
               <button className={styles.editBtn} onClick={() => startEdit(p)}>Edit</button>
               <button className={styles.deleteBtn} onClick={() => handleDelete(p._id)}>Delete</button>
