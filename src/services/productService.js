@@ -19,6 +19,11 @@ export async function getPatronProducts() {
   return res.json()
 }
 
+export async function getPatronPromotions() {
+  const res = await fetch(`${BASE}/api/products/patron/promotions`, { headers: authHeaders() })
+  return res.json()
+}
+
 export async function createProduct(data) {
   const res = await fetch(`${BASE}/api/products`, {
     method: 'POST', headers: authHeaders(), body: JSON.stringify(data),
