@@ -18,6 +18,57 @@ const BUSINESS_TYPES = [
   'Electronics','Pet Store','Book Store','Toy Store','Sporting Goods'
 ]
 
+const TERMS_TEXT = `CORNERS — TERMS AND CONDITIONS
+Last updated: June 2026
+
+Please read these Terms and Conditions ("Terms") carefully before creating an account on the Corners platform ("Service"). By checking the box and creating an account, you agree to be bound by these Terms.
+
+1. ACCEPTANCE OF TERMS
+By registering for and using the Service, you confirm that you are at least 18 years of age and that you have read, understood, and agree to these Terms in full.
+
+2. DATA COLLECTION AND USE
+By using the Service, you acknowledge and agree that:
+
+a. Corners collects information you provide during registration and through your use of the platform, including but not limited to your name, email address, location data, product preferences, votes, and purchase-related activity.
+
+b. This data may be shared with and used by connected store owners and businesses on the platform for the purposes of inventory planning, product demand analysis, customer preference research, and business analytics.
+
+c. Aggregated and anonymized usage data may be used by Corners internally to improve the platform, develop new features, and generate market insights.
+
+d. You grant Corners and its affiliated businesses a non-exclusive, royalty-free license to use your submitted data for the purposes described above.
+
+3. ACCOUNT TERMINATION AND DATA DELETION
+Corners reserves the right, at its sole discretion, to:
+
+a. Suspend or permanently terminate your account at any time, with or without notice, for conduct that Corners believes violates these Terms, is harmful to other users, businesses, or third parties, or for any other reason Corners deems appropriate.
+
+b. Delete your account and all associated data from our systems upon termination, whether initiated by you or by Corners.
+
+c. Remove any content, product requests, votes, or other submissions you have made to the platform.
+
+You may request deletion of your account at any time by contacting Corners through the platform settings. Upon verified request, your personal data will be deleted within 30 days, except where retention is required by applicable law.
+
+4. USER CONDUCT
+You agree not to use the Service to submit false, misleading, or fraudulent information; to harass, abuse, or harm other users or businesses; or to violate any applicable local, state, or federal law.
+
+5. INTELLECTUAL PROPERTY
+All content, design, and software comprising the Corners platform is the property of Corners and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without express written permission.
+
+6. DISCLAIMER OF WARRANTIES
+The Service is provided "as is" without warranties of any kind, express or implied. Corners does not warrant that the Service will be uninterrupted, error-free, or free of harmful components.
+
+7. LIMITATION OF LIABILITY
+To the fullest extent permitted by law, Corners shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the Service.
+
+8. CHANGES TO TERMS
+Corners reserves the right to modify these Terms at any time. Continued use of the Service after changes are posted constitutes acceptance of the revised Terms.
+
+9. GOVERNING LAW
+These Terms shall be governed by and construed in accordance with the laws of the United States, without regard to conflict of law principles.
+
+10. CONTACT
+For questions about these Terms, please contact us through the platform.`
+
 export default function Signup({ handleAuthEvt }) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -33,6 +84,8 @@ export default function Signup({ handleAuthEvt }) {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [showTerms, setShowTerms] = useState(false)
   const [error, setError] = useState('')
 
   function handleChange(e) {
@@ -42,6 +95,9 @@ export default function Signup({ handleAuthEvt }) {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    if (!agreedToTerms) {
+      return setError('You must agree to the Terms and Conditions to create an account.')
+    }
     if (formData.password !== confirmPassword) {
       return setError('Passwords do not match.')
     }
@@ -165,12 +221,48 @@ export default function Signup({ handleAuthEvt }) {
           </label>
         )}
 
+        <label className={styles.termsRow}>
+          <input
+            type="checkbox"
+            checked={agreedToTerms}
+            onChange={e => setAgreedToTerms(e.target.checked)}
+            className={styles.termsCheckbox}
+          />
+          <span>
+            I agree to the{' '}
+            <button type="button" className={styles.termsLink} onClick={() => setShowTerms(true)}>
+              Terms and Conditions
+            </button>
+          </span>
+        </label>
+
         <button type="submit" className={styles.submitBtn}>Sign Up</button>
       </form>
 
       <p className={styles.loginLink}>
         Already have an account? <Link to="/auth/login">Log in</Link>
       </p>
+
+      {/* ── Terms modal ── */}
+      {showTerms && (
+        <div className={styles.overlay} onClick={() => setShowTerms(false)}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Terms and Conditions</h3>
+              <button className={styles.closeBtn} onClick={() => setShowTerms(false)}>✕</button>
+            </div>
+            <pre className={styles.termsBody}>{TERMS_TEXT}</pre>
+            <div className={styles.modalFooter}>
+              <button
+                className={styles.agreeBtn}
+                onClick={() => { setAgreedToTerms(true); setShowTerms(false) }}
+              >
+                I Agree
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
