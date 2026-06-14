@@ -18,7 +18,7 @@ export default function PatronDashboard({ user }) {
   return (
     <div className={styles.page}>
       <header className={styles.greeting}>
-        <h1>Hey, {user?.name?.split(' ')[0]} 👋</h1>
+        <h1>Hey, {user?.name?.split(' ')[0]}.</h1>
         <p>Here's what's happening around you.</p>
       </header>
 

@@ -37,7 +37,7 @@ export default function BusinessDashboard({ user }) {
   return (
     <div className={styles.page}>
       <header className={styles.greeting}>
-        <h1>Welcome back{business?.displayName ? `, ${business.displayName}` : ''} 👋</h1>
+        <h1>Welcome back{business?.displayName ? `, ${business.displayName}` : ''}.</h1>
         {business?.businessType && <p>{business.businessType}</p>}
       </header>
 
