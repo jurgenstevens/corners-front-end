@@ -146,7 +146,7 @@
 
 /* ── Terms checkbox ── */
 .termsRow {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; flex-direction: row; align-items: center; gap: 10px;
   font-size: 0.88rem; color: var(--text);
   cursor: pointer; margin-top: 4px;
 }
