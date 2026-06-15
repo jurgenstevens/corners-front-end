@@ -20,7 +20,6 @@ const NavBar = ({ user, handleLogout }) => {
           </>
         ) : (
           <>
-            <span className={styles.welcome}>Hi, {user.name}</span>
             <NotificationBell user={user} />
             <button className={styles.navButton} onClick={handleLogout}>Log Out</button>
           </>
