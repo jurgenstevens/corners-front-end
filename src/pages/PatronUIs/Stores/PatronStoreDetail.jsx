@@ -147,6 +147,9 @@ export default function PatronStoreDetail({ user }) {
           <button className={`${styles.pill} ${activeTab === 'sales' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'sales' ? null : 'sales')}>
             Sales/Specials
           </button>
+          <button className={`${styles.pill} ${activeTab === 'inventory' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'inventory' ? null : 'inventory')}>
+            Inventory
+          </button>
           <button className={`${styles.pill} ${activeTab === 'request' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'request' ? null : 'request')}>
             Request An Item
           </button>
@@ -161,6 +164,35 @@ export default function PatronStoreDetail({ user }) {
             <span className={styles.toastIcon}>✓</span>
             Item Request Submitted
             <button className={styles.toastClose} onClick={() => setReqSuccess(false)}>✕</button>
+          </div>
+        )}
+
+        {activeTab === 'inventory' && (
+          <div className={styles.inventoryList}>
+            <h3>In-Store Products</h3>
+            {products.filter(p => p.status === 'stocked' || p.status === 'on_sale').length === 0 && (
+              <p className={styles.empty}>No products in store yet.</p>
+            )}
+            {products.filter(p => p.status === 'stocked' || p.status === 'on_sale').map(p => (
+              <div key={p._id} className={styles.invCard}>
+                {p.image && <img src={p.image} alt={p.name} className={styles.invImg} onError={e => e.target.style.display='none'} />}
+                <div className={styles.invInfo}>
+                  <h4>{p.name}</h4>
+                  {p.brand && <span className={styles.reqBrand}>{p.brand}</span>}
+                  {p.description && <p className={styles.invDesc}>{p.description}</p>}
+                  {p.status === 'on_sale' ? (
+                    <div className={styles.invPriceRow}>
+                      {p.price != null && <span className={styles.invOrigPrice}>${p.price}</span>}
+                      {p.salePrice != null && <span className={styles.invSalePrice}>${p.salePrice}</span>}
+                      {p.discountPercent != null && <span className={styles.invDiscount}>-{p.discountPercent}%</span>}
+                    </div>
+                  ) : (
+                    p.price != null && <span className={styles.invPrice}>${p.price}</span>
+                  )}
+                </div>
+                {p.status === 'on_sale' && <span className={styles.saleTag}>On Sale</span>}
+              </div>
+            ))}
           </div>
         )}
 

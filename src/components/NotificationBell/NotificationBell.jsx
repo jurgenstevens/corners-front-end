@@ -23,6 +23,7 @@ const ROUTES = {
   product_approved:     '/dashboard/patron/products',
   product_rejected:     '/dashboard/patron/products',
   product_ready:        '/dashboard/patron/products',
+  product_stocked:      '/dashboard/patron/products',
   product_needs_info:   '/dashboard/patron/products',
   product_updated:      '/dashboard/business/products',
 }
