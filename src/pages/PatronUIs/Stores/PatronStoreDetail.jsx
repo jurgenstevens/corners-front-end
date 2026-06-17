@@ -121,6 +121,21 @@ export default function PatronStoreDetail({ user }) {
 
         <hr className={styles.divider} />
 
+        <div className={styles.pillBtns}>
+          <button className={`${styles.pill} ${activeTab === 'request' ? styles.pillActive : styles.pillRequest}`} onClick={() => setActiveTab(t => t === 'request' ? null : 'request')}>
+            + Request An Item
+          </button>
+          <button className={`${styles.pill} ${activeTab === 'requests' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'requests' ? null : 'requests')}>
+            Requests
+          </button>
+          <button className={`${styles.pill} ${activeTab === 'inventory' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'inventory' ? null : 'inventory')}>
+            Inventory
+          </button>
+          <button className={`${styles.pill} ${activeTab === 'sales' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'sales' ? null : 'sales')}>
+            Sales/Specials
+          </button>
+        </div>
+
         {business.address && (
           <div className={styles.infoRow}><span>📍</span><span>{business.address}, {business.location?.city}, {business.location?.state} {business.location?.zip}</span></div>
         )}
@@ -142,21 +157,6 @@ export default function PatronStoreDetail({ user }) {
         )}
 
         {business.description && <p className={styles.description}>{business.description}</p>}
-
-        <div className={styles.pillBtns}>
-          <button className={`${styles.pill} ${activeTab === 'sales' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'sales' ? null : 'sales')}>
-            Sales/Specials
-          </button>
-          <button className={`${styles.pill} ${activeTab === 'inventory' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'inventory' ? null : 'inventory')}>
-            Inventory
-          </button>
-          <button className={`${styles.pill} ${activeTab === 'request' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'request' ? null : 'request')}>
-            Request An Item
-          </button>
-          <button className={`${styles.pill} ${activeTab === 'requests' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'requests' ? null : 'requests')}>
-            Requests
-          </button>
-        </div>
 
         {/* success toast — shown after a request is submitted successfully */}
         {reqSuccess && (

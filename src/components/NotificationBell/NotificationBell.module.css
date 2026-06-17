@@ -49,3 +49,15 @@
 }
 
 [data-theme='dark'] .item:hover { background: rgba(255,255,255,0.05); }
+
+@media (max-width: 640px) {
+  .dropdown {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    top: 72px;
+    width: calc(100vw - 32px);
+    max-width: 340px;
+  }
+}

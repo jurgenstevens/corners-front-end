@@ -59,6 +59,7 @@
   border-radius: 20px; padding: 8px 18px; cursor: pointer;
   font-size: 0.85rem; color: var(--text); transition: all 0.2s;
 }
+.pillRequest { background: #0F0F0F; border-color: #0F0F0F; color: #fff; }
 .pillActive { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 700; }
 
 /* ── Success toast ── */
