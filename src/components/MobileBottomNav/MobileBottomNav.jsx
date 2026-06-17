@@ -42,8 +42,8 @@ export default function MobileBottomNav({ user }) {
           <NavLink to="/dashboard/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🏷️</span><span className={styles.label}>Promotions</span>
           </NavLink>
-          <NavLink to="/profiles" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>👤</span><span className={styles.label}>Profile</span>
+          <NavLink to="/dashboard/patron/settings" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>⚙️</span><span className={styles.label}>Settings</span>
           </NavLink>
         </>
       )}
