@@ -18,6 +18,9 @@ import BusinessAnalytics from './pages/BusinessUIs/Analytics/BusinessAnalytics'
 import BusinessSettings from './pages/BusinessUIs/Settings/BusinessSettings'
 import BusinessPatronRequests from './pages/BusinessUIs/PatronRequests/BusinessPatronRequests'
 import BusinessSetup from './pages/BusinessUIs/Setup/BusinessSetup'
+import BusinessDistributors from './pages/BusinessUIs/Distributors/BusinessDistributors'
+import BusinessDistributorCatalog from './pages/BusinessUIs/Distributors/BusinessDistributorCatalog'
+import BusinessDistributorOrders from './pages/BusinessUIs/Distributors/BusinessDistributorOrders'
 // patron pages
 import PatronMyStores from './pages/PatronUIs/Stores/PatronMyStores'
 import PatronStoreDetail from './pages/PatronUIs/Stores/PatronStoreDetail'
@@ -113,6 +116,9 @@ function App() {
           <Route path="analytics"        element={<BusinessAnalytics />} />
           <Route path="settings"         element={<BusinessSettings />} />
           <Route path="patron-requests"  element={<BusinessPatronRequests />} />
+          <Route path="distributors"                    element={<BusinessDistributors />} />
+          <Route path="distributors/orders"             element={<BusinessDistributorOrders />} />
+          <Route path="distributors/:distributorId"     element={<BusinessDistributorCatalog />} />
         </Route>
 
         {/* Distributor */}

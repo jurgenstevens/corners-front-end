@@ -8,10 +8,11 @@ import analyticsImg from '../assets/analytics.png'
 import settingsImg  from '../assets/settings.png'
 
 const NAV_CARDS = [
-  { to: '/dashboard/business/products',        icon: productsImg,  label: 'Products',        sub: 'Manage your catalog'       },
-  { to: '/dashboard/business/patron-requests', icon: patronsImg,   label: 'Patron Requests', sub: 'Approve or deny patrons'   },
-  { to: '/dashboard/business/analytics',       icon: analyticsImg, label: 'Analytics',       sub: 'View your business stats'  },
-  { to: '/dashboard/business/setup',           icon: settingsImg,  label: 'Settings',        sub: 'Update your business info' },
+  { to: '/dashboard/business/products',        icon: productsImg,  label: 'Products',        sub: 'Manage your catalog'              },
+  { to: '/dashboard/business/patron-requests', icon: patronsImg,   label: 'Patron Requests', sub: 'Approve or deny patrons'          },
+  { to: '/dashboard/business/distributors',    icon: null, emoji: '🚛', label: 'Distributors',    sub: 'Order from nearby distributors'   },
+  { to: '/dashboard/business/analytics',       icon: analyticsImg, label: 'Analytics',       sub: 'View your business stats'         },
+  { to: '/dashboard/business/setup',           icon: settingsImg,  label: 'Settings',        sub: 'Update your business info'        },
 ]
 
 export default function BusinessDashboard({ user }) {
@@ -42,9 +43,14 @@ export default function BusinessDashboard({ user }) {
       </header>
 
       <section className={styles.cardGrid}>
-        {NAV_CARDS.map(({ to, icon, label, sub }) => (
+        {NAV_CARDS.map(({ to, icon, emoji, label, sub }) => (
           <Link key={to} to={to} className={styles.card}>
-            <div className={styles.iconWrapper}><img src={icon} alt={label} /></div>
+            <div className={styles.iconWrapper}>
+              {icon
+                ? <img src={icon} alt={label} />
+                : <span className={styles.cardEmoji}>{emoji}</span>
+              }
+            </div>
             <div>
               <h3 className={styles.cardLabel}>{label}</h3>
               <p className={styles.cardSub}>{sub}</p>
