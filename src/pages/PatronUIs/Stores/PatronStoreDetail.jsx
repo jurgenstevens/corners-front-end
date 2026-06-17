@@ -12,7 +12,7 @@ export default function PatronStoreDetail({ user }) {
   const navigate = useNavigate()
   const [business, setBusiness] = useState(null)
   const [products, setProducts] = useState([])
-  const [activeTab, setActiveTab] = useState(null)
+  const [activeTab, setActiveTab] = useState('info')
   const [photoIdx, setPhotoIdx] = useState(0)
   const [reqForm, setReqForm] = useState({ name:'', brand:'', description:'' })
   const [submitting, setSubmitting] = useState(false)
@@ -122,41 +122,47 @@ export default function PatronStoreDetail({ user }) {
         <hr className={styles.divider} />
 
         <div className={styles.pillBtns}>
-          <button className={`${styles.pill} ${activeTab === 'request' ? styles.pillActive : styles.pillRequest}`} onClick={() => setActiveTab(t => t === 'request' ? null : 'request')}>
+          <button className={`${styles.pill} ${activeTab === 'info' ? styles.pillActive : ''}`} onClick={() => setActiveTab('info')}>
+            Info
+          </button>
+          <button className={`${styles.pill} ${activeTab === 'request' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'request' ? 'info' : 'request')}>
             + Request An Item
           </button>
-          <button className={`${styles.pill} ${activeTab === 'requests' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'requests' ? null : 'requests')}>
+          <button className={`${styles.pill} ${activeTab === 'requests' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'requests' ? 'info' : 'requests')}>
             Requests
           </button>
-          <button className={`${styles.pill} ${activeTab === 'inventory' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'inventory' ? null : 'inventory')}>
+          <button className={`${styles.pill} ${activeTab === 'inventory' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'inventory' ? 'info' : 'inventory')}>
             Inventory
           </button>
-          <button className={`${styles.pill} ${activeTab === 'sales' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'sales' ? null : 'sales')}>
+          <button className={`${styles.pill} ${activeTab === 'sales' ? styles.pillActive : ''}`} onClick={() => setActiveTab(t => t === 'sales' ? 'info' : 'sales')}>
             Sales/Specials
           </button>
         </div>
 
-        {business.address && (
-          <div className={styles.infoRow}><span>📍</span><span>{business.address}, {business.location?.city}, {business.location?.state} {business.location?.zip}</span></div>
-        )}
-        {business.phone && (
-          <div className={styles.infoRow}><span>📞</span><a href={`tel:${business.phone}`}>{business.phone}</a></div>
-        )}
-        {DAYS.some(d => business.hours?.[d]) && (
-          <div className={styles.hours}>
-            <span>🕐</span>
-            <div>
-              {DAYS.filter(d => business.hours?.[d]).map(d => (
-                <div key={d} className={styles.hourRow}>
-                  <span>{d.charAt(0).toUpperCase() + d.slice(1)}</span>
-                  <span>{business.hours[d]}</span>
+        {activeTab === 'info' && (
+          <>
+            {business.address && (
+              <div className={styles.infoRow}><span>📍</span><span>{business.address}, {business.location?.city}, {business.location?.state} {business.location?.zip}</span></div>
+            )}
+            {business.phone && (
+              <div className={styles.infoRow}><span>📞</span><a href={`tel:${business.phone}`}>{business.phone}</a></div>
+            )}
+            {DAYS.some(d => business.hours?.[d]) && (
+              <div className={styles.hours}>
+                <span>🕐</span>
+                <div>
+                  {DAYS.filter(d => business.hours?.[d]).map(d => (
+                    <div key={d} className={styles.hourRow}>
+                      <span>{d.charAt(0).toUpperCase() + d.slice(1)}</span>
+                      <span>{business.hours[d]}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
+            {business.description && <p className={styles.description}>{business.description}</p>}
+          </>
         )}
-
-        {business.description && <p className={styles.description}>{business.description}</p>}
 
         {/* success toast — shown after a request is submitted successfully */}
         {reqSuccess && (
