@@ -1,0 +1,71 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 100px;
+}
+
+.loading { padding: 60px; text-align: center; color: var(--text-muted); }
+
+.greeting { margin-bottom: 28px; }
+.greeting h1 { font-size: 1.8rem; font-weight: 800; margin: 0 0 4px; }
+.greeting p  { font-size: 0.95rem; color: var(--text-muted); margin: 0; }
+
+/* ── Stats row ── */
+.stats {
+  display: flex; gap: 16px; margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.stat {
+  flex: 1; min-width: 120px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.statValue { font-size: 2rem; font-weight: 800; line-height: 1; }
+.statAlert  { color: var(--accent); }
+.statLabel  { font-size: 0.78rem; color: var(--text-muted); }
+
+/* ── Nav card grid ── */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 18px;
+  text-decoration: none; color: var(--text);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.iconWrapper {
+  position: relative; flex-shrink: 0;
+  width: 52px; height: 52px; border-radius: 14px;
+  background: rgba(245,158,11,0.12);
+  display: flex; align-items: center; justify-content: center;
+}
+.cardEmoji { font-size: 1.6rem; line-height: 1; }
+
+.cardBadge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--danger); color: #fff;
+  border-radius: 20px; padding: 1px 6px;
+  font-size: 0.7rem; font-weight: 700; min-width: 18px; text-align: center;
+}
+
+.cardText { flex: 1; min-width: 0; }
+.cardLabel { font-size: 0.95rem; font-weight: 700; margin: 0 0 2px; }
+.cardSub   { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
+.cardArrow { margin-left: auto; font-size: 1.4rem; color: var(--text-muted); flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .cardGrid { grid-template-columns: 1fr; }
+  .greeting h1 { font-size: 1.4rem; }
+  .stats { gap: 10px; }
+}

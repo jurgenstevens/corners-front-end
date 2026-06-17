@@ -1,0 +1,186 @@
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 100px; }
+.loading { padding: 40px; text-align: center; color: var(--text-muted); }
+
+.header { margin-bottom: 20px; }
+.header h2 { font-size: 1.4rem; font-weight: 800; margin: 0; }
+
+.tabs {
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none; margin-bottom: 20px;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0; background: transparent;
+  border: 1.5px solid var(--text-muted); border-radius: 20px;
+  padding: 6px 14px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+  transition: border-color 0.15s; white-space: nowrap;
+}
+.tab:hover { border-color: var(--text); }
+.tabActive { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+.tabCount {
+  background: var(--border); border-radius: 20px;
+  padding: 1px 6px; font-size: 0.7rem; font-weight: 700;
+}
+.tabCountAlert { background: var(--danger); color: #fff; }
+
+.list  { display: flex; flex-direction: column; gap: 14px; }
+.empty { color: var(--text-muted); font-size: 0.9rem; padding: 40px 0; text-align: center; }
+
+/* ── Order card ── */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.cardTop { display: flex; gap: 12px; align-items: flex-start; }
+.bizAvatar {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--border); color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 800; flex-shrink: 0;
+}
+.cardInfo { flex: 1; min-width: 0; }
+.cardTitleRow { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 2px; }
+.bizName  { font-size: 0.95rem; font-weight: 700; margin: 0; }
+.orderDate { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
+
+/* ── Status badges ── */
+.statusBadge {
+  font-size: 0.7rem; font-weight: 700;
+  border-radius: 20px; padding: 3px 10px; white-space: nowrap;
+}
+.statusPending   { background: #fef3c7; color: #b45309; }
+.statusQuoted    { background: #dbeafe; color: #1d4ed8; }
+.statusAccepted  { background: #dcfce7; color: #15803d; }
+.statusActive    { background: #ede9fe; color: #6d28d9; }
+.statusDone      { background: var(--border); color: var(--text-muted); }
+.statusCancelled { background: #fee2e2; color: #b91c1c; }
+
+:global([data-theme='dark']) .statusPending   { background: #451a03; color: #fbbf24; }
+:global([data-theme='dark']) .statusQuoted    { background: #1e3a5f; color: #93c5fd; }
+:global([data-theme='dark']) .statusAccepted  { background: #052e16; color: #4ade80; }
+:global([data-theme='dark']) .statusActive    { background: #2e1065; color: #c4b5fd; }
+:global([data-theme='dark']) .statusCancelled { background: #450a0a; color: #fca5a5; }
+
+/* ── Items list ── */
+.itemsList {
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
+}
+.itemRow {
+  display: flex; align-items: baseline; gap: 6px; font-size: 0.85rem;
+}
+.itemName  { flex: 1; font-weight: 600; }
+.itemUnit  { font-size: 0.75rem; color: var(--text-muted); }
+.itemQty   { color: var(--text-muted); font-size: 0.8rem; }
+.itemPrice { font-weight: 700; margin-left: auto; }
+.itemSubtotal {
+  display: flex; justify-content: space-between;
+  padding-top: 6px; border-top: 1px solid var(--border);
+  font-size: 0.82rem; color: var(--text-muted); font-weight: 600;
+}
+
+/* ── Order meta ── */
+.orderMeta { font-size: 0.8rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; }
+.orderMeta p { margin: 0; }
+.orderNotes { font-style: italic; }
+
+/* ── Action row ── */
+.actionRow { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.respondBtn {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 8px 18px;
+  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.respondBtn:hover { opacity: 0.88; }
+
+.declineBtn {
+  background: transparent; border: 1.5px solid var(--danger);
+  border-radius: 8px; padding: 8px 14px;
+  color: var(--danger); font-weight: 600; font-size: 0.85rem; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.declineBtn:hover { background: var(--danger); color: #fff; }
+.declineBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.statusBtn {
+  background: var(--info); color: #fff;
+  border: none; border-radius: 8px; padding: 8px 14px;
+  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.statusBtn:hover { opacity: 0.88; }
+
+.statusBtnSuccess {
+  background: var(--success); color: #000;
+  border: none; border-radius: 8px; padding: 8px 14px;
+  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.statusBtnSuccess:hover { opacity: 0.88; }
+
+/* ── Quote form ── */
+.quoteForm {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.quoteFormTitle { font-size: 0.9rem; font-weight: 700; margin: 0; }
+
+.fulfillToggle {
+  display: flex; border: 1.5px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.fulfillBtn {
+  flex: 1; background: transparent; border: none; padding: 8px;
+  cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+.fulfillActive { background: var(--accent); color: var(--accent-text); }
+
+.label {
+  display: flex; flex-direction: column; gap: 5px;
+  font-size: 0.82rem; font-weight: 600; color: var(--text);
+}
+
+.input {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 8px 10px; color: var(--text);
+  font-size: 0.88rem;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+
+.textarea {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 8px 10px; color: var(--text);
+  font-size: 0.88rem; resize: vertical; font-family: inherit;
+}
+.textarea:focus { outline: none; border-color: var(--accent); }
+
+.quoteTotalPreview {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 4px 16px; font-size: 0.82rem;
+  background: var(--bg-card); border-radius: 8px; padding: 10px 12px;
+}
+
+.quoteError { color: var(--danger); font-size: 0.82rem; margin: 0; }
+
+.quoteFormActions { display: flex; gap: 8px; }
+.cancelBtn {
+  flex: 1; background: transparent; border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 8px; cursor: pointer;
+  color: var(--text); font-weight: 600; font-size: 0.85rem;
+}
+.sendQuoteBtn {
+  flex: 2; background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 8px;
+  cursor: pointer; font-weight: 700; font-size: 0.85rem;
+}
+.sendQuoteBtn:disabled { opacity: 0.6; cursor: not-allowed; }

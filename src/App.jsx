@@ -30,6 +30,11 @@ import PatronRequests from './pages/PatronUIs/Requests/PatronRequests'
 import PatronPromotions from './pages/PatronUIs/Promotions/PatronPromotions'
 import PatronSettings from './pages/PatronUIs/Settings/PatronSettings'
 
+// distributor pages
+import DistributorOrders from './pages/DistributorUIs/DistributorOrders'
+import DistributorCatalog from './pages/DistributorUIs/DistributorCatalog'
+import DistributorSettings from './pages/DistributorUIs/DistributorSettings'
+
 // layout + components
 import DashboardLayout from './components/DashboardLayout/DashboardLayout'
 import NavBar from './components/NavBar/NavBar'
@@ -121,8 +126,23 @@ function App() {
           <Route path="distributors/:distributorId"     element={<BusinessDistributorCatalog />} />
         </Route>
 
-        {/* Distributor */}
-        <Route path="/dashboard/distributor" element={<ProtectedRoute user={user}><DistributorDashboard /></ProtectedRoute>} />
+        {/* ── Distributor (nested under /dashboard/distributor) ── */}
+        <Route
+          path="/dashboard/distributor"
+          element={
+            <ProtectedRoute user={user}>
+              <DashboardLayout
+                Dashboard={DistributorDashboard}
+                user={user}
+                homePath="/dashboard/distributor"
+              />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="orders"   element={<DistributorOrders />} />
+          <Route path="catalog"  element={<DistributorCatalog />} />
+          <Route path="settings" element={<DistributorSettings />} />
+        </Route>
       </Routes>
       <MobileBottomNav user={user} />
     </>

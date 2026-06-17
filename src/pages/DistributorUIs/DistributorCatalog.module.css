@@ -1,0 +1,156 @@
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 100px; }
+
+/* ── Section shared ── */
+.sectionTitle { font-size: 1.1rem; font-weight: 800; margin: 0 0 4px; }
+.sectionSub   { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 14px; }
+
+/* ── PDF Upload ── */
+.uploadSection {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px; margin-bottom: 28px;
+}
+
+.dropZone {
+  border: 2px dashed var(--border); border-radius: 10px;
+  padding: 18px; display: flex; align-items: center;
+  gap: 12px; flex-wrap: wrap;
+}
+
+.fileInput { display: none; }
+.fileLabel {
+  flex: 1; min-width: 160px;
+  font-size: 0.85rem; color: var(--text-muted);
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 8px 12px; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.fileLabel:hover { border-color: var(--accent); }
+
+.uploadBtn {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 8px 18px;
+  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  flex-shrink: 0; transition: opacity 0.15s;
+}
+.uploadBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.uploadBtn:not(:disabled):hover { opacity: 0.88; }
+
+.uploadingMsg { font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 0; }
+.uploadSuccess {
+  font-size: 0.85rem; color: var(--success);
+  font-weight: 700; margin: 8px 0 0;
+}
+.uploadError { font-size: 0.85rem; color: var(--danger); margin: 8px 0 0; }
+
+/* ── Catalog section ── */
+.catalogSection {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+}
+
+.catalogHeader {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+}
+
+.addBtn {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 7px 14px;
+  font-weight: 700; font-size: 0.82rem; cursor: pointer;
+}
+
+/* ── Category pills ── */
+.categoryFilter {
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none; margin-bottom: 14px;
+}
+.categoryFilter::-webkit-scrollbar { display: none; }
+
+.pill {
+  flex-shrink: 0; background: transparent;
+  border: 1.5px solid var(--text-muted); border-radius: 20px;
+  padding: 5px 13px; cursor: pointer;
+  font-size: 0.8rem; font-weight: 600; color: var(--text);
+  white-space: nowrap; transition: border-color 0.15s, background 0.15s;
+}
+.pill:hover { border-color: var(--text); }
+.pillActive { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+.loadingMsg { color: var(--text-muted); font-size: 0.9rem; }
+.empty { color: var(--text-muted); font-size: 0.9rem; padding: 20px 0; }
+
+/* ── Product list ── */
+.productList { display: flex; flex-direction: column; gap: 2px; }
+
+.productRow {
+  border-bottom: 1px solid var(--border); padding: 10px 0;
+}
+.productRow:last-child { border-bottom: none; }
+
+.productInfo { display: flex; flex-direction: column; gap: 4px; }
+.productMain { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.productName  { font-size: 0.9rem; font-weight: 700; }
+.productBrand { font-size: 0.75rem; color: var(--text-muted); }
+
+.catChip {
+  font-size: 0.65rem; font-weight: 700;
+  background: var(--border); color: var(--text-muted);
+  border-radius: 4px; padding: 2px 6px;
+}
+
+.productMeta {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.78rem; color: var(--text-muted);
+}
+.productPrice { font-weight: 700; color: var(--text); }
+.minQty { color: var(--text-muted); }
+
+.productActions { display: flex; gap: 6px; margin-top: 2px; }
+.editSmBtn {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 10px; cursor: pointer;
+  font-size: 0.75rem; font-weight: 600; color: var(--text);
+  transition: border-color 0.15s;
+}
+.editSmBtn:hover { border-color: var(--text); }
+.deactivateBtn {
+  background: transparent; border: 1px solid var(--danger);
+  border-radius: 6px; padding: 3px 10px; cursor: pointer;
+  font-size: 0.75rem; font-weight: 600; color: var(--danger);
+  transition: background 0.15s, color 0.15s;
+}
+.deactivateBtn:hover { background: var(--danger); color: #fff; }
+
+/* ── Inline form ── */
+.inlineForm {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; margin-bottom: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.formTitle { font-size: 0.9rem; font-weight: 700; margin: 0; }
+
+.formGrid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+@media (max-width: 500px) { .formGrid { grid-template-columns: 1fr; } }
+
+.input {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 7px 10px; color: var(--text);
+  font-size: 0.85rem; width: 100%; box-sizing: border-box;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+
+.formError { color: var(--danger); font-size: 0.8rem; margin: 0; }
+
+.formActions { display: flex; gap: 8px; }
+.cancelSmBtn {
+  flex: 1; background: transparent; border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 7px; cursor: pointer;
+  color: var(--text); font-weight: 600; font-size: 0.82rem;
+}
+.saveBtn {
+  flex: 2; background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 7px; padding: 7px;
+  cursor: pointer; font-weight: 700; font-size: 0.82rem;
+}
+.saveBtn:disabled { opacity: 0.6; cursor: not-allowed; }

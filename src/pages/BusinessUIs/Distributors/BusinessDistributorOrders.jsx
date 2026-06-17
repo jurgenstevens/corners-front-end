@@ -101,7 +101,7 @@ export default function BusinessDistributorOrders() {
         )}
         {filtered.map(order => {
           const distName = order.distributor?.name || order.distributor?.profile?.name || 'Distributor'
-          const itemNames = order.items?.slice(0, 2).map(i => i.productId?.name || i.name).filter(Boolean) || []
+          const itemNames = order.items?.slice(0, 2).map(i => i.name).filter(Boolean) || []
           const moreCount = Math.max(0, (order.items?.length || 0) - 2)
           const colorClass = STATUS_COLOR[order.status] || 'statusPending'
 
@@ -118,9 +118,9 @@ export default function BusinessDistributorOrders() {
                         ? `: ${itemNames.join(', ')}${moreCount > 0 ? ` +${moreCount} more` : ''}`
                         : ''}
                     </p>
-                    {(order.quote?.eta || order.preferredWindow) && (
+                    {(order.eta || order.preferredWindow) && (
                       <p className={styles.eta}>
-                        {order.quote?.eta ? `ETA: ${order.quote.eta}` : `Window: ${order.preferredWindow}`}
+                        {order.eta ? `ETA: ${new Date(order.eta).toLocaleDateString()}` : `Window: ${order.preferredWindow}`}
                       </p>
                     )}
                     {order.distributorNotes && (
@@ -133,8 +133,8 @@ export default function BusinessDistributorOrders() {
                   <span className={`${styles.statusBadge} ${styles[colorClass]}`}>
                     {STATUS_LABELS[order.status] || order.status}
                   </span>
-                  {['quoted', 'accepted', 'paid'].includes(order.status) && order.quote?.total != null && (
-                    <span className={styles.total}>${order.quote.total.toFixed(2)}</span>
+                  {['quoted', 'accepted', 'paid'].includes(order.status) && order.estimatedTotal != null && (
+                    <span className={styles.total}>${order.estimatedTotal.toFixed(2)}</span>
                   )}
                   {order.status === 'quoted' && (
                     <button
@@ -150,10 +150,10 @@ export default function BusinessDistributorOrders() {
               {/* Quote review expansion */}
               {order.status === 'quoted' && expanded[order._id] && (
                 <div className={styles.quoteExpansion}>
-                  {order.quote?.items?.length > 0 && (
+                  {order.items?.length > 0 && (
                     <div className={styles.quoteItems}>
-                      {order.quote.items.map((item, i) => {
-                        const lineTotal = item.lineTotal ?? (item.pricePerCase ?? 0) * (item.quantity ?? 0)
+                      {order.items.map((item, i) => {
+                        const lineTotal = (item.priceAtOrder ?? 0) * (item.quantity ?? 0)
                         return (
                           <div key={i} className={styles.quoteItem}>
                             <span>{item.name} × {item.quantity}</span>
@@ -164,28 +164,28 @@ export default function BusinessDistributorOrders() {
                     </div>
                   )}
 
-                  {order.quote?.deliveryFee != null && (
+                  {order.deliveryFee != null && (
                     <div className={styles.quoteLine}>
                       <span>Delivery fee</span>
-                      <span>${order.quote.deliveryFee.toFixed(2)}</span>
+                      <span>${order.deliveryFee.toFixed(2)}</span>
                     </div>
                   )}
 
-                  {order.quote?.total != null && (
+                  {order.estimatedTotal != null && (
                     <div className={`${styles.quoteLine} ${styles.quoteTotal}`}>
                       <strong>Total</strong>
-                      <strong>${order.quote.total.toFixed(2)}</strong>
+                      <strong>${order.estimatedTotal.toFixed(2)}</strong>
                     </div>
                   )}
 
-                  {order.quote?.eta && (
-                    <p className={styles.quoteDetail}>ETA: {order.quote.eta}</p>
+                  {order.eta && (
+                    <p className={styles.quoteDetail}>ETA: {new Date(order.eta).toLocaleDateString()}</p>
                   )}
-                  {order.quote?.pickupAddress && (
-                    <p className={styles.quoteDetail}>Pickup: {order.quote.pickupAddress}</p>
+                  {order.pickupAddress && (
+                    <p className={styles.quoteDetail}>Pickup: {order.pickupAddress}</p>
                   )}
-                  {order.quote?.pickupWindow && (
-                    <p className={styles.quoteDetail}>Pickup window: {order.quote.pickupWindow}</p>
+                  {order.pickupWindow && (
+                    <p className={styles.quoteDetail}>Pickup window: {order.pickupWindow}</p>
                   )}
                   {order.distributorNotes && (
                     <p className={styles.quoteNote}>"{order.distributorNotes}"</p>

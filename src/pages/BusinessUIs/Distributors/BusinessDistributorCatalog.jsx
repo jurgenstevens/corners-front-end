@@ -56,7 +56,7 @@ export default function BusinessDistributorCatalog() {
     setSubmitting(true)
     try {
       const result = await orderService.createOrder({
-        distributorId: distributor.profile._id,
+        distributorId: distributor._id,
         items: selectedItems.map(([productId, quantity]) => ({ productId, quantity })),
         fulfillmentType,
         deliveryAddress: fulfillmentType === 'delivery' ? deliveryAddress : undefined,

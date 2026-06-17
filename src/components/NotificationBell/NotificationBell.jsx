@@ -26,6 +26,11 @@ const ROUTES = {
   product_stocked:      '/dashboard/patron/products',
   product_needs_info:   '/dashboard/patron/products',
   product_updated:      '/dashboard/business/products',
+  order_request:        '/dashboard/distributor/orders',
+  order_quoted:         '/dashboard/business/distributors/orders',
+  order_accepted:       '/dashboard/distributor/orders',
+  order_declined:       '/dashboard/business/distributors/orders',
+  order_fulfilled:      '/dashboard/business/distributors/orders',
 }
 
 export default function NotificationBell({ user }) {
