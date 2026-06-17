@@ -1,8 +1,12 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import styles from './MobileBottomNav.module.css'
 
+const DASHBOARD_ROOTS = ['/dashboard/patron', '/dashboard/business', '/dashboard/distributor']
+
 export default function MobileBottomNav({ user }) {
+  const { pathname } = useLocation()
   if (!user) return null
+  if (DASHBOARD_ROOTS.includes(pathname)) return null
 
   const isPatron   = user.authorizationLevel >= 150 && user.authorizationLevel < 250
   const isBusiness = user.authorizationLevel >= 250 && user.authorizationLevel < 500
