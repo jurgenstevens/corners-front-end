@@ -1,7 +1,109 @@
-const BusinessSettings = () => {
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import * as authService from '../../../services/authService'
+import styles from './BusinessSettings.module.css'
+
+export default function BusinessSettings() {
+  const navigate = useNavigate()
+  const [pwForm, setPwForm] = useState({ password: '', newPassword: '', newPasswordConf: '' })
+  const [showPw, setShowPw] = useState({ current: false, next: false, conf: false })
+  const [pwSaving, setPwSaving] = useState(false)
+  const [pwMessage, setPwMessage] = useState('')
+  const [pwError, setPwError] = useState('')
+
+  async function handlePwSubmit(e) {
+    e.preventDefault()
+    setPwMessage('')
+    setPwError('')
+    if (pwForm.newPassword !== pwForm.newPasswordConf) return setPwError('New passwords do not match.')
+    if (pwForm.newPassword.length < 6) return setPwError('New password must be at least 6 characters.')
+    setPwSaving(true)
+    try {
+      await authService.changePassword(pwForm)
+      setPwForm({ password: '', newPassword: '', newPasswordConf: '' })
+      setPwMessage('Password updated successfully!')
+    } catch (err) {
+      setPwError(err.message || 'Failed to update password.')
+    } finally {
+      setPwSaving(false)
+    }
+  }
+
   return (
-    <div>This is BusinessSettings!</div>
+    <div className={styles.container}>
+      <h2 className={styles.heading}>Settings</h2>
+
+      <div className={styles.section}>
+        <p className={styles.sectionLabel}>Business Profile</p>
+        <p className={styles.sectionSub}>Update your business name, type, and location.</p>
+        <button className={styles.linkBtn} onClick={() => navigate('/dashboard/business/setup')}>
+          Edit Business Profile →
+        </button>
+      </div>
+
+      <hr className={styles.divider} />
+      <p className={styles.sectionLabel}>Change Password</p>
+
+      {pwMessage && <p className={styles.success}>{pwMessage}</p>}
+      {pwError   && <p className={styles.error}>{pwError}</p>}
+
+      <form onSubmit={handlePwSubmit} className={styles.form}>
+        <label className={styles.fieldLabel}>Current Password
+          <div className={styles.passwordWrap}>
+            <input
+              type={showPw.current ? 'text' : 'password'}
+              name="password"
+              value={pwForm.password}
+              onChange={e => setPwForm(p => ({ ...p, password: e.target.value }))}
+              className={styles.input}
+              autoComplete="current-password"
+            />
+            <button type="button" className={styles.eyeBtn} onClick={() => setShowPw(p => ({ ...p, current: !p.current }))}>
+              {showPw.current ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </label>
+
+        <label className={styles.fieldLabel}>New Password
+          <div className={styles.passwordWrap}>
+            <input
+              type={showPw.next ? 'text' : 'password'}
+              name="newPassword"
+              value={pwForm.newPassword}
+              onChange={e => setPwForm(p => ({ ...p, newPassword: e.target.value }))}
+              className={styles.input}
+              autoComplete="new-password"
+            />
+            <button type="button" className={styles.eyeBtn} onClick={() => setShowPw(p => ({ ...p, next: !p.next }))}>
+              {showPw.next ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </label>
+
+        <label className={styles.fieldLabel}>Confirm New Password
+          <div className={styles.passwordWrap}>
+            <input
+              type={showPw.conf ? 'text' : 'password'}
+              name="newPasswordConf"
+              value={pwForm.newPasswordConf}
+              onChange={e => setPwForm(p => ({ ...p, newPasswordConf: e.target.value }))}
+              className={styles.input}
+              autoComplete="new-password"
+            />
+            <button type="button" className={styles.eyeBtn} onClick={() => setShowPw(p => ({ ...p, conf: !p.conf }))}>
+              {showPw.conf ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </label>
+
+        <button
+          type="submit"
+          className={styles.saveBtn}
+          disabled={pwSaving || !pwForm.password || !pwForm.newPassword || !pwForm.newPasswordConf}
+        >
+          {pwSaving ? 'Updating…' : 'Change Password'}
+        </button>
+      </form>
+    </div>
   )
 }
-
-export default BusinessSettings
