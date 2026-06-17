@@ -59,7 +59,7 @@
   border-radius: 20px; padding: 8px 18px; cursor: pointer;
   font-size: 0.85rem; color: #fff; transition: all 0.2s;
 }
-.pillActive { background: #0F0F0F; border-color: #0F0F0F; color: #fff; font-weight: 700; }
+.pillActive { background: #F69E0C; border-color: #F69E0C; color: #000; font-weight: 700; }
 
 /* ── Success toast ── */
 .toast {
