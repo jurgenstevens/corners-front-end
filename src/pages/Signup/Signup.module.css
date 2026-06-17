@@ -150,7 +150,35 @@
   font-size: 0.88rem; color: var(--text);
   cursor: pointer; margin-top: 4px;
 }
-.termsCheckbox { width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; accent-color: #0d6efd; }
+.termsCheckbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid #555;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+.termsCheckbox:checked {
+  background: #0d6efd;
+  border-color: #0d6efd;
+}
+.termsCheckbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
 .termsLink {
   background: none; border: none; padding: 0;
   color: #0d6efd; text-decoration: underline;
@@ -195,6 +223,37 @@
   font-size: 0.95rem; font-weight: 700; cursor: pointer;
 }
 .agreeBtn:hover { background: #0b5ed7; }
+
+/* ── Distributor category checkboxes ── */
+.catSection { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.catLabel { font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text); }
+.catGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 480px) { .catGrid { grid-template-columns: repeat(3, 1fr); } }
+.catRow {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.85rem; cursor: pointer; color: var(--text);
+}
+.catCheckboxInput {
+  position: absolute; opacity: 0; width: 0; height: 0;
+}
+.catCheckboxCustom {
+  width: 16px; height: 16px; flex-shrink: 0;
+  border: 2px solid #555; border-radius: 3px;
+  background: #fff; position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+.catCheckboxInput:checked + .catCheckboxCustom {
+  background: #0d6efd; border-color: #0d6efd;
+}
+.catCheckboxInput:checked + .catCheckboxCustom::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 0px;
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
 
 /* ── Mobile ── */
 @media (max-width: 480px) {

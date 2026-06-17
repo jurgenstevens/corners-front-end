@@ -133,12 +133,33 @@
 }
 @media (max-width: 500px) { .formGrid { grid-template-columns: 1fr; } }
 
+.fieldLabel {
+  display: flex; flex-direction: column; gap: 4px;
+  font-size: 0.78rem; font-weight: 600; color: var(--text);
+}
+.fieldHint { font-size: 0.7rem; font-weight: 400; color: var(--text-muted); }
+
 .input {
   background: var(--bg-card); border: 1.5px solid var(--border);
   border-radius: 7px; padding: 7px 10px; color: var(--text);
   font-size: 0.85rem; width: 100%; box-sizing: border-box;
 }
 .input:focus { outline: none; border-color: var(--accent); }
+
+.selectWrap { position: relative; }
+.select {
+  appearance: none; -webkit-appearance: none;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 7px 30px 7px 10px; color: var(--text);
+  font-size: 0.85rem; width: 100%; box-sizing: border-box; cursor: pointer;
+}
+.select:focus { outline: none; border-color: var(--accent); }
+.selectArrow {
+  position: absolute; right: 10px; top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; color: var(--text);
+  font-size: 0.85rem; line-height: 1;
+}
 
 .formError { color: var(--danger); font-size: 0.8rem; margin: 0; }
 

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import * as authService from '../../services/authService'
+import * as distributorService from '../../services/distributorService'
 import styles from './Signup.module.css'
 import { redirectByRole } from '../../utils/redirectByRole'
 
@@ -11,6 +12,8 @@ const US_STATES = [
   'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
   'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
 ]
+
+const CATEGORIES = ['Beverages', 'Snacks', 'Dairy', 'Bakery', 'Meat', 'Produce', 'Frozen', 'Dry Goods', 'Tobacco', 'Alcohol', 'Other']
 
 const BUSINESS_TYPES = [
   'Convenience Store','Mini Mart','Hardware Store','Pharmacy','Grocery',
@@ -84,9 +87,18 @@ export default function Signup({ handleAuthEvt }) {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [distributorCompanyName, setDistributorCompanyName] = useState('')
+  const [distributorRegions, setDistributorRegions] = useState('')
+  const [distributorCategories, setDistributorCategories] = useState([])
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
   const [error, setError] = useState('')
+
+  function toggleDistributorCategory(cat) {
+    setDistributorCategories(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    )
+  }
 
   function handleChange(e) {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -110,11 +122,22 @@ export default function Signup({ handleAuthEvt }) {
     if (formData.role === 'Business' && !formData.businessType) {
       return setError('Business type is required.')
     }
+    if (formData.role === 'Distributor' && !distributorCompanyName.trim()) {
+      return setError('Company name is required for distributors.')
+    }
     try {
       const user = await authService.signup(formData)
       if (user.err) return setError(user.err)
       handleAuthEvt(user)
-      if (formData.role === 'Business') {
+      if (formData.role === 'Distributor') {
+        const serviceRegions = distributorRegions.split(',').map(s => s.trim()).filter(Boolean)
+        await distributorService.updateDistributor({
+          companyName: distributorCompanyName.trim(),
+          serviceRegions,
+          categories: distributorCategories,
+        })
+        redirectByRole(user, navigate)
+      } else if (formData.role === 'Business') {
         navigate('/dashboard/business/setup')
       } else {
         redirectByRole(user, navigate)
@@ -135,7 +158,7 @@ export default function Signup({ handleAuthEvt }) {
           <select name="role" value={formData.role} onChange={handleChange} className={styles.input}>
             <option value="Patron">Patron</option>
             <option value="Business">Business Owner</option>
-            <option value="Distributor">Distributor</option>
+            {/* <option value="Distributor">Distributor</option> — hidden until distributor launch */}
           </select>
         </label>
 
@@ -221,20 +244,65 @@ export default function Signup({ handleAuthEvt }) {
           </label>
         )}
 
-        <label className={styles.termsRow}>
+        {formData.role === 'Distributor' && (
+          <>
+            <label className={styles.fieldLabel}>Company Name *
+              <input
+                className={styles.input}
+                type="text"
+                value={distributorCompanyName}
+                onChange={e => setDistributorCompanyName(e.target.value)}
+                placeholder="Your company name"
+              />
+            </label>
+            <label className={styles.fieldLabel}>
+              Service Zip Codes <span className={styles.optional}>(comma-separated)</span>
+              <input
+                className={styles.input}
+                type="text"
+                value={distributorRegions}
+                onChange={e => setDistributorRegions(e.target.value)}
+                placeholder="60609, 60616, 60632…"
+              />
+            </label>
+            <div className={styles.catSection}>
+              <p className={styles.catLabel}>Categories You Carry</p>
+              <div className={styles.catGrid}>
+                {CATEGORIES.map(cat => (
+                  <label key={cat} className={styles.catRow}>
+                    <input
+                      type="checkbox"
+                      className={styles.catCheckboxInput}
+                      checked={distributorCategories.includes(cat)}
+                      onChange={() => toggleDistributorCategory(cat)}
+                    />
+                    <span className={styles.catCheckboxCustom} />
+                    <span>{cat}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        <div className={styles.termsRow}>
           <input
             type="checkbox"
             checked={agreedToTerms}
             onChange={e => setAgreedToTerms(e.target.checked)}
             className={styles.termsCheckbox}
           />
-          <span>
+          <span onClick={() => setAgreedToTerms(t => !t)}>
             I agree to the{' '}
-            <button type="button" className={styles.termsLink} onClick={() => setShowTerms(true)}>
+            <button
+              type="button"
+              className={styles.termsLink}
+              onClick={e => { e.stopPropagation(); setShowTerms(true) }}
+            >
               Terms and Conditions
             </button>
           </span>
-        </label>
+        </div>
 
         <button type="submit" className={styles.submitBtn}>Sign Up</button>
       </form>

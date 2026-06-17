@@ -8,7 +8,7 @@ import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
 import PatronDashboard from './pages/Dashboards/PatronDashboard'
 import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
-import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
+// import DistributorDashboard from './pages/Dashboards/DistributorDashboard' — hidden until distributor launch
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 // business pages
 import BusinessProducts from './pages/BusinessUIs/Products/BusinessProducts'
@@ -30,10 +30,10 @@ import PatronRequests from './pages/PatronUIs/Requests/PatronRequests'
 import PatronPromotions from './pages/PatronUIs/Promotions/PatronPromotions'
 import PatronSettings from './pages/PatronUIs/Settings/PatronSettings'
 
-// distributor pages
-import DistributorOrders from './pages/DistributorUIs/DistributorOrders'
-import DistributorCatalog from './pages/DistributorUIs/DistributorCatalog'
-import DistributorSettings from './pages/DistributorUIs/DistributorSettings'
+// distributor pages — hidden until distributor launch, re-enable with routes below
+// import DistributorOrders from './pages/DistributorUIs/DistributorOrders'
+// import DistributorCatalog from './pages/DistributorUIs/DistributorCatalog'
+// import DistributorSettings from './pages/DistributorUIs/DistributorSettings'
 
 // layout + components
 import DashboardLayout from './components/DashboardLayout/DashboardLayout'
@@ -126,7 +126,7 @@ function App() {
           <Route path="distributors/:distributorId"     element={<BusinessDistributorCatalog />} />
         </Route>
 
-        {/* ── Distributor (nested under /dashboard/distributor) ── */}
+        {/* ── Distributor routes — hidden until distributor launch, re-enable to test locally ──
         <Route
           path="/dashboard/distributor"
           element={
@@ -143,6 +143,7 @@ function App() {
           <Route path="catalog"  element={<DistributorCatalog />} />
           <Route path="settings" element={<DistributorSettings />} />
         </Route>
+        ── */}
       </Routes>
       <MobileBottomNav user={user} />
     </>

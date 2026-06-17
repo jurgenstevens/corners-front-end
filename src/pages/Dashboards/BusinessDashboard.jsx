@@ -10,7 +10,7 @@ import settingsImg  from '../assets/settings.png'
 const NAV_CARDS = [
   { to: '/dashboard/business/products',        icon: productsImg,  label: 'Products',        sub: 'Manage your catalog'              },
   { to: '/dashboard/business/patron-requests', icon: patronsImg,   label: 'Patron Requests', sub: 'Approve or deny patrons'          },
-  { to: '/dashboard/business/distributors',    icon: null, emoji: '🚛', label: 'Distributors',    sub: 'Order from nearby distributors'   },
+  // { to: '/dashboard/business/distributors', icon: null, emoji: '🚛', label: 'Distributors', sub: 'Order from nearby distributors' }, // Hidden until distributor launch
   { to: '/dashboard/business/analytics',       icon: analyticsImg, label: 'Analytics',       sub: 'View your business stats'         },
   { to: '/dashboard/business/setup',           icon: settingsImg,  label: 'Settings',        sub: 'Update your business info'        },
 ]

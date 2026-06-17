@@ -173,16 +173,40 @@ export default function DistributorCatalog() {
           <div className={styles.inlineForm}>
             <h4 className={styles.formTitle}>New Product</h4>
             <div className={styles.formGrid}>
-              <input className={styles.input} placeholder="Name *" value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
-              <input className={styles.input} placeholder="Brand" value={addForm.brand} onChange={e => setAddForm(f => ({ ...f, brand: e.target.value }))} />
-              <select className={styles.input} value={addForm.category} onChange={e => setAddForm(f => ({ ...f, category: e.target.value }))}>
-                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-              <input className={styles.input} placeholder="Unit size (e.g. 12 × 16oz)" value={addForm.unitSize} onChange={e => setAddForm(f => ({ ...f, unitSize: e.target.value }))} />
-              <input className={styles.input} type="number" placeholder="Price per case *" min="0" step="0.01" value={addForm.pricePerCase} onChange={e => setAddForm(f => ({ ...f, pricePerCase: e.target.value }))} />
-              <input className={styles.input} type="number" placeholder="Min order qty" min="1" value={addForm.minOrderQty} onChange={e => setAddForm(f => ({ ...f, minOrderQty: e.target.value }))} />
+              <label className={styles.fieldLabel}>
+                Product Name *
+                <input className={styles.input} value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
+              </label>
+              <label className={styles.fieldLabel}>
+                Brand
+                <input className={styles.input} value={addForm.brand} onChange={e => setAddForm(f => ({ ...f, brand: e.target.value }))} />
+              </label>
+              <label className={styles.fieldLabel}>
+                Category
+                <div className={styles.selectWrap}>
+                  <select className={styles.select} value={addForm.category} onChange={e => setAddForm(f => ({ ...f, category: e.target.value }))}>
+                    {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <span className={styles.selectArrow}>▾</span>
+                </div>
+              </label>
+              <label className={styles.fieldLabel}>
+                Unit Size <span className={styles.fieldHint}>(e.g. 12 × 16oz)</span>
+                <input className={styles.input} value={addForm.unitSize} onChange={e => setAddForm(f => ({ ...f, unitSize: e.target.value }))} />
+              </label>
+              <label className={styles.fieldLabel}>
+                Price Per Case ($) *
+                <input className={styles.input} type="number" min="0" step="0.01" value={addForm.pricePerCase} onChange={e => setAddForm(f => ({ ...f, pricePerCase: e.target.value }))} />
+              </label>
+              <label className={styles.fieldLabel}>
+                Min. Order Qty
+                <input className={styles.input} type="number" min="1" value={addForm.minOrderQty} onChange={e => setAddForm(f => ({ ...f, minOrderQty: e.target.value }))} />
+              </label>
             </div>
-            <input className={styles.input} placeholder="Description" value={addForm.description} onChange={e => setAddForm(f => ({ ...f, description: e.target.value }))} />
+            <label className={styles.fieldLabel}>
+              Description
+              <input className={styles.input} value={addForm.description} onChange={e => setAddForm(f => ({ ...f, description: e.target.value }))} />
+            </label>
             {addError && <p className={styles.formError}>{addError}</p>}
             <button className={styles.saveBtn} onClick={handleAddProduct} disabled={addSaving}>
               {addSaving ? 'Saving…' : 'Add Product'}
@@ -215,16 +239,40 @@ export default function DistributorCatalog() {
               {editId === p._id ? (
                 <div className={styles.inlineForm}>
                   <div className={styles.formGrid}>
-                    <input className={styles.input} placeholder="Name *" value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} />
-                    <input className={styles.input} placeholder="Brand" value={editForm.brand} onChange={e => setEditForm(f => ({ ...f, brand: e.target.value }))} />
-                    <select className={styles.input} value={editForm.category} onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))}>
-                      {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <input className={styles.input} placeholder="Unit size" value={editForm.unitSize} onChange={e => setEditForm(f => ({ ...f, unitSize: e.target.value }))} />
-                    <input className={styles.input} type="number" placeholder="Price per case" min="0" step="0.01" value={editForm.pricePerCase} onChange={e => setEditForm(f => ({ ...f, pricePerCase: e.target.value }))} />
-                    <input className={styles.input} type="number" placeholder="Min order qty" min="1" value={editForm.minOrderQty} onChange={e => setEditForm(f => ({ ...f, minOrderQty: e.target.value }))} />
+                    <label className={styles.fieldLabel}>
+                      Product Name *
+                      <input className={styles.input} value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} />
+                    </label>
+                    <label className={styles.fieldLabel}>
+                      Brand
+                      <input className={styles.input} value={editForm.brand} onChange={e => setEditForm(f => ({ ...f, brand: e.target.value }))} />
+                    </label>
+                    <label className={styles.fieldLabel}>
+                      Category
+                      <div className={styles.selectWrap}>
+                        <select className={styles.select} value={editForm.category} onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))}>
+                          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                        <span className={styles.selectArrow}>▾</span>
+                      </div>
+                    </label>
+                    <label className={styles.fieldLabel}>
+                      Unit Size <span className={styles.fieldHint}>(e.g. 12 × 16oz)</span>
+                      <input className={styles.input} value={editForm.unitSize} onChange={e => setEditForm(f => ({ ...f, unitSize: e.target.value }))} />
+                    </label>
+                    <label className={styles.fieldLabel}>
+                      Price Per Case ($) *
+                      <input className={styles.input} type="number" min="0" step="0.01" value={editForm.pricePerCase} onChange={e => setEditForm(f => ({ ...f, pricePerCase: e.target.value }))} />
+                    </label>
+                    <label className={styles.fieldLabel}>
+                      Min. Order Qty
+                      <input className={styles.input} type="number" min="1" value={editForm.minOrderQty} onChange={e => setEditForm(f => ({ ...f, minOrderQty: e.target.value }))} />
+                    </label>
                   </div>
-                  <input className={styles.input} placeholder="Description" value={editForm.description} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
+                  <label className={styles.fieldLabel}>
+                    Description
+                    <input className={styles.input} value={editForm.description} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
+                  </label>
                   {editError && <p className={styles.formError}>{editError}</p>}
                   <div className={styles.formActions}>
                     <button className={styles.cancelSmBtn} onClick={() => setEditId(null)} disabled={editSaving}>Cancel</button>

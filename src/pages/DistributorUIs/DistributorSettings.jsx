@@ -91,9 +91,11 @@ export default function DistributorSettings() {
               <label key={cat} className={styles.checkboxRow}>
                 <input
                   type="checkbox"
+                  className={styles.checkboxInput}
                   checked={selectedCategories.includes(cat)}
                   onChange={() => toggleCategory(cat)}
                 />
+                <span className={styles.checkboxCustom} />
                 <span>{cat}</span>
               </label>
             ))}

@@ -44,22 +44,27 @@ const Landing = () => {
           </p>
         </div>
 
+        {/* Distributor feature card — hidden until distributor launch
         <div className={styles.featureCard}>
           <h3>Direct Supply Connections</h3>
           <p>
             Distributors and businesses connect directly to fulfill real demand faster and smarter.
           </p>
         </div>
+        */}
       </section>
 
       {/* How It Works */}
       <section className={styles.howItWorks}>
         <h2>How Corners Works</h2>
         <ol>
-          <li>Create an account as a Patron, Business, or Distributor.</li>
+          <li>Create an account as a Patron or Business.</li>
           <li>Patrons request products they’re looking for.</li>
-          <li>Businesses and distributors fulfill those requests.</li>
+          <li>Businesses fulfill those requests.</li>
           <li>Everyone wins — faster discovery, stronger local commerce.</li>
+          {/* Distributor step hidden until launch:
+          <li>Businesses and distributors fulfill those requests.</li>
+          */}
         </ol>
       </section>
 
