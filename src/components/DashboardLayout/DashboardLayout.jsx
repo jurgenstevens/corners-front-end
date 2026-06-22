@@ -1,11 +1,14 @@
-import { useOutlet, useNavigate } from 'react-router-dom'
+import { useOutlet, useNavigate, useLocation } from 'react-router-dom'
 import styles from './DashboardLayout.module.css'
 
 export default function DashboardLayout({ Dashboard, user, homePath }) {
   const outlet   = useOutlet()
   const navigate = useNavigate()
+  const location = useLocation()
 
-  function close() { navigate(homePath) }
+  const isSetupLocked = location.pathname === '/dashboard/business/setup'
+
+  function close() { if (!isSetupLocked) navigate(homePath) }
 
   return (
     <div className={styles.root}>
@@ -17,15 +20,17 @@ export default function DashboardLayout({ Dashboard, user, homePath }) {
       {/* ── Sidebar ── */}
       {outlet && (
         <>
-          {/* Desktop backdrop */}
-          <div className={styles.backdrop} onClick={close} />
+          {/* Desktop backdrop — not clickable during required setup */}
+          <div className={styles.backdrop} onClick={isSetupLocked ? undefined : close} />
 
           <div className={styles.sidebar}>
-            {/* Sticky header with X at top-left */}
+            {/* Sticky header with X at top-left — hidden during required setup */}
             <div className={styles.sidebarHeader}>
-              <button className={styles.closeBtn} onClick={close} aria-label="Close">
-                ✕
-              </button>
+              {!isSetupLocked && (
+                <button className={styles.closeBtn} onClick={close} aria-label="Close">
+                  ✕
+                </button>
+              )}
             </div>
 
             <div className={styles.sidebarInner}>

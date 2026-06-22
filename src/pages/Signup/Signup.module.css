@@ -50,6 +50,13 @@
   opacity: 0.6;
 }
 
+.hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 0;
+  padding: 2px 0;
+}
+
 /* ── Inputs: always white bg + black border + black text ── */
 .input {
   padding: 10px 12px;

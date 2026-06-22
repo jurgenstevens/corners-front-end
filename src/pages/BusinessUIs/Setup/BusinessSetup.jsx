@@ -23,6 +23,7 @@ export default function BusinessSetup() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
+  const [stepError, setStepError] = useState('')
   const [form, setForm] = useState({
     businessType: '', description: '', visibility: 'public', priceTier: '$',
     address: '', zip: '', city: '', state: '', phone: '',
@@ -55,6 +56,20 @@ export default function BusinessSetup() {
 
   function handleHours(day, val) {
     setForm(prev => ({ ...prev, hours: { ...prev.hours, [day]: val } }))
+  }
+
+  function handleStep2Next() {
+    setStepError('')
+    const addr = form.address.trim()
+    const zip  = form.zip.trim()
+    const city = form.city.trim()
+    if (!addr) return setStepError('Street address is required.')
+    if (!/^\d+\s+\S/.test(addr)) return setStepError('Enter a valid street address starting with a house number (e.g. 123 Main St).')
+    if (!/^\d{5}$/.test(zip)) return setStepError('Zip code must be exactly 5 digits.')
+    if (!city) return setStepError('City is required.')
+    if (!/^[A-Za-z\s\-'.]+$/.test(city)) return setStepError('City name may only contain letters, spaces, and hyphens.')
+    if (!form.state) return setStepError('State is required.')
+    setStep(3)
   }
 
   async function handleFinish() {
@@ -116,16 +131,16 @@ export default function BusinessSetup() {
       {step === 2 && (
         <div className={styles.section}>
           <h3>Location & Contact</h3>
-          <label>Street Address
-            <input name="address" value={form.address} onChange={handleChange} />
+          <label>Street Address *
+            <input name="address" value={form.address} onChange={handleChange} placeholder="e.g. 123 Main St" />
           </label>
           <label>Zip Code *
-            <input name="zip" value={form.zip} onChange={handleChange} required />
+            <input name="zip" value={form.zip} onChange={handleChange} maxLength={5} placeholder="5-digit zip" />
           </label>
-          <label>City
+          <label>City *
             <input name="city" value={form.city} onChange={handleChange} />
           </label>
-          <label>State
+          <label>State *
             <select name="state" value={form.state} onChange={handleChange}>
               <option value="">Select state…</option>
               {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -134,9 +149,10 @@ export default function BusinessSetup() {
           <label>Phone
             <input name="phone" value={form.phone} onChange={handleChange} />
           </label>
+          {stepError && <p className={styles.error}>{stepError}</p>}
           <div className={styles.btns}>
-            <button className={styles.back} onClick={() => setStep(1)}>← Back</button>
-            <button className={styles.next} onClick={() => setStep(3)} disabled={!form.zip}>Next →</button>
+            <button className={styles.back} onClick={() => { setStepError(''); setStep(1) }}>← Back</button>
+            <button className={styles.next} onClick={handleStep2Next}>Next →</button>
           </div>
         </div>
       )}

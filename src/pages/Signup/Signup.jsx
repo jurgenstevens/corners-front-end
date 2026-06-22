@@ -104,6 +104,14 @@ export default function Signup({ handleAuthEvt }) {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
+  function validatePasswordComplexity(pw) {
+    if (pw.length < 8) return 'Password must be at least 8 characters.'
+    if (!/[A-Z]/.test(pw)) return 'Password must include at least one uppercase letter.'
+    if (!/[0-9]/.test(pw)) return 'Password must include at least one number.'
+    if (!/[^A-Za-z0-9]/.test(pw)) return 'Password must include at least one special character (e.g. !@#$%).'
+    return null
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
@@ -113,6 +121,8 @@ export default function Signup({ handleAuthEvt }) {
     if (formData.password !== confirmPassword) {
       return setError('Passwords do not match.')
     }
+    const pwErr = validatePasswordComplexity(formData.password)
+    if (pwErr) return setError(pwErr)
     if (formData.role === 'Patron' && !formData.zip) {
       return setError('Zip code is required for patrons.')
     }
@@ -178,7 +188,7 @@ export default function Signup({ handleAuthEvt }) {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength={6}
+              minLength={8}
               className={styles.input}
             />
             <button
@@ -190,6 +200,7 @@ export default function Signup({ handleAuthEvt }) {
               {showPw ? 'Hide' : 'Show'}
             </button>
           </div>
+          <p className={styles.hint}>Min 8 characters · 1 uppercase · 1 number · 1 special character</p>
         </label>
 
         <label className={styles.fieldLabel}>Confirm Password
@@ -199,7 +210,7 @@ export default function Signup({ handleAuthEvt }) {
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               className={styles.input}
               placeholder="Re-enter password"
             />
