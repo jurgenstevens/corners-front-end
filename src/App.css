@@ -38,6 +38,23 @@
   --btn-hover:   #e5e5e5;
 }
 
+/* CSS-only fallback for system dark mode on the rare frame before the
+   inline script fires. Skipped if the user has explicitly chosen light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg:          #0f0f0f;
+    --bg-card:     #1a1a1a;
+    --text:        #ffffff;
+    --text-muted:  #999999;
+    --border:      #2e2e2e;
+    --accent:      #f59e0b;
+    --accent-text: #000000;
+    --btn-bg:      #ffffff;
+    --btn-text:    #000000;
+    --btn-hover:   #e5e5e5;
+  }
+}
+
 /* =========================
    Aliases (backwards compat for older CSS modules)
 ========================= */
