@@ -200,7 +200,12 @@ export default function Signup({ handleAuthEvt }) {
               {showPw ? 'Hide' : 'Show'}
             </button>
           </div>
-          <p className={styles.hint}>Min 8 characters · 1 uppercase · 1 number · 1 special character</p>
+          <ul className={styles.requirementsList}>
+            <li className={formData.password.length >= 8 ? styles.requirementMet : styles.requirement}>Min 8 characters</li>
+            <li className={/[A-Z]/.test(formData.password) ? styles.requirementMet : styles.requirement}>1 uppercase letter</li>
+            <li className={/[0-9]/.test(formData.password) ? styles.requirementMet : styles.requirement}>1 number</li>
+            <li className={/[^A-Za-z0-9]/.test(formData.password) ? styles.requirementMet : styles.requirement}>1 special character</li>
+          </ul>
         </label>
 
         <label className={styles.fieldLabel}>Confirm Password

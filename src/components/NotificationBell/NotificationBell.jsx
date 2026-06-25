@@ -31,6 +31,10 @@ const ROUTES = {
   order_accepted:       '/dashboard/distributor/orders',
   order_declined:       '/dashboard/business/distributors/orders',
   order_fulfilled:      '/dashboard/business/distributors/orders',
+  // Message notifications don't navigate — the MessageInbox toggle button
+  // on the dashboard lets the user open the inbox panel directly.
+  new_message:          null,
+  admin_message:        null,
 }
 
 export default function NotificationBell({ user }) {

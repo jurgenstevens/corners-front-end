@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import BugReportModal from '../../components/BugReportModal/BugReportModal'
+import MessageInbox from '../../components/MessageInbox/MessageInbox'
 import styles from './PatronDashboard.module.css'
 import storesImg     from '../assets/stores.png'
 import productsImg   from '../assets/products.png'
@@ -15,6 +18,8 @@ const QUICK_LINKS = [
 ]
 
 export default function PatronDashboard({ user }) {
+  const [showBugReport, setShowBugReport] = useState(false)
+
   return (
     <div className={styles.page}>
       <header className={styles.greeting}>
@@ -34,6 +39,15 @@ export default function PatronDashboard({ user }) {
           </Link>
         ))}
       </section>
+
+      <footer className={styles.footer}>
+        <button className={styles.bugLink} onClick={() => setShowBugReport(true)}>
+          Found a bug? Report it →
+        </button>
+      </footer>
+
+      <BugReportModal isOpen={showBugReport} onClose={() => setShowBugReport(false)} user={user} />
+      <MessageInbox user={user} />
     </div>
   )
 }

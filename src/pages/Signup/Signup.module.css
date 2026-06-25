@@ -50,11 +50,24 @@
   opacity: 0.6;
 }
 
-.hint {
+.requirementsList {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.requirement {
   font-size: 0.75rem;
-  color: #666;
-  margin: 0;
-  padding: 2px 0;
+  color: #888;
+}
+
+.requirementMet {
+  font-size: 0.75rem;
+  color: #16a34a;
+  font-weight: 600;
 }
 
 /* ── Inputs: always white bg + black border + black text ── */

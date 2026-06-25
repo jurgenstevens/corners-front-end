@@ -69,6 +69,26 @@
 }
 .eyeBtn:hover { color: var(--text); }
 
+.requirementsList {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.requirement {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.requirementMet {
+  font-size: 0.72rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
 .saveBtn {
   margin-top: 4px;
   padding: 12px;

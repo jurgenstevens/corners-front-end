@@ -1,0 +1,153 @@
+/* All values hardcoded — this page is always dark regardless of app theme */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0f0f14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 40px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.heading {
+  font-size: 26px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0 0 28px;
+  letter-spacing: -0.3px;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 13px 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #2a2a4a;
+  background: #0f0f14;
+  color: #e2e8f0;
+  outline: none;
+  transition: border-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: #4a4a6a;
+}
+
+.input:focus {
+  border-color: #6366f1;
+}
+
+.passwordWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrap .input {
+  padding-right: 60px;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4a4a6a;
+  padding: 4px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.1s ease;
+}
+
+.eyeBtn:hover {
+  color: #e2e8f0;
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: 4px;
+  padding: 13px 0;
+  border-radius: 8px;
+  border: none;
+  background: #6366f1;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.05s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.submitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.backLink {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #4a4a6a;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.backLink:hover {
+  color: #e2e8f0;
+}

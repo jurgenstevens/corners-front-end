@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 
 // pages
 import Signup from './pages/Signup/Signup'
@@ -35,6 +35,19 @@ import PatronSettings from './pages/PatronUIs/Settings/PatronSettings'
 // import DistributorCatalog from './pages/DistributorUIs/DistributorCatalog'
 // import DistributorSettings from './pages/DistributorUIs/DistributorSettings'
 
+// admin
+import AdminLogin from './pages/Admin/AdminLogin'
+import AdminDashboard from './pages/Admin/AdminDashboard'
+import AdminOverview from './pages/Admin/AdminOverview'
+import AdminPatrons from './pages/Admin/AdminPatrons'
+import AdminStores from './pages/Admin/AdminStores'
+import AdminBusinessDetail from './pages/Admin/AdminBusinessDetail'
+import AdminProducts from './pages/Admin/AdminProducts'
+import AdminDistribution from './pages/Admin/AdminDistribution'
+import AdminBugReports from './pages/Admin/AdminBugReports'
+import AdminAnalytics from './pages/Admin/AdminAnalytics'
+import AdminSettings from './pages/Admin/AdminSettings'
+
 // layout + components
 import DashboardLayout from './components/DashboardLayout/DashboardLayout'
 import NavBar from './components/NavBar/NavBar'
@@ -47,6 +60,12 @@ import * as authService from './services/authService'
 // styles
 import './App.css'
 
+function AdminGuard({ user, children }) {
+  if (!user) return <Navigate to="/admin/login" replace />
+  if (user.authorizationLevel !== 100) return <Navigate to="/" replace />
+  return children
+}
+
 function getDashboard(user) {
   if (!user) return '/'
   if (user.authorizationLevel >= 500) return '/dashboard/distributor'
@@ -57,6 +76,8 @@ function getDashboard(user) {
 function App() {
   const [user, setUser] = useState(authService.getUser())
   const navigate = useNavigate()
+  const location = useLocation()
+  const isAdminPath = location.pathname.startsWith('/dashboard/admin') || location.pathname.startsWith('/admin/login')
 
   const handleLogout = () => {
     authService.logout()
@@ -70,8 +91,11 @@ function App() {
 
   return (
     <>
-      <NavBar user={user} handleLogout={handleLogout} />
+      {!isAdminPath && <NavBar user={user} handleLogout={handleLogout} />}
       <Routes>
+        {/* Admin — standalone, no auth guard, dark login */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
         {/* Public */}
         <Route path="/" element={user ? <Navigate to={getDashboard(user)} replace /> : <Landing />} />
         <Route path="/auth/signup" element={<Signup handleAuthEvt={handleAuthEvt} />} />
@@ -144,8 +168,27 @@ function App() {
           <Route path="settings" element={<DistributorSettings />} />
         </Route>
         ── */}
+        {/* ── Admin dashboard (nested under /dashboard/admin) ── */}
+        <Route
+          path="/dashboard/admin"
+          element={
+            <AdminGuard user={user}>
+              <AdminDashboard user={user} />
+            </AdminGuard>
+          }
+        >
+          <Route index element={<AdminOverview />} />
+          <Route path="patrons" element={<AdminPatrons />} />
+          <Route path="stores" element={<AdminStores />} />
+          <Route path="stores/:id" element={<AdminBusinessDetail />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="distribution" element={<AdminDistribution />} />
+          <Route path="bug-reports" element={<AdminBugReports />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="settings" element={<AdminSettings user={user} />} />
+        </Route>
       </Routes>
-      <MobileBottomNav user={user} />
+      {!isAdminPath && <MobileBottomNav user={user} />}
     </>
   )
 }

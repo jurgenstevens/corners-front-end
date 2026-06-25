@@ -7,6 +7,11 @@ const AUTH_LEVEL_TO_ROUTE = {
 export function redirectByRole(user, navigate) {
   if (!user || user.authorizationLevel == null) return
 
+  if (user.authorizationLevel === 100) {
+    navigate('/dashboard/admin')
+    return
+  }
+
   const route = AUTH_LEVEL_TO_ROUTE[user.authorizationLevel]
 
   if (!route) {

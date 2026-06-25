@@ -40,6 +40,23 @@
 .cardSub   { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
 .cardArrow { margin-left: auto; font-size: 1.4rem; color: var(--text-muted); flex-shrink: 0; }
 
+.footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.bugLink {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+.bugLink:hover { color: var(--text); }
+
 @media (max-width: 500px) {
   .cardGrid { grid-template-columns: 1fr; gap: 10px; }
   .card { padding: 14px 12px; }

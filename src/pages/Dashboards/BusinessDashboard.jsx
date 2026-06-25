@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as businessService from '../../services/businessService'
+import BugReportModal from '../../components/BugReportModal/BugReportModal'
+import MessageInbox from '../../components/MessageInbox/MessageInbox'
 import styles from './BusinessDashboard.module.css'
 import productsImg  from '../assets/products.png'
 import patronsImg   from '../assets/patrons.jpg'
@@ -19,6 +21,7 @@ export default function BusinessDashboard({ user }) {
   const navigate = useNavigate()
   const [business, setBusiness] = useState(null)
   const [loading, setLoading]   = useState(true)
+  const [showBugReport, setShowBugReport] = useState(false)
 
   useEffect(() => {
     businessService.getMyBusiness()
@@ -59,6 +62,15 @@ export default function BusinessDashboard({ user }) {
           </Link>
         ))}
       </section>
+
+      <footer className={styles.footer}>
+        <button className={styles.bugLink} onClick={() => setShowBugReport(true)}>
+          Found a bug? Report it →
+        </button>
+      </footer>
+
+      <BugReportModal isOpen={showBugReport} onClose={() => setShowBugReport(false)} user={user} />
+      <MessageInbox user={user} />
     </div>
   )
 }

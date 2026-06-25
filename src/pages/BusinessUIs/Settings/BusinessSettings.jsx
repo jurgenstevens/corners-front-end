@@ -3,6 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import * as authService from '../../../services/authService'
 import styles from './BusinessSettings.module.css'
 
+function validatePassword(pw) {
+  if (pw.length < 8) return 'Password must be at least 8 characters.'
+  if (!/[A-Z]/.test(pw)) return 'Must include at least one uppercase letter.'
+  if (!/[0-9]/.test(pw)) return 'Must include at least one number.'
+  if (!/[^A-Za-z0-9]/.test(pw)) return 'Must include at least one special character.'
+  return null
+}
+
 export default function BusinessSettings() {
   const navigate = useNavigate()
   const [pwForm, setPwForm] = useState({ password: '', newPassword: '', newPasswordConf: '' })
@@ -16,7 +24,8 @@ export default function BusinessSettings() {
     setPwMessage('')
     setPwError('')
     if (pwForm.newPassword !== pwForm.newPasswordConf) return setPwError('New passwords do not match.')
-    if (pwForm.newPassword.length < 6) return setPwError('New password must be at least 6 characters.')
+    const pwErr = validatePassword(pwForm.newPassword)
+    if (pwErr) return setPwError(pwErr)
     setPwSaving(true)
     try {
       await authService.changePassword(pwForm)
@@ -78,6 +87,12 @@ export default function BusinessSettings() {
               {showPw.next ? 'Hide' : 'Show'}
             </button>
           </div>
+          <ul className={styles.requirementsList}>
+            <li className={pwForm.newPassword.length >= 8 ? styles.requirementMet : styles.requirement}>Min 8 characters</li>
+            <li className={/[A-Z]/.test(pwForm.newPassword) ? styles.requirementMet : styles.requirement}>1 uppercase letter</li>
+            <li className={/[0-9]/.test(pwForm.newPassword) ? styles.requirementMet : styles.requirement}>1 number</li>
+            <li className={/[^A-Za-z0-9]/.test(pwForm.newPassword) ? styles.requirementMet : styles.requirement}>1 special character</li>
+          </ul>
         </label>
 
         <label className={styles.fieldLabel}>Confirm New Password
