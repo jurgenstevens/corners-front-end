@@ -34,6 +34,10 @@ export default function BusinessDashboard({ user }) {
           navigate('/dashboard/business/pending-approval')
           return
         }
+        if (data.verificationStatus === 'rejected') {
+          navigate('/dashboard/business/rejected')
+          return
+        }
         setBusiness(data)
       })
       .catch(() => navigate('/dashboard/business/setup'))

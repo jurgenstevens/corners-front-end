@@ -14,6 +14,8 @@ export default function BusinessPendingApproval() {
     const data = await businessService.getMyBusiness()
     if (data?.verificationStatus === 'approved') {
       navigate('/dashboard/business')
+    } else if (data?.verificationStatus === 'rejected') {
+      navigate('/dashboard/business/rejected')
     } else {
       setChecking(false)
       setNotYet(true)
@@ -70,15 +72,6 @@ export default function BusinessPendingApproval() {
         <button className={styles.checkBtn} onClick={checkStatus} disabled={checking}>
           {checking ? 'Checking…' : 'Check Approval Status'}
         </button>
-
-        <div className={styles.bottomRow}>
-          <button className={styles.setupLink} onClick={() => navigate('/dashboard/business/setup')}>
-            Update store info →
-          </button>
-          <button className={styles.returnLink} onClick={() => navigate('/')}>
-            Return →
-          </button>
-        </div>
       </div>
     </div>
   )

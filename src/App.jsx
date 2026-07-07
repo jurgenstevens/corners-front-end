@@ -19,6 +19,7 @@ import BusinessSettings from './pages/BusinessUIs/Settings/BusinessSettings'
 import BusinessPatronRequests from './pages/BusinessUIs/PatronRequests/BusinessPatronRequests'
 import BusinessSetup from './pages/BusinessUIs/Setup/BusinessSetup'
 import BusinessPendingApproval from './pages/BusinessUIs/PendingApproval/BusinessPendingApproval'
+import BusinessRejected from './pages/BusinessUIs/Rejected/BusinessRejected'
 import BusinessDistributors from './pages/BusinessUIs/Distributors/BusinessDistributors'
 import BusinessDistributorCatalog from './pages/BusinessUIs/Distributors/BusinessDistributorCatalog'
 import BusinessDistributorOrders from './pages/BusinessUIs/Distributors/BusinessDistributorOrders'
@@ -128,6 +129,10 @@ function App() {
           <Route path="settings"                     element={<PatronSettings user={user} />} />
         </Route>
 
+        {/* Business standalone status pages (no DashboardLayout chrome) */}
+        <Route path="/dashboard/business/pending-approval" element={<ProtectedRoute user={user}><BusinessPendingApproval /></ProtectedRoute>} />
+        <Route path="/dashboard/business/rejected" element={<ProtectedRoute user={user}><BusinessRejected /></ProtectedRoute>} />
+
         {/* ── Business (nested under /dashboard/business) ── */}
         <Route
           path="/dashboard/business"
@@ -142,7 +147,6 @@ function App() {
           }
         >
           <Route path="setup"            element={<BusinessSetup user={user} />} />
-          <Route path="pending-approval" element={<BusinessPendingApproval />} />
           <Route path="products"         element={<BusinessProducts />} />
           <Route path="promotions"       element={<BusinessPromotions />} />
           <Route path="inventory"        element={<BusinessInventory />} />

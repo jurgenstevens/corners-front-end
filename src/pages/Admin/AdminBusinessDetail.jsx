@@ -17,7 +17,7 @@ const CHECKLIST = [
   'Business is active (not closed)',
 ]
 
-const STATUS_CLASS = { pending: 'warn', approved: 'success' }
+const STATUS_CLASS = { pending: 'warn', approved: 'success', verified: 'success', rejected: 'danger' }
 
 export default function AdminBusinessDetail() {
   const { id } = useParams()
@@ -32,6 +32,7 @@ export default function AdminBusinessDetail() {
   const [compose, setCompose] = useState({ subject: '', body: '' })
   const [replyBody, setReplyBody] = useState('')
   const [actionFeedback, setActionFeedback] = useState('')
+  const [confirmReject, setConfirmReject] = useState(false)
 
   useEffect(() => {
     adminService.getBusinessDetail(id).then(data => { setDetail(data); setLoading(false) })
@@ -91,6 +92,15 @@ export default function AdminBusinessDetail() {
     }
   }
 
+  async function handleRejectStore() {
+    const data = await adminService.rejectStore(id)
+    if (data.verificationStatus) {
+      setDetail(d => ({ ...d, business: { ...d.business, verificationStatus: data.verificationStatus, rejectedAt: data.rejectedAt } }))
+      setActionFeedback('Store rejected. The owner has been notified and the account will be deleted in 3 days.')
+      setConfirmReject(false)
+    }
+  }
+
   if (loading) return <p className={styles.loading}>Loading…</p>
   if (!detail) return <p className={styles.error}>Business not found.</p>
 
@@ -111,7 +121,7 @@ export default function AdminBusinessDetail() {
           <div className={styles.bizHeader}>
             <h2 className={styles.bizName}>{business.displayName || owner?.name}</h2>
             <div className={styles.badgeRow}>
-              <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]}`}>{vStatus}</span>
+              <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]}`}>{vStatus.charAt(0).toUpperCase() + vStatus.slice(1)}</span>
             </div>
           </div>
 
@@ -219,12 +229,7 @@ export default function AdminBusinessDetail() {
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>Status</h3>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-            <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]} ${styles.badgeLarge}`}>{vStatus}</span>
-            {isAuthentic && (
-              <span className={`${styles.badge} ${styles.badgeLarge}`} style={{ color: '#818cf8', borderColor: 'rgba(129,140,248,0.35)', background: 'rgba(99,102,241,0.1)' }}>
-                Verified Authentic
-              </span>
-            )}
+            <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]} ${styles.badgeLarge}`}>{vStatus.charAt(0).toUpperCase() + vStatus.slice(1)}</span>
           </div>
 
           {business.verificationNotes && (
@@ -243,26 +248,26 @@ export default function AdminBusinessDetail() {
           />
 
           <div className={styles.actions}>
-            {vStatus !== 'approved' && (
+            {vStatus === 'pending' && (
               <button className={styles.btnGreen} onClick={handleApprove}>✓ Approve Store</button>
             )}
             {vStatus === 'approved' && (
               <button className={styles.btnOrange} onClick={handleRevoke}>Revoke Approval</button>
             )}
-            {!isAuthentic && (
-              <button
-                className={styles.btnAccent}
-                onClick={() => adminService.verifyAuthenticBusiness(id)
-                  .then(() => {
-                    setDetail(prev => ({ ...prev, business: { ...prev.business, isAuthentic: true } }))
-                    setActionFeedback('Store verified as authentic local business.')
-                  })
-                }
-              >
-                ✓ Verify Authentic
-              </button>
+            {vStatus !== 'rejected' && (
+              <button className={styles.btnRed} onClick={() => setConfirmReject(true)}>Reject Store</button>
             )}
           </div>
+
+          {confirmReject && (
+            <div className={styles.confirmBox}>
+              <p className={styles.confirmText}>Reject this store? The owner will be notified and their account deleted in 3 days.</p>
+              <div className={styles.actions}>
+                <button className={styles.btnRed} onClick={handleRejectStore}>Confirm Reject</button>
+                <button className={styles.btnGhost} onClick={() => setConfirmReject(false)}>Cancel</button>
+              </div>
+            </div>
+          )}
 
           <div className={styles.checklist}>
             <p className={styles.checklistTitle}>Verification Checklist</p>

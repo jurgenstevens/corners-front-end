@@ -40,7 +40,7 @@ export default function AdminProducts() {
                 <div>
                   <p className={styles.productName}>{p.name}</p>
                   {p.brand && <p className={styles.meta}>{p.brand}</p>}
-                  <p className={styles.meta}>{p.business?.displayName ?? p.business?.name ?? '—'}</p>
+                  {p.storeName && <p className={styles.meta}>{p.storeName}</p>}
                 </div>
                 <div className={styles.cardRowRight}>
                   <span className={`${styles.statusBadge} ${p.status === 'stocked' ? styles.success : p.status === 'rejected' ? styles.danger : styles.warn}`}>

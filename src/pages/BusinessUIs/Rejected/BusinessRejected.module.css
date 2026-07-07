@@ -1,0 +1,70 @@
+.page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+}
+
+.iconWrap {
+  width: 72px; height: 72px;
+  border-radius: 20px;
+  background: rgba(239,68,68,0.1);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+}
+.icon { font-size: 36px; }
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.body {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.notice {
+  font-size: 0.85rem;
+  color: #ef4444;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 20px 0;
+  line-height: 1.5;
+}
+
+.logoutBtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+.logoutBtn:hover { background: rgba(239,68,68,0.25); }
+
+@media (max-width: 560px) {
+  .card { padding: 32px 24px; }
+}

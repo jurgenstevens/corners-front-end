@@ -3,8 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom'
 import * as adminService from '../../services/adminService'
 import styles from './AdminStores.module.css'
 
-const STATUS_LABEL = { pending: 'Pending Approval', approved: 'Approved' }
-const STATUS_CLASS = { pending: 'warn', approved: 'success' }
+const STATUS_LABEL = { pending: 'Pending Approval', approved: 'Approved', verified: 'Approved', rejected: 'Rejected' }
+const STATUS_CLASS = { pending: 'warn', approved: 'success', verified: 'success', rejected: 'danger' }
 
 function daysSince(dateStr) {
   return Math.floor((Date.now() - new Date(dateStr)) / 86400000)
