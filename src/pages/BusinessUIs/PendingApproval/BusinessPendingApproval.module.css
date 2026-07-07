@@ -1,0 +1,137 @@
+.page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+}
+
+.iconWrap {
+  width: 72px; height: 72px;
+  border-radius: 20px;
+  background: rgba(245,158,11,0.12);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+}
+.icon { font-size: 36px; }
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.body {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.timeline {
+  margin: 32px 0;
+  text-align: left;
+}
+
+.timelineItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.timelineConnector {
+  width: 2px;
+  height: 20px;
+  background: var(--border);
+  margin: 4px 0 4px 10px;
+}
+
+.dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.dotDone { background: #22c55e; }
+.dotActive {
+  background: rgba(245,158,11,0.2);
+  border: 2px solid #f59e0b;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+.dotLocked {
+  background: var(--border);
+  border: 2px solid transparent;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.timelineText { padding-bottom: 4px; }
+.timelineTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 2px;
+}
+.timelineTitle.locked { color: var(--text-muted); }
+.timelineSub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.notYet {
+  font-size: 0.85rem;
+  color: #f59e0b;
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 0 0 16px;
+}
+
+.checkBtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: #F69E0C;
+  color: #fff;
+  margin-top: 8px;
+  transition: opacity 0.15s;
+}
+.checkBtn:hover { opacity: 0.88; }
+.checkBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.setupLink {
+  display: block;
+  margin-top: 14px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.setupLink:hover { color: var(--text); }
+
+@media (max-width: 560px) {
+  .card { padding: 32px 24px; }
+}

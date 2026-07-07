@@ -3,13 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom'
 import * as adminService from '../../services/adminService'
 import styles from './AdminStores.module.css'
 
-const STATUS_LABEL = {
-  unverified: 'Pending', pending_verification: 'Pending Review',
-  verified: 'Verified', rejected: 'Rejected',
-}
-const STATUS_CLASS = {
-  unverified: 'warn', pending_verification: 'warn', verified: 'success', rejected: 'danger',
-}
+const STATUS_LABEL = { pending: 'Pending Approval', approved: 'Approved' }
+const STATUS_CLASS = { pending: 'warn', approved: 'success' }
 
 function daysSince(dateStr) {
   return Math.floor((Date.now() - new Date(dateStr)) / 86400000)
@@ -48,7 +43,7 @@ function BusinessCard({ b, tab }) {
 
 export default function AdminStores() {
   const [searchParams] = useSearchParams()
-  const initialTab = searchParams.get('status') === 'pending' ? 'pending' : searchParams.get('status') === 'verified' ? 'verified' : 'all'
+  const initialTab = searchParams.get('status') === 'pending' ? 'pending' : searchParams.get('status') === 'approved' ? 'approved' : 'all'
   const [tab, setTab] = useState(initialTab)
   const [businesses, setBusinesses] = useState([])
   const [search, setSearch] = useState('')
@@ -56,10 +51,10 @@ export default function AdminStores() {
 
   useEffect(() => {
     setLoading(true)
-    const params = tab === 'verified'
-      ? { verificationStatus: 'verified' }
+    const params = tab === 'approved'
+      ? { verificationStatus: 'approved' }
       : tab === 'pending'
-      ? { verificationStatus: 'unverified' }
+      ? { verificationStatus: 'pending' }
       : {}
     adminService.getAllBusinesses(params).then(data => {
       setBusinesses(Array.isArray(data) ? data : [])
@@ -84,9 +79,9 @@ export default function AdminStores() {
       </div>
 
       <div className={styles.tabs}>
-        {['all', 'pending', 'verified'].map(t => (
+        {['all', 'pending', 'approved'].map(t => (
           <button key={t} className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`} onClick={() => setTab(t)}>
-            {t === 'all' ? 'All Stores' : t === 'pending' ? 'Pending Approval' : 'Verified'}
+            {t === 'all' ? 'All Stores' : t === 'pending' ? 'Pending Approval' : 'Approved'}
           </button>
         ))}
       </div>

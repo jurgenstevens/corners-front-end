@@ -30,6 +30,10 @@ export default function BusinessDashboard({ user }) {
           navigate('/dashboard/business/setup')
           return
         }
+        if (data.verificationStatus === 'pending') {
+          navigate('/dashboard/business/pending-approval')
+          return
+        }
         setBusiness(data)
       })
       .catch(() => navigate('/dashboard/business/setup'))

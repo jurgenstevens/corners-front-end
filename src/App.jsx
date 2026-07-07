@@ -18,6 +18,7 @@ import BusinessAnalytics from './pages/BusinessUIs/Analytics/BusinessAnalytics'
 import BusinessSettings from './pages/BusinessUIs/Settings/BusinessSettings'
 import BusinessPatronRequests from './pages/BusinessUIs/PatronRequests/BusinessPatronRequests'
 import BusinessSetup from './pages/BusinessUIs/Setup/BusinessSetup'
+import BusinessPendingApproval from './pages/BusinessUIs/PendingApproval/BusinessPendingApproval'
 import BusinessDistributors from './pages/BusinessUIs/Distributors/BusinessDistributors'
 import BusinessDistributorCatalog from './pages/BusinessUIs/Distributors/BusinessDistributorCatalog'
 import BusinessDistributorOrders from './pages/BusinessUIs/Distributors/BusinessDistributorOrders'
@@ -141,6 +142,7 @@ function App() {
           }
         >
           <Route path="setup"            element={<BusinessSetup user={user} />} />
+          <Route path="pending-approval" element={<BusinessPendingApproval />} />
           <Route path="products"         element={<BusinessProducts />} />
           <Route path="promotions"       element={<BusinessPromotions />} />
           <Route path="inventory"        element={<BusinessInventory />} />

@@ -75,11 +75,15 @@ export default function BusinessSetup() {
   async function handleFinish() {
     setSaving(true)
     try {
-      await businessService.setupBusiness({
+      const result = await businessService.setupBusiness({
         ...form,
         location: { zip: form.zip, city: form.city, state: form.state },
       })
-      navigate('/dashboard/business')
+      if (result?.verificationStatus === 'approved') {
+        navigate('/dashboard/business')
+      } else {
+        navigate('/dashboard/business/pending-approval')
+      }
     } catch {
       setSaving(false)
     }

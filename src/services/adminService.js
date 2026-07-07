@@ -38,7 +38,7 @@ export const getAllBusinesses = (params = {}) => {
 }
 export const getBusinessDetail = (id) => req('GET', `/businesses/${id}`)
 export const verifyBusiness = (id, notes) => req('PUT', `/businesses/${id}/verify`, { notes })
-export const rejectBusiness = (id, notes) => req('PUT', `/businesses/${id}/reject`, { notes })
+export const revokeBusiness = (id) => req('PUT', `/businesses/${id}/revoke`)
 export const verifyAuthenticBusiness = (id) => req('PUT', `/businesses/${id}/verify-authentic`)
 
 export const getAllPatrons = () => req('GET', '/users/patrons')

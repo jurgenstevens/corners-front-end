@@ -17,7 +17,7 @@ const CHECKLIST = [
   'Business is active (not closed)',
 ]
 
-const STATUS_CLASS = { unverified: 'warn', pending_verification: 'warn', verified: 'success', rejected: 'danger' }
+const STATUS_CLASS = { pending: 'warn', approved: 'success' }
 
 export default function AdminBusinessDetail() {
   const { id } = useParams()
@@ -75,19 +75,19 @@ export default function AdminBusinessDetail() {
     loadThread(activeThread._id)
   }
 
-  async function handleVerify() {
+  async function handleApprove() {
     const data = await adminService.verifyBusiness(id, verifyNotes)
     if (data.verificationStatus) {
       setDetail(d => ({ ...d, business: { ...d.business, verificationStatus: data.verificationStatus, verificationNotes: data.verificationNotes } }))
-      setActionFeedback('Business verified.')
+      setActionFeedback('Store approved.')
     }
   }
 
-  async function handleReject() {
-    const data = await adminService.rejectBusiness(id, verifyNotes)
+  async function handleRevoke() {
+    const data = await adminService.revokeBusiness(id)
     if (data.verificationStatus) {
-      setDetail(d => ({ ...d, business: { ...d.business, verificationStatus: data.verificationStatus, verificationNotes: data.verificationNotes } }))
-      setActionFeedback('Business rejected.')
+      setDetail(d => ({ ...d, business: { ...d.business, verificationStatus: data.verificationStatus, verificationNotes: null } }))
+      setActionFeedback('Approval revoked. Store is now pending.')
     }
   }
 
@@ -243,17 +243,11 @@ export default function AdminBusinessDetail() {
           />
 
           <div className={styles.actions}>
-            {vStatus !== 'verified' && (
-              <button className={styles.btnGreen} onClick={handleVerify}>✓ Approve</button>
+            {vStatus !== 'approved' && (
+              <button className={styles.btnGreen} onClick={handleApprove}>✓ Approve Store</button>
             )}
-            {vStatus !== 'rejected' && (
-              <button className={styles.btnRed} onClick={handleReject}>✗ Reject</button>
-            )}
-            {vStatus === 'verified' && (
-              <button className={styles.btnOrange} onClick={() => adminService.rejectBusiness(id, 'Marked unverified by admin')
-                .then(d => setDetail(prev => ({ ...prev, business: { ...prev.business, verificationStatus: d.verificationStatus } })))}>
-                Revoke Approval
-              </button>
+            {vStatus === 'approved' && (
+              <button className={styles.btnOrange} onClick={handleRevoke}>Revoke Approval</button>
             )}
             {!isAuthentic && (
               <button
@@ -261,7 +255,7 @@ export default function AdminBusinessDetail() {
                 onClick={() => adminService.verifyAuthenticBusiness(id)
                   .then(() => {
                     setDetail(prev => ({ ...prev, business: { ...prev.business, isAuthentic: true } }))
-                    setActionFeedback('Store verified as authentic.')
+                    setActionFeedback('Store verified as authentic local business.')
                   })
                 }
               >
