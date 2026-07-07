@@ -83,6 +83,7 @@ export default function Signup({ handleAuthEvt }) {
     role: initialRole,
     zip: '', city: '', state: '',
     businessType: '',
+    ownerName: '',
   })
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
@@ -129,6 +130,9 @@ export default function Signup({ handleAuthEvt }) {
     if (formData.role === 'Patron' && !formData.state) {
       return setError('State is required.')
     }
+    if (formData.role === 'Business' && !formData.ownerName.trim()) {
+      return setError('Business owner name is required.')
+    }
     if (formData.role === 'Business' && !formData.businessType) {
       return setError('Business type is required.')
     }
@@ -172,9 +176,23 @@ export default function Signup({ handleAuthEvt }) {
           </select>
         </label>
 
-        <label className={styles.fieldLabel}>Name
+        <label className={styles.fieldLabel}>
+          {formData.role === 'Business' ? 'Business Name' : 'Name'}
           <input name="name" value={formData.name} onChange={handleChange} required className={styles.input} />
         </label>
+
+        {formData.role === 'Business' && (
+          <label className={styles.fieldLabel}>Business Owner Name
+            <input
+              name="ownerName"
+              value={formData.ownerName}
+              onChange={handleChange}
+              required
+              placeholder="Your full name"
+              className={styles.input}
+            />
+          </label>
+        )}
 
         <label className={styles.fieldLabel}>Email
           <input type="email" name="email" value={formData.email} onChange={handleChange} required className={styles.input} />

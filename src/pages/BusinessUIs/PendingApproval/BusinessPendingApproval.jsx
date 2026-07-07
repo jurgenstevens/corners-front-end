@@ -71,9 +71,14 @@ export default function BusinessPendingApproval() {
           {checking ? 'Checking…' : 'Check Approval Status'}
         </button>
 
-        <button className={styles.setupLink} onClick={() => navigate('/dashboard/business/setup')}>
-          Update store info →
-        </button>
+        <div className={styles.bottomRow}>
+          <button className={styles.setupLink} onClick={() => navigate('/dashboard/business/setup')}>
+            Update store info →
+          </button>
+          <button className={styles.returnLink} onClick={() => navigate('/')}>
+            Return →
+          </button>
+        </div>
       </div>
     </div>
   )

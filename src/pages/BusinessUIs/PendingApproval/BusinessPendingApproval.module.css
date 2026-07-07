@@ -119,9 +119,14 @@
 .checkBtn:hover { opacity: 0.88; }
 .checkBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.setupLink {
-  display: block;
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 14px;
+}
+
+.setupLink, .returnLink {
   background: none;
   border: none;
   color: var(--text-muted);
@@ -129,8 +134,9 @@
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+  padding: 0;
 }
-.setupLink:hover { color: var(--text); }
+.setupLink:hover, .returnLink:hover { color: var(--text); }
 
 @media (max-width: 560px) {
   .card { padding: 32px 24px; }
