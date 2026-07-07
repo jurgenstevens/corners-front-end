@@ -15,9 +15,7 @@ function daysSince(dateStr) {
   return Math.floor((Date.now() - new Date(dateStr)) / 86400000)
 }
 
-function BusinessCard({ b, onApprove, onReject, tab }) {
-  const [showReject, setShowReject] = useState(false)
-  const [rejectNotes, setRejectNotes] = useState('')
+function BusinessCard({ b, tab }) {
   const owner = b.profile
   const days = daysSince(b.createdAt)
 
@@ -26,12 +24,11 @@ function BusinessCard({ b, onApprove, onReject, tab }) {
       <div className={styles.cardTop}>
         <div className={styles.cardInfo}>
           <div className={styles.cardTitleRow}>
-            <Link to={`/dashboard/admin/stores/${b._id}`} className={styles.bizName}>
-              {b.displayName || owner?.name || 'Unnamed'}
-            </Link>
+            <span className={styles.bizName}>{b.displayName || owner?.name || 'Unnamed'}</span>
             <span className={`${styles.statusBadge} ${styles[STATUS_CLASS[b.verificationStatus]]}`}>
               {STATUS_LABEL[b.verificationStatus] ?? b.verificationStatus}
             </span>
+            {b.isAuthentic && <span className={styles.authenticBadge}>Verified Authentic</span>}
           </div>
           <p className={styles.meta}>{owner?.name} · {owner?.email}</p>
           <p className={styles.meta}>{b.businessType} · {b.location?.city}, {b.location?.state}</p>
@@ -41,43 +38,17 @@ function BusinessCard({ b, onApprove, onReject, tab }) {
             </p>
           )}
         </div>
-        {(tab === 'pending' || tab === 'all') && (
-          <div className={styles.cardActions}>
-            <button className={styles.btnGreen} onClick={() => onApprove(b._id)}>Approve</button>
-            <button className={styles.btnRed} onClick={() => setShowReject(p => !p)}>Reject</button>
-            <Link to={`/dashboard/admin/stores/${b._id}`} className={styles.btnGhost}>View →</Link>
-          </div>
-        )}
-        {tab === 'verified' && (
-          <div className={styles.cardActions}>
-            <Link to={`/dashboard/admin/stores/${b._id}`} className={styles.btnGhost}>View →</Link>
-          </div>
-        )}
-      </div>
-      {showReject && (
-        <div className={styles.rejectForm}>
-          <textarea
-            className={styles.textarea}
-            placeholder="Reason for rejection (optional)"
-            value={rejectNotes}
-            onChange={e => setRejectNotes(e.target.value)}
-            rows={3}
-          />
-          <div className={styles.rejectActions}>
-            <button className={styles.btnRed} onClick={() => { onReject(b._id, rejectNotes); setShowReject(false) }}>
-              Confirm Reject
-            </button>
-            <button className={styles.btnGhost} onClick={() => setShowReject(false)}>Cancel</button>
-          </div>
+        <div className={styles.cardActions}>
+          <Link to={`/dashboard/admin/stores/${b._id}`} className={styles.btnGhost}>View →</Link>
         </div>
-      )}
+      </div>
     </div>
   )
 }
 
 export default function AdminStores() {
   const [searchParams] = useSearchParams()
-  const initialTab = searchParams.get('status') === 'verified' ? 'verified' : 'pending'
+  const initialTab = searchParams.get('status') === 'pending' ? 'pending' : searchParams.get('status') === 'verified' ? 'verified' : 'all'
   const [tab, setTab] = useState(initialTab)
   const [businesses, setBusinesses] = useState([])
   const [search, setSearch] = useState('')
@@ -96,16 +67,6 @@ export default function AdminStores() {
     })
   }, [tab])
 
-  async function handleApprove(id) {
-    await adminService.verifyBusiness(id, '')
-    setBusinesses(b => b.filter(x => x._id !== id))
-  }
-
-  async function handleReject(id, notes) {
-    await adminService.rejectBusiness(id, notes)
-    setBusinesses(b => b.filter(x => x._id !== id))
-  }
-
   const filtered = businesses.filter(b => {
     const q = search.toLowerCase()
     return !q || (b.displayName ?? '').toLowerCase().includes(q) || (b.profile?.name ?? '').toLowerCase().includes(q)
@@ -123,9 +84,9 @@ export default function AdminStores() {
       </div>
 
       <div className={styles.tabs}>
-        {['pending', 'all', 'verified'].map(t => (
+        {['all', 'pending', 'verified'].map(t => (
           <button key={t} className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`} onClick={() => setTab(t)}>
-            {t === 'pending' ? 'Pending Approval' : t === 'all' ? 'All Stores' : 'Verified'}
+            {t === 'all' ? 'All Stores' : t === 'pending' ? 'Pending Approval' : 'Verified'}
           </button>
         ))}
       </div>
@@ -133,7 +94,7 @@ export default function AdminStores() {
       {loading && <p className={styles.loading}>Loading…</p>}
       {!loading && filtered.length === 0 && <p className={styles.empty}>No stores found.</p>}
       {!loading && filtered.map(b => (
-        <BusinessCard key={b._id} b={b} tab={tab} onApprove={handleApprove} onReject={handleReject} />
+        <BusinessCard key={b._id} b={b} tab={tab} />
       ))}
     </div>
   )

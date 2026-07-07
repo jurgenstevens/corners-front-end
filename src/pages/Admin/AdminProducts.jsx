@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import * as adminService from '../../services/adminService'
 import styles from './AdminProducts.module.css'
 
@@ -20,16 +21,6 @@ export default function AdminProducts() {
     }
   }, [tab])
 
-  async function handleDelete(id) {
-    await adminService.hardDeleteProduct(id)
-    setExpiring(p => p.filter(x => x._id !== id))
-  }
-
-  async function handleRestore(id) {
-    await adminService.restoreProduct(id)
-    setExpiring(p => p.filter(x => x._id !== id))
-  }
-
   return (
     <div>
       <div className={styles.tabs}>
@@ -49,11 +40,14 @@ export default function AdminProducts() {
                 <div>
                   <p className={styles.productName}>{p.name}</p>
                   {p.brand && <p className={styles.meta}>{p.brand}</p>}
-                  <p className={styles.meta}>{p.business?.displayName ?? '—'}</p>
+                  <p className={styles.meta}>{p.business?.displayName ?? p.business?.name ?? '—'}</p>
                 </div>
-                <span className={`${styles.statusBadge} ${p.status === 'stocked' ? styles.success : p.status === 'rejected' ? styles.danger : styles.warn}`}>
-                  {p.status}
-                </span>
+                <div className={styles.cardRowRight}>
+                  <span className={`${styles.statusBadge} ${p.status === 'stocked' ? styles.success : p.status === 'rejected' ? styles.danger : styles.warn}`}>
+                    {p.status}
+                  </span>
+                  <Link to={`/dashboard/admin/products/${p._id}`} className={styles.btnGhost}>View →</Link>
+                </div>
               </div>
               <p className={styles.dateMeta}>Added {new Date(p.createdAt).toLocaleDateString()}</p>
             </div>
@@ -69,11 +63,14 @@ export default function AdminProducts() {
                 <div>
                   <p className={styles.productName}>{p.name}</p>
                   {p.brand && <p className={styles.meta}>{p.brand}</p>}
-                  <p className={styles.meta}>{typeof p.business === 'object' ? p.business.name : '—'}</p>
+                  <p className={styles.meta}>{typeof p.business === 'object' ? (p.business.displayName ?? p.business.name) : '—'}</p>
                 </div>
-                <span className={`${styles.statusBadge} ${p.status === 'stocked' ? styles.success : styles.warn}`}>
-                  {p.status}
-                </span>
+                <div className={styles.cardRowRight}>
+                  <span className={`${styles.statusBadge} ${p.status === 'stocked' ? styles.success : styles.warn}`}>
+                    {p.status}
+                  </span>
+                  <Link to={`/dashboard/admin/products/${p._id}`} className={styles.btnGhost}>View →</Link>
+                </div>
               </div>
               <div className={styles.tallyRow}>
                 <div className={styles.progressBar}>
@@ -97,15 +94,14 @@ export default function AdminProducts() {
               <div className={styles.cardRow}>
                 <div>
                   <p className={styles.productName}>{p.name}</p>
-                  <p className={styles.meta}>{typeof p.business === 'object' ? p.business.name : '—'}</p>
+                  <p className={styles.meta}>{typeof p.business === 'object' ? (p.business.displayName ?? p.business.name) : '—'}</p>
                 </div>
-                <span className={`${styles.countdown} ${p.daysUntilDeletion <= 5 ? styles.countdownRed : ''}`}>
-                  Deletes in {Math.ceil(p.daysUntilDeletion)} days
-                </span>
-              </div>
-              <div className={styles.actions}>
-                <button className={styles.btnGreen} onClick={() => handleRestore(p._id)}>Restore</button>
-                <button className={styles.btnRed} onClick={() => handleDelete(p._id)}>Delete Now</button>
+                <div className={styles.cardRowRight}>
+                  <span className={`${styles.countdown} ${p.daysUntilDeletion <= 5 ? styles.countdownRed : ''}`}>
+                    Deletes in {Math.ceil(p.daysUntilDeletion)} days
+                  </span>
+                  <Link to={`/dashboard/admin/products/${p._id}`} className={styles.btnGhost}>View →</Link>
+                </div>
               </div>
             </div>
           ))

@@ -40,9 +40,11 @@ import AdminLogin from './pages/Admin/AdminLogin'
 import AdminDashboard from './pages/Admin/AdminDashboard'
 import AdminOverview from './pages/Admin/AdminOverview'
 import AdminPatrons from './pages/Admin/AdminPatrons'
+import AdminPatronDetail from './pages/Admin/AdminPatronDetail'
 import AdminStores from './pages/Admin/AdminStores'
 import AdminBusinessDetail from './pages/Admin/AdminBusinessDetail'
 import AdminProducts from './pages/Admin/AdminProducts'
+import AdminProductDetail from './pages/Admin/AdminProductDetail'
 import AdminDistribution from './pages/Admin/AdminDistribution'
 import AdminBugReports from './pages/Admin/AdminBugReports'
 import AdminAnalytics from './pages/Admin/AdminAnalytics'
@@ -179,9 +181,11 @@ function App() {
         >
           <Route index element={<AdminOverview />} />
           <Route path="patrons" element={<AdminPatrons />} />
+          <Route path="patrons/:id" element={<AdminPatronDetail />} />
           <Route path="stores" element={<AdminStores />} />
           <Route path="stores/:id" element={<AdminBusinessDetail />} />
           <Route path="products" element={<AdminProducts />} />
+          <Route path="products/:id" element={<AdminProductDetail />} />
           <Route path="distribution" element={<AdminDistribution />} />
           <Route path="bug-reports" element={<AdminBugReports />} />
           <Route path="analytics" element={<AdminAnalytics />} />

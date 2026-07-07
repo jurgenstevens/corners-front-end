@@ -1,0 +1,87 @@
+.loading, .empty { color: #94a3b8; font-size: 14px; margin: 8px 0; }
+.error { color: #ef4444; font-size: 14px; margin: 8px 0; }
+
+.backBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid #2a2a4a; color: #94a3b8;
+  padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;
+  margin-bottom: 16px; transition: all 0.15s;
+}
+.backBtn:hover { color: #e2e8f0; border-color: #6366f1; }
+
+.layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+.col { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: #16213e; border: 1px solid #2a2a4a; border-radius: 10px;
+  padding: 18px 20px;
+}
+.cardTitle { font-size: 14px; font-weight: 600; color: #e2e8f0; margin: 0 0 14px; }
+
+.header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.name { font-size: 20px; font-weight: 700; color: #e2e8f0; margin: 0 0 4px; }
+.brand { font-size: 13px; color: #94a3b8; margin: 0; }
+.description { font-size: 13px; color: #94a3b8; margin: 0 0 14px; line-height: 1.5; }
+
+.statusBadge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+.success { color: #22c55e; border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.1); }
+.warn { color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); }
+.danger { color: #ef4444; border: 1px solid rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); }
+
+.metaGrid { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin-bottom: 14px; font-size: 13px; color: #e2e8f0; }
+.metaLabel { color: #4a4a6a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; align-self: center; }
+.storeLink { color: #818cf8; text-decoration: none; font-size: 13px; }
+.storeLink:hover { text-decoration: underline; }
+
+.tallyRow { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.progressBar { flex: 1; height: 8px; background: #2a2a4a; border-radius: 4px; overflow: hidden; }
+.progressFill { height: 100%; background: #6366f1; border-radius: 4px; transition: width 0.3s; }
+.tallyLabel { font-size: 12px; color: #94a3b8; white-space: nowrap; }
+
+.feedback { font-size: 13px; color: #22c55e; margin: 8px 0 0; }
+
+.confirm {
+  margin-top: 12px; padding: 12px; background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25); border-radius: 8px;
+}
+.confirm p { font-size: 13px; color: #fca5a5; margin: 0 0 10px; }
+
+.rowActions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btnGreen {
+  padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
+  background: rgba(34,197,94,0.15); color: #22c55e; transition: background 0.15s;
+}
+.btnGreen:hover { background: rgba(34,197,94,0.25); }
+.btnRed {
+  padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
+  background: rgba(239,68,68,0.15); color: #ef4444; transition: background 0.15s;
+}
+.btnRed:hover { background: rgba(239,68,68,0.25); }
+.btnGhost {
+  padding: 7px 14px; border-radius: 6px; border: 1px solid #2a2a4a; cursor: pointer;
+  font-size: 13px; font-weight: 600; background: none; color: #94a3b8;
+}
+.btnGhost:hover { color: #e2e8f0; border-color: #6366f1; }
+
+.productImg { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+
+.itemRow {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 8px; margin-bottom: 6px;
+  background: #0f1635; border: 1px solid #2a2a4a; text-decoration: none;
+  transition: border-color 0.15s;
+}
+.itemRow:last-child { margin-bottom: 0; }
+.itemRow:hover { border-color: #6366f1; }
+.patronName { font-size: 14px; font-weight: 500; color: #e2e8f0; margin: 0; }
+.patronEmail { font-size: 11px; color: #94a3b8; margin: 2px 0 0; }
+.miniAvatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.arrowHint { font-size: 14px; color: #4a4a6a; }
+
+.btnOrange {
+  padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
+  background: rgba(245,158,11,0.15); color: #f59e0b; transition: background 0.15s;
+}
+.btnOrange:hover { background: rgba(245,158,11,0.25); }

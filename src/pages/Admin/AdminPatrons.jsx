@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import * as adminService from '../../services/adminService'
 import styles from './AdminPatrons.module.css'
 
@@ -10,12 +11,11 @@ const FLAG_LABELS = {
 }
 
 export default function AdminPatrons() {
-  const [tab, setTab] = useState('flags')
+  const [tab, setTab] = useState('all')
   const [flags, setFlags] = useState([])
   const [banned, setBanned] = useState([])
   const [allPatrons, setAllPatrons] = useState([])
   const [loading, setLoading] = useState(true)
-  const [confirmBan, setConfirmBan] = useState(null)
 
   useEffect(() => {
     setLoading(true)
@@ -27,29 +27,6 @@ export default function AdminPatrons() {
       adminService.getAllPatrons().then(data => { setAllPatrons(Array.isArray(data) ? data : []); setLoading(false) })
     }
   }, [tab])
-
-  async function handleDismiss(flagId) {
-    await adminService.dismissAbuseFlag(flagId)
-    setFlags(f => f.filter(x => x._id !== flagId))
-  }
-
-  async function handleSuspend(profileId, flagId) {
-    await adminService.suspendUser(profileId, 'Vote manipulation', 7)
-    await adminService.dismissAbuseFlag(flagId)
-    setFlags(f => f.filter(x => x._id !== flagId))
-  }
-
-  async function handleBan(profileId, flagId) {
-    await adminService.banUser(profileId, 'Vote abuse')
-    await adminService.dismissAbuseFlag(flagId)
-    setFlags(f => f.filter(x => x._id !== flagId))
-    setConfirmBan(null)
-  }
-
-  async function handleLiftBan(profileId) {
-    await adminService.liftBan(profileId)
-    setBanned(b => b.filter(u => u._id !== profileId))
-  }
 
   return (
     <div>
@@ -82,22 +59,11 @@ export default function AdminPatrons() {
               <p className={styles.flagDescription}>
                 {FLAG_LABELS[flag.reason]?.(flag) ?? flag.reason}
               </p>
-              <div className={styles.actions}>
-                <button className={styles.btnGreen} onClick={() => handleDismiss(flag._id)}>Dismiss Flag</button>
-                <button className={styles.btnOrange} onClick={() => handleSuspend(flag.patron?._id, flag._id)}>Suspend 7 Days</button>
-                <button className={styles.btnRed} onClick={() => setConfirmBan({ profileId: flag.patron?._id, flagId: flag._id })}>
-                  Ban Account
-                </button>
-              </div>
-              {confirmBan?.flagId === flag._id && (
-                <div className={styles.confirm}>
-                  <p>Are you sure you want to permanently ban this account?</p>
-                  <div className={styles.actions}>
-                    <button className={styles.btnRed} onClick={() => handleBan(confirmBan.profileId, confirmBan.flagId)}>
-                      Confirm Ban
-                    </button>
-                    <button className={styles.btnGhost} onClick={() => setConfirmBan(null)}>Cancel</button>
-                  </div>
+              {flag.patron?._id && (
+                <div className={styles.actions}>
+                  <Link to={`/dashboard/admin/patrons/${flag.patron._id}`} className={styles.btnGhost}>
+                    View Patron →
+                  </Link>
                 </div>
               )}
             </div>
@@ -117,7 +83,7 @@ export default function AdminPatrons() {
                   {u.bannedAt ? new Date(u.bannedAt).toLocaleDateString() : ''}
                 </p>
               </div>
-              <button className={styles.btnGreen} onClick={() => handleLiftBan(u._id)}>Lift Ban</button>
+              <Link to={`/dashboard/admin/patrons/${u._id}`} className={styles.btnGhost}>View →</Link>
             </div>
           ))
       )}
@@ -134,7 +100,10 @@ export default function AdminPatrons() {
                   <p className={styles.patronEmail}>{u.email}</p>
                   <p className={styles.banMeta}>Joined {new Date(u.createdAt).toLocaleDateString()}</p>
                 </div>
-                <span className={`${styles.statusBadge} ${styles[`status_${status}`]}`}>{status}</span>
+                <div className={styles.actions}>
+                  <span className={`${styles.statusBadge} ${styles[`status_${status}`]}`}>{status}</span>
+                  <Link to={`/dashboard/admin/patrons/${u._id}`} className={styles.btnGhost}>View →</Link>
+                </div>
               </div>
             )
           })

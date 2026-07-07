@@ -45,7 +45,9 @@
 .btnGhost {
   padding: 7px 14px; border-radius: 6px; border: 1px solid #2a2a4a; cursor: pointer;
   font-size: 13px; font-weight: 600; background: none; color: #94a3b8;
+  text-decoration: none; white-space: nowrap;
 }
+.btnGhost:hover { color: #e2e8f0; border-color: #6366f1; }
 
 .confirm {
   margin-top: 12px; padding: 12px; background: rgba(239,68,68,0.08);

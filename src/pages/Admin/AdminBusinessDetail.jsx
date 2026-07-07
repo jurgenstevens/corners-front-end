@@ -101,6 +101,7 @@ export default function AdminBusinessDetail() {
   connectionStats.forEach(({ _id, count }) => { connMap[_id] = count })
 
   const vStatus = business.verificationStatus ?? 'unverified'
+  const isAuthentic = business.isAuthentic ?? false
 
   return (
     <div className={styles.layout}>
@@ -216,8 +217,15 @@ export default function AdminBusinessDetail() {
       {/* RIGHT — Verification */}
       <div className={styles.col}>
         <div className={styles.card}>
-          <h3 className={styles.cardTitle}>Verification</h3>
-          <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]} ${styles.badgeLarge}`}>{vStatus}</span>
+          <h3 className={styles.cardTitle}>Status</h3>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
+            <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]} ${styles.badgeLarge}`}>{vStatus}</span>
+            {isAuthentic && (
+              <span className={`${styles.badge} ${styles.badgeLarge}`} style={{ color: '#818cf8', borderColor: 'rgba(129,140,248,0.35)', background: 'rgba(99,102,241,0.1)' }}>
+                Verified Authentic
+              </span>
+            )}
+          </div>
 
           {business.verificationNotes && (
             <p className={styles.verifyNotes}>{business.verificationNotes}</p>
@@ -227,7 +235,7 @@ export default function AdminBusinessDetail() {
 
           <textarea
             className={styles.textarea}
-            placeholder="Admin notes…"
+            placeholder="Admin notes (optional)…"
             rows={3}
             value={verifyNotes}
             onChange={e => setVerifyNotes(e.target.value)}
@@ -236,7 +244,7 @@ export default function AdminBusinessDetail() {
 
           <div className={styles.actions}>
             {vStatus !== 'verified' && (
-              <button className={styles.btnGreen} onClick={handleVerify}>✓ Verify Business</button>
+              <button className={styles.btnGreen} onClick={handleVerify}>✓ Approve</button>
             )}
             {vStatus !== 'rejected' && (
               <button className={styles.btnRed} onClick={handleReject}>✗ Reject</button>
@@ -244,7 +252,20 @@ export default function AdminBusinessDetail() {
             {vStatus === 'verified' && (
               <button className={styles.btnOrange} onClick={() => adminService.rejectBusiness(id, 'Marked unverified by admin')
                 .then(d => setDetail(prev => ({ ...prev, business: { ...prev.business, verificationStatus: d.verificationStatus } })))}>
-                Mark Unverified
+                Revoke Approval
+              </button>
+            )}
+            {!isAuthentic && (
+              <button
+                className={styles.btnAccent}
+                onClick={() => adminService.verifyAuthenticBusiness(id)
+                  .then(() => {
+                    setDetail(prev => ({ ...prev, business: { ...prev.business, isAuthentic: true } }))
+                    setActionFeedback('Store verified as authentic.')
+                  })
+                }
+              >
+                ✓ Verify Authentic
               </button>
             )}
           </div>
