@@ -77,6 +77,24 @@ const PATRON_NAV = [
   { to: '/dashboard/patron/settings',   label: 'Settings',    icon: '⚙️'            },
 ]
 
+const BUSINESS_NAV = [
+  { to: '/dashboard/business',                  label: 'Home',         icon: '🏠', end: true },
+  { to: '/dashboard/business/products',         label: 'Products',     icon: '📦'            },
+  { to: '/dashboard/business/inventory',        label: 'Inventory',    icon: '🗂️'            },
+  { to: '/dashboard/business/promotions',       label: 'Promotions',   icon: '🏷️'            },
+  { to: '/dashboard/business/patron-requests',  label: 'Patrons',      icon: '👥'            },
+  { to: '/dashboard/business/distributors',     label: 'Distributors', icon: '🚚'            },
+  { to: '/dashboard/business/analytics',        label: 'Analytics',    icon: '📊'            },
+  { to: '/dashboard/business/settings',         label: 'Settings',     icon: '⚙️'            },
+]
+
+// const DISTRIBUTOR_NAV = [
+//   { to: '/dashboard/distributor',          label: 'Home',     icon: '🏠', end: true },
+//   { to: '/dashboard/distributor/orders',   label: 'Orders',   icon: '📦'            },
+//   { to: '/dashboard/distributor/catalog',  label: 'Catalog',  icon: '📋'            },
+//   { to: '/dashboard/distributor/settings', label: 'Settings', icon: '⚙️'            },
+// ]
+
 function getDashboard(user) {
   if (!user) return '/'
   if (user.authorizationLevel >= 500) return '/dashboard/distributor'
@@ -149,6 +167,7 @@ function App() {
                 Dashboard={BusinessDashboard}
                 user={user}
                 homePath="/dashboard/business"
+                navItems={BUSINESS_NAV}
               />
             </ProtectedRoute>
           }

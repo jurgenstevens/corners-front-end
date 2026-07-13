@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import styles from './MobileBottomNav.module.css'
 
-const DASHBOARD_ROOTS = ['/dashboard/business', '/dashboard/distributor']
+const DASHBOARD_ROOTS = ['/dashboard/distributor']
 
 export default function MobileBottomNav({ user }) {
   const { pathname } = useLocation()
