@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import * as authService from '../../services/authService'
 import * as distributorService from '../../services/distributorService'
+import ImageUpload from '../../components/ImageUpload/ImageUpload'
 import styles from './Signup.module.css'
 import { redirectByRole } from '../../utils/redirectByRole'
 
@@ -248,9 +249,11 @@ export default function Signup({ handleAuthEvt }) {
           </div>
         </label>
 
-        <label className={styles.fieldLabel}>Photo URL <span className={styles.optional}>(optional)</span>
-          <input name="photo" value={formData.photo} onChange={handleChange} className={styles.input} />
-        </label>
+        <ImageUpload
+          value={formData.photo}
+          onChange={(url) => setFormData(d => ({ ...d, photo: url }))}
+          label="Profile photo (optional)"
+        />
 
         {formData.role === 'Patron' && (
           <>
@@ -368,3 +371,4 @@ export default function Signup({ handleAuthEvt }) {
     </div>
   )
 }
+

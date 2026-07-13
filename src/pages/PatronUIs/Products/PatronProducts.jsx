@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import * as productService from '../../../services/productService'
 import * as connectionService from '../../../services/connectionService'
+import ImageUpload from '../../../components/ImageUpload/ImageUpload'
 import styles from './PatronProducts.module.css'
 
 const EMPTY_FORM = { businessId: '', name: '', brand: '', description: '', image: '' }
@@ -306,10 +307,7 @@ export default function PatronProducts({ user }) {
               <label>Description
                 <textarea name="description" value={form.description} onChange={handleChange} rows={2} placeholder="Short description (optional)" />
               </label>
-              <label>Image URL
-                <input name="image" value={form.image} onChange={handleChange} placeholder="https://i.imgur.com/…" />
-                <span className={styles.hint}>Imgur or direct image link. Store owner can update later.</span>
-              </label>
+              <ImageUpload value={form.image} onChange={(url) => setForm(f => ({ ...f, image: url }))} label="Product photo (optional)" />
               {reqError && <p className={styles.error}>{reqError}</p>}
               <div className={styles.modalActions}>
                 <button type="button" className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
@@ -341,9 +339,7 @@ export default function PatronProducts({ user }) {
               <label>Description
                 <textarea name="description" value={updateForm.description} onChange={handleUpdateChange} rows={3} placeholder="Add more details about this product…" />
               </label>
-              <label>Image URL
-                <input name="image" value={updateForm.image} onChange={handleUpdateChange} placeholder="https://i.imgur.com/…" />
-              </label>
+              <ImageUpload value={updateForm.image} onChange={(url) => setUpdateForm(f => ({ ...f, image: url }))} label="Product photo (optional)" />
               {updateError && <p className={styles.error}>{updateError}</p>}
               <div className={styles.modalActions}>
                 <button type="button" className={styles.cancelBtn} onClick={closeUpdateModal}>Cancel</button>

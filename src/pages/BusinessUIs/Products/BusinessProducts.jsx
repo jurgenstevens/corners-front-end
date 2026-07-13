@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import * as productService from '../../../services/productService'
+import ImageUpload from '../../../components/ImageUpload/ImageUpload'
 import styles from './BusinessProducts.module.css'
 
 const TABS = ['All', 'Requests', 'Approved', 'In Store', 'Promotions/Sales', 'Requires Update']
@@ -167,10 +168,7 @@ export default function BusinessProducts() {
           <input name="brand" placeholder="Brand" value={form.brand} onChange={handleChange} />
           <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
           <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
-          <div className={styles.imageRow}>
-            <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} />
-            {form.image && <img src={form.image} alt="preview" className={styles.imagePreview} onError={e => e.target.style.display='none'} />}
-          </div>
+          <ImageUpload value={form.image} onChange={(url) => setForm(f => ({ ...f, image: url }))} label="Product photo" />
           <div className={styles.tallyRow}>
             <label>Tally Goal</label>
             <input name="tallyGoal" type="number" min={1} value={form.tallyGoal} onChange={handleChange} />
