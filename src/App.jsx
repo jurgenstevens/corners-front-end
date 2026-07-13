@@ -24,7 +24,6 @@ import BusinessDistributors from './pages/BusinessUIs/Distributors/BusinessDistr
 import BusinessDistributorCatalog from './pages/BusinessUIs/Distributors/BusinessDistributorCatalog'
 import BusinessDistributorOrders from './pages/BusinessUIs/Distributors/BusinessDistributorOrders'
 // patron pages
-import PatronMyStores from './pages/PatronUIs/Stores/PatronMyStores'
 import PatronStoreDetail from './pages/PatronUIs/Stores/PatronStoreDetail'
 import PatronPendingApproval from './pages/PatronUIs/Stores/PatronPendingApproval'
 import PatronProducts from './pages/PatronUIs/Products/PatronProducts'
@@ -69,6 +68,14 @@ function AdminGuard({ user, children }) {
   if (user.authorizationLevel !== 100) return <Navigate to="/" replace />
   return children
 }
+
+const PATRON_NAV = [
+  { to: '/dashboard/patron',            label: 'Home',        icon: '🏠', end: true },
+  { to: '/dashboard/patron/products',   label: 'Products',    icon: '🛍️'            },
+  { to: '/dashboard/patron/requests',   label: 'My Requests', icon: '📋'            },
+  { to: '/dashboard/patron/promotions', label: 'Promotions',  icon: '🏷️'            },
+  { to: '/dashboard/patron/settings',   label: 'Settings',    icon: '⚙️'            },
+]
 
 function getDashboard(user) {
   if (!user) return '/'
@@ -116,11 +123,11 @@ function App() {
                 Dashboard={PatronDashboard}
                 user={user}
                 homePath="/dashboard/patron"
+                navItems={PATRON_NAV}
               />
             </ProtectedRoute>
           }
         >
-          <Route path="stores"                       element={<PatronMyStores user={user} />} />
           <Route path="stores/pending/:businessId"   element={<PatronPendingApproval user={user} />} />
           <Route path="stores/:id"                   element={<PatronStoreDetail user={user} />} />
           <Route path="products"                     element={<PatronProducts user={user} />} />

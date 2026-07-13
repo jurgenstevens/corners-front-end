@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import styles from './MobileBottomNav.module.css'
 
-const DASHBOARD_ROOTS = ['/dashboard/patron', '/dashboard/business', '/dashboard/distributor']
+const DASHBOARD_ROOTS = ['/dashboard/business', '/dashboard/distributor']
 
 export default function MobileBottomNav({ user }) {
   const { pathname } = useLocation()
@@ -37,11 +37,11 @@ export default function MobileBottomNav({ user }) {
           <NavLink to="/dashboard/patron" end className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🏠</span><span className={styles.label}>Home</span>
           </NavLink>
-          <NavLink to="/dashboard/patron/stores" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🏪</span><span className={styles.label}>Stores</span>
-          </NavLink>
           <NavLink to="/dashboard/patron/products" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🛍️</span><span className={styles.label}>Products</span>
+          </NavLink>
+          <NavLink to="/dashboard/patron/requests" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>📋</span><span className={styles.label}>Requests</span>
           </NavLink>
           <NavLink to="/dashboard/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>🏷️</span><span className={styles.label}>Promotions</span>

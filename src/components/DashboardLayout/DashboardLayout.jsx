@@ -1,7 +1,7 @@
-import { useOutlet, useNavigate, useLocation } from 'react-router-dom'
+import { NavLink, useOutlet, useNavigate, useLocation } from 'react-router-dom'
 import styles from './DashboardLayout.module.css'
 
-export default function DashboardLayout({ Dashboard, user, homePath }) {
+export default function DashboardLayout({ Dashboard, user, homePath, navItems }) {
   const outlet   = useOutlet()
   const navigate = useNavigate()
   const location = useLocation()
@@ -11,20 +11,35 @@ export default function DashboardLayout({ Dashboard, user, homePath }) {
   function close() { if (!isSetupLocked) navigate(homePath) }
 
   return (
-    <div className={styles.root}>
-      {/* ── Main dashboard (always visible on desktop; hidden on mobile when sidebar is open) ── */}
+    <div className={`${styles.root} ${navItems ? styles.hasNav : ''}`}>
+
+      {/* ── Left nav sidebar (desktop only, patron/distributor) ── */}
+      {navItems && (
+        <nav className={styles.leftNav}>
+          {navItems.map(({ to, label, icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navActive : ''}`}
+            >
+              {icon && <span className={styles.navIcon}>{icon}</span>}
+              {label}
+            </NavLink>
+          ))}
+        </nav>
+      )}
+
+      {/* ── Main dashboard ── */}
       <div className={outlet ? `${styles.main} ${styles.dimmed}` : styles.main}>
         <Dashboard user={user} />
       </div>
 
-      {/* ── Sidebar ── */}
+      {/* ── Right sidebar (sub-routes) ── */}
       {outlet && (
         <>
-          {/* Desktop backdrop — not clickable during required setup */}
           <div className={styles.backdrop} onClick={isSetupLocked ? undefined : close} />
-
           <div className={styles.sidebar}>
-            {/* Sticky header with X at top-left — hidden during required setup */}
             <div className={styles.sidebarHeader}>
               {!isSetupLocked && (
                 <button className={styles.closeBtn} onClick={close} aria-label="Close">
@@ -32,7 +47,6 @@ export default function DashboardLayout({ Dashboard, user, homePath }) {
                 </button>
               )}
             </div>
-
             <div className={styles.sidebarInner}>
               {outlet}
             </div>

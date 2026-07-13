@@ -1,5 +1,52 @@
 .root { min-height: 100vh; }
 
+/* ── Left nav sidebar (desktop only) ── */
+.leftNav { display: none; }
+
+@media (min-width: 769px) {
+  .hasNav {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .leftNav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 32px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .hasNav .main {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.navLink:hover { background: var(--border); color: var(--text); text-decoration: none; }
+.navLink.navActive,
+.navLink.navActive:hover { background: var(--accent); color: #000; }
+
+.navIcon { font-size: 1.1rem; flex-shrink: 0; }
+
 /* ── Mobile: sidebar takes over full screen ── */
 .main  { display: block; }
 .backdrop { display: none; }
@@ -38,11 +85,7 @@
 }
 .closeBtn:hover { background: var(--border); color: var(--text); }
 
-.sidebarInner {
-  /* Pages handle their own internal padding */
-}
-
-/* ── Desktop (≥ 900px): dashboard stays visible, sidebar overlays on right ── */
+/* ── Desktop (≥ 900px): dashboard stays visible, right sidebar overlays ── */
 @media (min-width: 900px) {
   .main.dimmed { display: block; }
 
@@ -72,9 +115,7 @@
     to   { transform: translateX(0);    opacity: 1; }
   }
 
-  .sidebarHeader {
-    padding: 18px 24px;
-  }
+  .sidebarHeader { padding: 18px 24px; }
 
   .sidebarInner {
     height: calc(100% - 57px);
