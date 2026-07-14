@@ -1,0 +1,55 @@
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 100px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.header h2 { font-size: 1.4rem; font-weight: 800; margin: 0; }
+
+.loading { display: flex; justify-content: center; padding: 80px 20px; }
+.spinner {
+  display: inline-block; width: 28px; height: 28px;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error { color: var(--danger); font-size: 0.88rem; margin-bottom: 12px; }
+.empty { color: var(--text-muted); font-size: 0.9rem; }
+
+.list { display: flex; flex-direction: column; gap: 10px; }
+
+.row {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+
+.thumb            { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.thumbPlaceholder { width: 48px; height: 48px; border-radius: 8px; background: var(--border); flex-shrink: 0; }
+
+.info  { flex: 1; min-width: 120px; display: flex; flex-direction: column; gap: 2px; }
+.name  { font-size: 0.92rem; font-weight: 700; }
+.brand { font-size: 0.75rem; color: var(--text-muted); }
+
+.priceCol { font-size: 0.9rem; font-weight: 700; min-width: 60px; }
+
+.badgeCol { min-width: 72px; }
+.inStoreBadge {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  background: var(--success); color: #000;
+  border-radius: 4px; padding: 3px 8px;
+}
+.saleBadge {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  background: #f59e0b; color: #000;
+  border-radius: 4px; padding: 3px 8px;
+}
+
+.actions    { display: flex; gap: 6px; flex-wrap: wrap; }
+.promoteBtn {
+  background: #f59e0b; color: #000;
+  border: none; border-radius: 6px; padding: 5px 12px;
+  cursor: pointer; font-size: 0.78rem; font-weight: 700;
+}
+.unavailBtn {
+  background: transparent; border: 1px solid var(--danger);
+  color: var(--danger); border-radius: 6px; padding: 5px 12px;
+  cursor: pointer; font-size: 0.78rem; font-weight: 700;
+}

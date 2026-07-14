@@ -1,0 +1,50 @@
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 100px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.header h2 { font-size: 1.4rem; font-weight: 800; margin: 0; }
+
+.loading { display: flex; justify-content: center; padding: 80px 20px; }
+.spinner {
+  display: inline-block; width: 28px; height: 28px;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error { color: var(--danger); font-size: 0.9rem; }
+.empty { color: var(--text-muted); font-size: 0.9rem; margin: 0; }
+
+.statsRow {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 20px;
+}
+@media (max-width: 600px) { .statsRow { grid-template-columns: repeat(2, 1fr); } }
+
+.statCard {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 16px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.statNum   { font-size: 2rem; font-weight: 800; line-height: 1; }
+.statLabel { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-align: center; }
+
+.section {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+  margin-bottom: 16px;
+}
+.sectionTitle { font-size: 0.95rem; font-weight: 800; margin: 0 0 16px; }
+
+.barList { display: flex; flex-direction: column; gap: 12px; }
+.barRow  { display: flex; flex-direction: column; gap: 4px; }
+.barMeta { display: flex; align-items: center; gap: 8px; }
+.barName  { font-size: 0.85rem; font-weight: 700; flex: 1; }
+.barStore { font-size: 0.75rem; color: var(--text-muted); }
+.barTally { font-size: 0.8rem; font-weight: 700; color: var(--accent); min-width: 24px; text-align: right; }
+.barTrack { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.barFill  { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s; }
+
+.fulfillRow  { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.fulfillTrack { flex: 1; height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; }
+.fulfillFill  { height: 100%; background: var(--success); border-radius: 6px; transition: width 0.4s; }
+.fulfillPct   { font-size: 1.1rem; font-weight: 800; min-width: 44px; text-align: right; }
+.fulfillNote  { font-size: 0.8rem; color: var(--text-muted); margin: 0; }

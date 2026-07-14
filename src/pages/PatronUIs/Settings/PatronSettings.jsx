@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import * as patronService from '../../../services/patronService'
 import * as authService from '../../../services/authService'
+import ImageUpload from '../../../components/ImageUpload/ImageUpload'
 import styles from './PatronSettings.module.css'
 
 function validatePassword(pw) {
@@ -110,15 +111,11 @@ export default function PatronSettings() {
           />
         </label>
 
-        <label className={styles.fieldLabel}>Photo URL <span className={styles.optional}>(optional)</span>
-          <input
-            name="photo"
-            value={formData.photo}
-            onChange={handleChange}
-            className={styles.input}
-            placeholder="https://…"
-          />
-        </label>
+        <ImageUpload
+          value={formData.photo}
+          onChange={(url) => setFormData(f => ({ ...f, photo: url }))}
+          label="Profile photo"
+        />
 
         <hr className={styles.divider} />
         <p className={styles.sectionLabel}>Location</p>
