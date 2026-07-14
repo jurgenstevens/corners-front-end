@@ -1,0 +1,73 @@
+.page {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px 20px;
+  background: var(--bg);
+}
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px 28px;
+  width: 100%; max-width: 420px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-align: center;
+}
+
+.photo {
+  width: 96px; height: 96px;
+  border-radius: 50%; object-fit: cover;
+  margin-bottom: 4px;
+}
+
+.photoPlaceholder {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: var(--accent); color: var(--accent-text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.name        { font-size: 1.6rem; font-weight: 800; margin: 0; }
+.city        { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+.description { font-size: 0.9rem; color: var(--text-muted); margin: 0; max-width: 320px; }
+
+.actions {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  width: 100%; margin-top: 12px;
+}
+
+.cta { font-size: 1rem; font-weight: 700; margin: 0; }
+
+.primaryBtn {
+  width: 100%;
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 10px;
+  padding: 14px; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.primaryBtn:hover:not(:disabled) { opacity: 0.85; }
+.primaryBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.secondaryLink {
+  font-size: 0.85rem; color: var(--text-muted); text-decoration: underline;
+}
+
+.success   { font-size: 1rem; font-weight: 700; color: var(--success); }
+.wrongRole { font-size: 0.9rem; color: var(--text-muted); }
+
+.center {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; padding: 20px; text-align: center;
+}
+.center h2 { font-size: 1.2rem; font-weight: 800; }
+.center p  { color: var(--text-muted); font-size: 0.9rem; }
+
+.spinner {
+  display: inline-block; width: 32px; height: 32px;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -8,7 +8,8 @@ import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
 import PatronDashboard from './pages/Dashboards/PatronDashboard'
 import BusinessDashboard from './pages/Dashboards/BusinessDashboard'
-// import DistributorDashboard from './pages/Dashboards/DistributorDashboard' — hidden until distributor launch
+import DistributorDashboard from './pages/Dashboards/DistributorDashboard'
+import JoinBusiness from './pages/Public/JoinBusiness'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 // business pages
 import BusinessProducts from './pages/BusinessUIs/Products/BusinessProducts'
@@ -31,10 +32,10 @@ import PatronRequests from './pages/PatronUIs/Requests/PatronRequests'
 import PatronPromotions from './pages/PatronUIs/Promotions/PatronPromotions'
 import PatronSettings from './pages/PatronUIs/Settings/PatronSettings'
 
-// distributor pages — hidden until distributor launch, re-enable with routes below
-// import DistributorOrders from './pages/DistributorUIs/DistributorOrders'
-// import DistributorCatalog from './pages/DistributorUIs/DistributorCatalog'
-// import DistributorSettings from './pages/DistributorUIs/DistributorSettings'
+// distributor pages
+import DistributorOrders from './pages/DistributorUIs/DistributorOrders'
+import DistributorCatalog from './pages/DistributorUIs/DistributorCatalog'
+import DistributorSettings from './pages/DistributorUIs/DistributorSettings'
 
 // admin
 import AdminLogin from './pages/Admin/AdminLogin'
@@ -56,6 +57,10 @@ import DashboardLayout from './components/DashboardLayout/DashboardLayout'
 import NavBar from './components/NavBar/NavBar'
 import MobileBottomNav from './components/MobileBottomNav/MobileBottomNav'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import IdleWarningModal from './components/IdleWarningModal/IdleWarningModal'
+
+// hooks
+import useIdleTimeout from './hooks/useIdleTimeout'
 
 // services
 import * as authService from './services/authService'
@@ -88,12 +93,12 @@ const BUSINESS_NAV = [
   { to: '/dashboard/business/settings',         label: 'Settings',     icon: '⚙️'            },
 ]
 
-// const DISTRIBUTOR_NAV = [
-//   { to: '/dashboard/distributor',          label: 'Home',     icon: '🏠', end: true },
-//   { to: '/dashboard/distributor/orders',   label: 'Orders',   icon: '📦'            },
-//   { to: '/dashboard/distributor/catalog',  label: 'Catalog',  icon: '📋'            },
-//   { to: '/dashboard/distributor/settings', label: 'Settings', icon: '⚙️'            },
-// ]
+const DISTRIBUTOR_NAV = [
+  { to: '/dashboard/distributor',          label: 'Home',     icon: '🏠', end: true },
+  { to: '/dashboard/distributor/orders',   label: 'Orders',   icon: '📦'            },
+  { to: '/dashboard/distributor/catalog',  label: 'Catalog',  icon: '📋'            },
+  { to: '/dashboard/distributor/settings', label: 'Settings', icon: '⚙️'            },
+]
 
 function getDashboard(user) {
   if (!user) return '/'
@@ -116,6 +121,16 @@ function App() {
 
   const handleAuthEvt = (u) => { setUser(u) }
 
+  const isBusiness = user?.authorizationLevel >= 250
+  const idleTimeoutMs = !user ? Infinity : isBusiness ? 30 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000
+  const idleWarningMs = !user ? 60 * 1000  : isBusiness ? 2 * 60 * 1000  : 5 * 60 * 1000
+
+  const { showWarning, secondsLeft, resetTimer } = useIdleTimeout({
+    timeoutMs: idleTimeoutMs,
+    warningMs: idleWarningMs,
+    onLogout:  handleLogout,
+  })
+
   useEffect(() => { setUser(authService.getUser()) }, [])
 
   return (
@@ -127,6 +142,7 @@ function App() {
 
         {/* Public */}
         <Route path="/" element={user ? <Navigate to={getDashboard(user)} replace /> : <Landing />} />
+        <Route path="/join/:slug" element={<JoinBusiness />} />
         <Route path="/auth/signup" element={<Signup handleAuthEvt={handleAuthEvt} />} />
         <Route path="/auth/login"  element={<Login  handleAuthEvt={handleAuthEvt} />} />
         <Route path="/auth/change-password" element={<ProtectedRoute user={user}><ChangePassword handleAuthEvt={handleAuthEvt} /></ProtectedRoute>} />
@@ -184,7 +200,7 @@ function App() {
           <Route path="distributors/:distributorId"     element={<BusinessDistributorCatalog />} />
         </Route>
 
-        {/* ── Distributor routes — hidden until distributor launch, re-enable to test locally ──
+        {/* ── Distributor ── */}
         <Route
           path="/dashboard/distributor"
           element={
@@ -193,6 +209,7 @@ function App() {
                 Dashboard={DistributorDashboard}
                 user={user}
                 homePath="/dashboard/distributor"
+                navItems={DISTRIBUTOR_NAV}
               />
             </ProtectedRoute>
           }
@@ -201,7 +218,6 @@ function App() {
           <Route path="catalog"  element={<DistributorCatalog />} />
           <Route path="settings" element={<DistributorSettings />} />
         </Route>
-        ── */}
         {/* ── Admin dashboard (nested under /dashboard/admin) ── */}
         <Route
           path="/dashboard/admin"
@@ -225,6 +241,12 @@ function App() {
         </Route>
       </Routes>
       {!isAdminPath && <MobileBottomNav user={user} />}
+      <IdleWarningModal
+        showWarning={showWarning}
+        secondsLeft={secondsLeft}
+        resetTimer={resetTimer}
+        onLogout={handleLogout}
+      />
     </>
   )
 }

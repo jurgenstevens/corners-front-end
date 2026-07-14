@@ -106,3 +106,6 @@
 
 .success { color: var(--success); font-size: 0.88rem; font-weight: 600; padding: 10px 14px; background: rgba(34,197,94,0.08); border-radius: 6px; }
 .error   { color: var(--danger);  font-size: 0.88rem; font-weight: 600; padding: 10px 14px; background: rgba(239,68,68,0.08);  border-radius: 6px; }
+
+.qrSection { display: flex; flex-direction: column; gap: 12px; }
+.qrWrap    { display: inline-flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }

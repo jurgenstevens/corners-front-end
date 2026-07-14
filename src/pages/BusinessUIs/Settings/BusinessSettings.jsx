@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { QRCodeCanvas } from 'qrcode.react'
 import * as authService from '../../../services/authService'
+import * as businessService from '../../../services/businessService'
 import styles from './BusinessSettings.module.css'
 
 function validatePassword(pw) {
@@ -13,6 +15,27 @@ function validatePassword(pw) {
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
+  const [slug, setSlug] = useState(null)
+  const qrRef = useRef(null)
+
+  useEffect(() => {
+    businessService.getMyBusiness().then(data => {
+      if (data?.slug) setSlug(data.slug)
+    })
+  }, [])
+
+  function handleDownload() {
+    const canvas = qrRef.current
+    if (!canvas) return
+    const url = canvas.toDataURL('image/png')
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `corners-qr-${slug}.png`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
   const [pwForm, setPwForm] = useState({ password: '', newPassword: '', newPasswordConf: '' })
   const [showPw, setShowPw] = useState({ current: false, next: false, conf: false })
   const [pwSaving, setPwSaving] = useState(false)
@@ -119,6 +142,31 @@ export default function BusinessSettings() {
           {pwSaving ? 'Updating…' : 'Change Password'}
         </button>
       </form>
+
+      <hr className={styles.divider} />
+      <p className={styles.sectionLabel}>Your QR Code</p>
+
+      {slug ? (
+        <div className={styles.qrSection}>
+          <p className={styles.sectionSub}>Customers scan this to follow your store instantly.</p>
+          <div className={styles.qrWrap}>
+            <QRCodeCanvas
+              ref={qrRef}
+              value={`${window.location.origin}/join/${slug}`}
+              size={200}
+              level="H"
+              includeMargin={true}
+            />
+          </div>
+          <button className={styles.linkBtn} onClick={handleDownload}>
+            Download QR Code
+          </button>
+        </div>
+      ) : (
+        <p className={styles.sectionSub}>
+          Your QR code will appear here once your store is approved.
+        </p>
+      )}
     </div>
   )
 }

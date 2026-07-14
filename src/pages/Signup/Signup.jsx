@@ -73,6 +73,92 @@ These Terms shall be governed by and construed in accordance with the laws of th
 10. CONTACT
 For questions about these Terms, please contact us through the platform.`
 
+const PRIVACY_TEXT = `PRIVACY POLICY — CORNERS
+
+Effective date: July 2026
+Last updated: July 2026
+
+Corners ("we", "our", or "us") operates a neighborhood marketplace platform connecting patrons, local businesses, and distributors. This Privacy Policy explains what information we collect, how we use it, who we share it with, and your rights regarding your data.
+
+1. INFORMATION WE COLLECT
+
+Account information: When you create an account we collect your name, email address, and password (stored as a bcrypt hash — we never store your plain-text password).
+
+Location information: Patrons provide a zip code, city, and state at signup. Businesses provide a full address including street, city, state, and zip code. This information is used to match patrons with nearby businesses.
+
+Profile photo: If you upload a profile or product photo, it is stored with Cloudinary, Inc. (cloudinary.com). We store the URL of your photo, not the file itself.
+
+Product requests and votes: When you submit a product request or vote on a product, we store the content of that request and your vote, associated with your account.
+
+Messages: Messages sent between patrons and businesses are stored in our database and visible to both parties in the conversation.
+
+Usage data: We collect standard server logs including IP address, browser type, and pages visited. We use this for security and debugging purposes only.
+
+Payment information: We do not store your credit or debit card information. Payments are processed by Stripe, Inc. (stripe.com). Stripe's privacy policy governs how your payment data is handled.
+
+2. HOW WE USE YOUR INFORMATION
+
+We use your information to:
+- Create and manage your account
+- Match patrons with nearby businesses based on zip code
+- Send you notifications about product requests, approvals, and store activity
+- Send weekly email digests (you may opt out at any time in your settings)
+- Detect and prevent fraud, abuse, and spam
+- Improve the platform
+
+We do not sell your personal information to third parties. We do not use your data for advertising by external companies.
+
+3. WHO WE SHARE YOUR INFORMATION WITH
+
+Service providers who process data on our behalf:
+- MongoDB Atlas (database hosting) — mongodb.com
+- Cloudinary, Inc. (image storage) — cloudinary.com
+- Stripe, Inc. (payment processing) — stripe.com
+- Render (backend hosting) — render.com
+- Netlify (frontend hosting) — netlify.com
+- Anthropic, PBC (AI-powered PDF parsing for distributors) — anthropic.com
+- Resend or SendGrid (email delivery)
+
+We share only the minimum information necessary for each provider to perform their service. We do not share your data with data brokers, advertisers, or marketing companies.
+
+Business visibility: When a patron connects to a business, the patron's name and profile photo are visible to that business. Businesses' names, addresses, and product catalogs are visible to connected patrons.
+
+Legal requirements: We may disclose your information if required by law, court order, or to protect the rights and safety of Corners users.
+
+4. DATA RETENTION
+
+Notifications are automatically deleted after 14 days. Account data is retained until you request deletion. Billing records are retained per Stripe's data retention policy. Product requests and votes are retained as long as your account is active.
+
+5. YOUR RIGHTS
+
+You have the right to:
+- Access the personal data we hold about you
+- Request correction of inaccurate data
+- Request deletion of your account and associated data
+- Opt out of email communications at any time
+
+To exercise any of these rights, contact us through the platform or at the email address on file with your account.
+
+6. CHILDREN
+
+Corners is not intended for users under the age of 13. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has created an account, please contact us and we will delete it promptly.
+
+7. CALIFORNIA RESIDENTS (CCPA)
+
+If you are a California resident, you have additional rights under the California Consumer Privacy Act, including the right to know what personal information we collect, the right to delete it, and the right to opt out of its sale. We do not sell personal information. To exercise your CCPA rights, contact us through the platform.
+
+8. SECURITY
+
+We use industry-standard security practices including HTTPS encryption, bcrypt password hashing, and JWT-based authentication. No method of transmission over the Internet is 100% secure. In the event of a data breach that affects your personal information, we will notify you as required by applicable law.
+
+9. CHANGES TO THIS POLICY
+
+We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top and, for material changes, notify you via email or an in-app notice.
+
+10. CONTACT
+
+For questions about this Privacy Policy or your personal data, contact us through the Corners platform.`
+
 export default function Signup({ handleAuthEvt }) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -94,6 +180,7 @@ export default function Signup({ handleAuthEvt }) {
   const [distributorCategories, setDistributorCategories] = useState([])
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
   const [error, setError] = useState('')
 
   function toggleDistributorCategory(cat) {
@@ -118,7 +205,7 @@ export default function Signup({ handleAuthEvt }) {
     e.preventDefault()
     setError('')
     if (!agreedToTerms) {
-      return setError('You must agree to the Terms and Conditions to create an account.')
+      return setError('You must agree to the Terms and Conditions and Privacy Policy to create an account.')
     }
     if (formData.password !== confirmPassword) {
       return setError('Passwords do not match.')
@@ -338,6 +425,14 @@ export default function Signup({ handleAuthEvt }) {
             >
               Terms and Conditions
             </button>
+            {' '}and{' '}
+            <button
+              type="button"
+              className={styles.termsLink}
+              onClick={e => { e.stopPropagation(); setShowPrivacy(true) }}
+            >
+              Privacy Policy
+            </button>
           </span>
         </div>
 
@@ -361,6 +456,27 @@ export default function Signup({ handleAuthEvt }) {
               <button
                 className={styles.agreeBtn}
                 onClick={() => { setAgreedToTerms(true); setShowTerms(false) }}
+              >
+                I Agree
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Privacy Policy modal ── */}
+      {showPrivacy && (
+        <div className={styles.overlay} onClick={() => setShowPrivacy(false)}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Privacy Policy</h3>
+              <button className={styles.closeBtn} onClick={() => setShowPrivacy(false)}>✕</button>
+            </div>
+            <pre className={styles.termsBody}>{PRIVACY_TEXT}</pre>
+            <div className={styles.modalFooter}>
+              <button
+                className={styles.agreeBtn}
+                onClick={() => { setAgreedToTerms(true); setShowPrivacy(false) }}
               >
                 I Agree
               </button>
