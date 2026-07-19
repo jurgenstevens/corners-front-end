@@ -8,7 +8,7 @@ import styles from './PatronDashboard.module.css'
 const FILTERS = [
   { value: 'all',       label: 'All'       },
   { value: 'connected', label: 'Connected' },
-  { value: 'new',       label: 'Discover'  },
+  // { value: 'new', label: 'Discover' },  // Hidden until 10+ live stores
 ]
 const SORTS = [
   { value: 'name',   label: 'Name'   },

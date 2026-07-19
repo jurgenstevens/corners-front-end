@@ -1,15 +1,16 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import styles from './MobileBottomNav.module.css'
 
-const DASHBOARD_ROOTS = ['/dashboard/distributor']
+const DASHBOARD_ROOTS = []
 
 export default function MobileBottomNav({ user }) {
   const { pathname } = useLocation()
   if (!user) return null
   if (DASHBOARD_ROOTS.includes(pathname)) return null
 
-  const isPatron   = user.authorizationLevel >= 150 && user.authorizationLevel < 250
-  const isBusiness = user.authorizationLevel >= 250 && user.authorizationLevel < 500
+  const isPatron      = user.authorizationLevel >= 150 && user.authorizationLevel < 250
+  const isBusiness    = user.authorizationLevel >= 250 && user.authorizationLevel < 500
+  const isDistributor = user.authorizationLevel >= 500
 
   return (
     <nav className={styles.nav}>
@@ -47,6 +48,22 @@ export default function MobileBottomNav({ user }) {
             <span>🏷️</span><span className={styles.label}>Promotions</span>
           </NavLink>
           <NavLink to="/dashboard/patron/settings" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>⚙️</span><span className={styles.label}>Settings</span>
+          </NavLink>
+        </>
+      )}
+      {isDistributor && (
+        <>
+          <NavLink to="/dashboard/distributor" end className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>🏠</span><span className={styles.label}>Home</span>
+          </NavLink>
+          <NavLink to="/dashboard/distributor/orders" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>📦</span><span className={styles.label}>Orders</span>
+          </NavLink>
+          <NavLink to="/dashboard/distributor/catalog" className={({ isActive }) => isActive ? styles.active : ''}>
+            <span>📋</span><span className={styles.label}>Catalog</span>
+          </NavLink>
+          <NavLink to="/dashboard/distributor/settings" className={({ isActive }) => isActive ? styles.active : ''}>
             <span>⚙️</span><span className={styles.label}>Settings</span>
           </NavLink>
         </>

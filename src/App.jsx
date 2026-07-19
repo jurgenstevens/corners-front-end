@@ -88,7 +88,7 @@ const BUSINESS_NAV = [
   { to: '/dashboard/business/inventory',        label: 'Inventory',    icon: '🗂️'            },
   { to: '/dashboard/business/promotions',       label: 'Promotions',   icon: '🏷️'            },
   { to: '/dashboard/business/patron-requests',  label: 'Patrons',      icon: '👥'            },
-  { to: '/dashboard/business/distributors',     label: 'Distributors', icon: '🚚'            },
+  // { to: '/dashboard/business/distributors', label: 'Distributors', icon: '🚚' },  // Hidden until distributor launch
   { to: '/dashboard/business/analytics',        label: 'Analytics',    icon: '📊'            },
   { to: '/dashboard/business/settings',         label: 'Settings',     icon: '⚙️'            },
 ]
