@@ -64,7 +64,7 @@ export default function PatronMyStores() {
   const filtered = all
     .filter(b => {
       if (filter === 'connected') return b._connected
-      if (filter === 'new') return !b._connected
+      // if (filter === 'new') return !b._connected
       return true
     })
     .sort((a, b) => {
@@ -100,7 +100,7 @@ export default function PatronMyStores() {
           <select className={styles.controlBtn} value={filter} onChange={e => setFilter(e.target.value)}>
             <option value="all">Filter: All</option>
             <option value="connected">Filter: Connected</option>
-            <option value="new">Filter: Discover</option>
+            {/* <option value="new">Filter: Discover</option> */}
           </select>
           <select className={styles.controlBtn} value={sortBy} onChange={e => setSortBy(e.target.value)}>
             <option value="name">Sort: Name</option>

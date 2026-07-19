@@ -14,7 +14,7 @@ export default function PatronStoreDetail({ user }) {
   const [products, setProducts] = useState([])
   const [activeTab, setActiveTab] = useState('info')
   const [photoIdx, setPhotoIdx] = useState(0)
-  const [reqForm, setReqForm] = useState({ name:'', brand:'', description:'' })
+  const [reqForm, setReqForm] = useState({ type:'', name:'', brand:'', description:'' })
   const [submitting, setSubmitting] = useState(false)
   const [myVotes, setMyVotes] = useState({})
   const [disconnecting, setDisconnecting] = useState(false)
@@ -53,7 +53,7 @@ export default function PatronStoreDetail({ user }) {
       }
       setProducts(prev => [newProduct, ...prev])
       setMyVotes(prev => ({ ...prev, [newProduct._id]: true }))
-      setReqForm({ name:'', brand:'', description:'' })
+      setReqForm({ type:'', name:'', brand:'', description:'' })
       setActiveTab('requests')
       setReqSuccess(true)
     } catch {
@@ -207,6 +207,19 @@ export default function PatronStoreDetail({ user }) {
             <h3>Request a Product</h3>
             {/* show API error inline so the patron knows if the request failed */}
             {reqError && <p className={styles.reqError}>{reqError}</p>}
+            <select value={reqForm.type} onChange={e => setReqForm(p => ({...p, type: e.target.value}))}>
+              <option value="">Select a type (optional)</option>
+              <option value="Food">Food</option>
+              <option value="Beverage">Beverage</option>
+              <option value="Snack">Snack</option>
+              <option value="Household">Household</option>
+              <option value="Personal Care">Personal Care</option>
+              <option value="Baby & Kids">Baby & Kids</option>
+              <option value="Pet">Pet</option>
+              <option value="Tobacco">Tobacco</option>
+              <option value="Lottery & Gaming">Lottery & Gaming</option>
+              <option value="Other">Other</option>
+            </select>
             <input placeholder="Product name *" value={reqForm.name} onChange={e => setReqForm(p => ({...p, name: e.target.value}))} required />
             <input placeholder="Brand" value={reqForm.brand} onChange={e => setReqForm(p => ({...p, brand: e.target.value}))} />
             <textarea placeholder="Description / notes" rows={2} value={reqForm.description} onChange={e => setReqForm(p => ({...p, description: e.target.value}))} />

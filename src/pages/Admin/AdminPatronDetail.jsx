@@ -18,11 +18,25 @@ export default function AdminPatronDetail() {
   const [confirmAction, setConfirmAction] = useState(null)
   const [suspendDays, setSuspendDays] = useState(7)
   const [feedback, setFeedback] = useState('')
+  const [approvedFlash, setApprovedFlash] = useState({})
+  const [editMode, setEditMode] = useState(false)
+  const [editForm, setEditForm] = useState({ name: '', email: '', zip: '', city: '', state: '' })
+  const [editSaving, setEditSaving] = useState(false)
+  const [editError, setEditError] = useState('')
 
   useEffect(() => {
     adminService.getPatronDetail(id).then(data => {
       setDetail(data)
       setLoading(false)
+      if (data?.patron) {
+        setEditForm({
+          name:  data.patron.name  || '',
+          email: data.patron.email || '',
+          zip:   data.patron.patron?.location?.zip   || '',
+          city:  data.patron.patron?.location?.city  || '',
+          state: data.patron.patron?.location?.state || '',
+        })
+      }
     })
   }, [id])
 
@@ -64,10 +78,63 @@ export default function AdminPatronDetail() {
     navigate('/dashboard/admin/patrons')
   }
 
+  async function handleApproveForStore(productId) {
+    await adminService.approveProductForStore(productId)
+    setDetail(d => ({
+      ...d,
+      productRequests: d.productRequests.map(p =>
+        p._id === productId ? { ...p, status: 'approved' } : p
+      ),
+    }))
+    setApprovedFlash(prev => ({ ...prev, [productId]: true }))
+    setTimeout(() => {
+      setApprovedFlash(prev => { const n = { ...prev }; delete n[productId]; return n })
+    }, 2000)
+  }
+
+  async function handleEditSave() {
+    setEditSaving(true)
+    setEditError('')
+    try {
+      const result = await adminService.updateUser(patron._id, editForm)
+      if (result.err) { setEditError(result.err); return }
+      setDetail(d => ({
+        ...d,
+        patron: {
+          ...d.patron,
+          name:  editForm.name  || d.patron.name,
+          email: editForm.email || d.patron.email,
+          patron: d.patron.patron ? {
+            ...d.patron.patron,
+            location: { zip: editForm.zip, city: editForm.city, state: editForm.state },
+          } : d.patron.patron,
+        },
+      }))
+      setEditMode(false)
+      setFeedback('Profile updated successfully.')
+    } catch (err) {
+      setEditError(err.message || 'Failed to update profile.')
+    } finally {
+      setEditSaving(false)
+    }
+  }
+
+  function handleEditCancel() {
+    setEditMode(false)
+    setEditError('')
+    setEditForm({
+      name:  patron.name  || '',
+      email: patron.email || '',
+      zip:   patron.patron?.location?.zip   || '',
+      city:  patron.patron?.location?.city  || '',
+      state: patron.patron?.location?.state || '',
+    })
+  }
+
   if (loading) return <p className={styles.loading}>Loading…</p>
   if (!detail?.patron) return <p className={styles.error}>Patron not found.</p>
 
-  const { patron, connections = [], votes = [], activeFlags = [] } = detail
+  const { patron, connections = [], votes = [], activeFlags = [], productRequests = [] } = detail
   const status = patron.isBanned ? 'banned' : patron.isSuspended ? 'suspended' : 'active'
 
   return (
@@ -85,37 +152,82 @@ export default function AdminPatronDetail() {
               <h2 className={styles.name}>{patron.name}</h2>
               <p className={styles.email}>{patron.email}</p>
             </div>
-            <span className={`${styles.statusBadge} ${styles[`status_${status}`]}`}>{status}</span>
+            <div className={styles.headerRight}>
+              <span className={`${styles.statusBadge} ${styles[`status_${status}`]}`}>{status}</span>
+              {!editMode && (
+                <button className={styles.editBtn} onClick={() => setEditMode(true)}>Edit</button>
+              )}
+            </div>
           </div>
 
-          <div className={styles.metaGrid}>
-            <span className={styles.metaLabel}>Joined</span>
-            <span>{new Date(patron.createdAt).toLocaleDateString()}</span>
-            {patron.isSuspended && patron.suspendedUntil && (
-              <>
-                <span className={styles.metaLabel}>Suspended until</span>
-                <span>{new Date(patron.suspendedUntil).toLocaleDateString()}</span>
-              </>
-            )}
-            {patron.isSuspended && patron.suspensionReason && (
-              <>
-                <span className={styles.metaLabel}>Reason</span>
-                <span>{patron.suspensionReason}</span>
-              </>
-            )}
-            {patron.isBanned && patron.banReason && (
-              <>
-                <span className={styles.metaLabel}>Ban reason</span>
-                <span>{patron.banReason}</span>
-              </>
-            )}
-            {patron.isBanned && patron.bannedAt && (
-              <>
-                <span className={styles.metaLabel}>Banned</span>
-                <span>{new Date(patron.bannedAt).toLocaleDateString()}</span>
-              </>
-            )}
-          </div>
+          {editMode ? (
+            <div className={styles.editForm}>
+              {editError && <p className={styles.editError}>{editError}</p>}
+              <label className={styles.editField}>
+                <span className={styles.metaLabel}>Name</span>
+                <input className={styles.input} value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} />
+              </label>
+              <label className={styles.editField}>
+                <span className={styles.metaLabel}>Email</span>
+                <input type="email" className={styles.input} value={editForm.email} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} />
+              </label>
+              <label className={styles.editField}>
+                <span className={styles.metaLabel}>Zip</span>
+                <input className={styles.input} value={editForm.zip} maxLength={5} onChange={e => setEditForm(f => ({ ...f, zip: e.target.value }))} />
+              </label>
+              <label className={styles.editField}>
+                <span className={styles.metaLabel}>City</span>
+                <input className={styles.input} value={editForm.city} onChange={e => setEditForm(f => ({ ...f, city: e.target.value }))} />
+              </label>
+              <label className={styles.editField}>
+                <span className={styles.metaLabel}>State</span>
+                <input className={styles.input} value={editForm.state} onChange={e => setEditForm(f => ({ ...f, state: e.target.value }))} />
+              </label>
+              <div className={styles.rowActions}>
+                <button className={styles.btnGreen} onClick={handleEditSave} disabled={editSaving}>
+                  {editSaving ? 'Saving…' : 'Save changes'}
+                </button>
+                <button className={styles.btnGhost} onClick={handleEditCancel} disabled={editSaving}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.metaGrid}>
+              <span className={styles.metaLabel}>Joined</span>
+              <span>{new Date(patron.createdAt).toLocaleDateString()}</span>
+              {patron.patron?.location?.zip && (
+                <>
+                  <span className={styles.metaLabel}>Location</span>
+                  <span>{[patron.patron.location.city, patron.patron.location.state, patron.patron.location.zip].filter(Boolean).join(', ')}</span>
+                </>
+              )}
+              {patron.isSuspended && patron.suspendedUntil && (
+                <>
+                  <span className={styles.metaLabel}>Suspended until</span>
+                  <span>{new Date(patron.suspendedUntil).toLocaleDateString()}</span>
+                </>
+              )}
+              {patron.isSuspended && patron.suspensionReason && (
+                <>
+                  <span className={styles.metaLabel}>Reason</span>
+                  <span>{patron.suspensionReason}</span>
+                </>
+              )}
+              {patron.isBanned && patron.banReason && (
+                <>
+                  <span className={styles.metaLabel}>Ban reason</span>
+                  <span>{patron.banReason}</span>
+                </>
+              )}
+              {patron.isBanned && patron.bannedAt && (
+                <>
+                  <span className={styles.metaLabel}>Banned</span>
+                  <span>{new Date(patron.bannedAt).toLocaleDateString()}</span>
+                </>
+              )}
+            </div>
+          )}
 
           {feedback && <p className={styles.feedback}>{feedback}</p>}
 
@@ -227,6 +339,43 @@ export default function AdminPatronDetail() {
                 </span>
               </Link>
             ))
+          }
+        </div>
+
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Product Requests ({productRequests.length})</h3>
+          {productRequests.length === 0
+            ? <p className={styles.empty}>No product requests.</p>
+            : productRequests.map(p => {
+                const badgeClass =
+                  p.status === 'stocked'  ? styles.success :
+                  p.status === 'approved' ? styles.info    :
+                  p.status === 'on_sale'  ? styles.warn    :
+                  p.status === 'rejected' ? styles.danger  :
+                  styles.muted
+                return (
+                  <div key={p._id} className={styles.reqRow}>
+                    <div className={styles.reqInfo}>
+                      <p className={styles.itemName}>{p.name}</p>
+                      {p.brand && <p className={styles.itemMeta}>{p.brand}</p>}
+                      {p.storeName && <p className={styles.itemMeta}>{p.storeName}</p>}
+                    </div>
+                    <div className={styles.reqRight}>
+                      <span className={`${styles.reqStatus} ${badgeClass}`}>
+                        {p.status.replace(/_/g, ' ')}
+                      </span>
+                      {p.status === 'pending' && !approvedFlash[p._id] && (
+                        <button className={styles.btnApprove} onClick={() => handleApproveForStore(p._id)}>
+                          Approve for store
+                        </button>
+                      )}
+                      {approvedFlash[p._id] && (
+                        <span className={styles.approvedFlash}>Approved</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })
           }
         </div>
       </div>

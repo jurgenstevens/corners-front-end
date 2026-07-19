@@ -107,5 +107,19 @@
 .success { color: var(--success); font-size: 0.88rem; font-weight: 600; padding: 10px 14px; background: rgba(34,197,94,0.08); border-radius: 6px; }
 .error   { color: var(--danger);  font-size: 0.88rem; font-weight: 600; padding: 10px 14px; background: rgba(239,68,68,0.08);  border-radius: 6px; }
 
-.qrSection { display: flex; flex-direction: column; gap: 12px; }
+.qrSection { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .qrWrap    { display: inline-flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+
+.qrToggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.qrToggleRow:hover { background: rgba(128,128,128,0.06); }
+
+.qrToggleLabel { font-size: 0.8rem; font-weight: 500; }
+
+.qrCaret { font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }

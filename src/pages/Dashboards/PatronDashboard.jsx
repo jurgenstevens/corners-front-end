@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as connectionService from '../../services/connectionService'
+import * as productService from '../../services/productService'
 import BugReportModal from '../../components/BugReportModal/BugReportModal'
 import MessageInbox from '../../components/MessageInbox/MessageInbox'
 import styles from './PatronDashboard.module.css'
@@ -27,6 +28,10 @@ export default function PatronDashboard({ user }) {
   const [showBugReport, setShowBugReport] = useState(false)
   const navigate    = useNavigate()
   const debounceRef = useRef(null)
+  const [itemQuery, setItemQuery]         = useState('')
+  const [itemResults, setItemResults]     = useState([])
+  const [itemSearching, setItemSearching] = useState(false)
+  const [itemSearched, setItemSearched]   = useState(false)
 
   function fetchNearby(zip) {
     setLoading(true)
@@ -66,6 +71,35 @@ export default function PatronDashboard({ user }) {
     }
   }
 
+  async function handleItemSearch() {
+    if (!itemQuery.trim()) return
+    setItemSearching(true)
+    setItemSearched(true)
+    setItemResults([])
+    try {
+      const perStore = await Promise.all(
+        connected.map(biz =>
+          productService.getProductsByBusiness(biz._id)
+            .then(products => {
+              if (!Array.isArray(products)) return []
+              const q = itemQuery.toLowerCase()
+              return products
+                .filter(p => p.status === 'stocked' || p.status === 'on_sale')
+                .filter(p =>
+                  (p.name || '').toLowerCase().includes(q) ||
+                  (p.brand || '').toLowerCase().includes(q)
+                )
+                .map(p => ({ ...p, _storeName: biz.displayName || biz.profile?.name || 'Unknown' }))
+            })
+            .catch(() => [])
+        )
+      )
+      setItemResults(perStore.flat())
+    } finally {
+      setItemSearching(false)
+    }
+  }
+
   const connectedIds = new Set(connected.map(s => s._id))
 
   const all = [
@@ -89,6 +123,8 @@ export default function PatronDashboard({ user }) {
 
   return (
     <div className={styles.page}>
+
+      <h4 className={styles.heading}>Search for stores nearby</h4>
 
       {/* Search */}
       <div className={styles.searchBar}>
@@ -125,19 +161,6 @@ export default function PatronDashboard({ user }) {
             {label}
           </button>
         ))}
-      </div>
-
-      {/* Map placeholder */}
-      <div className={styles.mapBox}>
-        <div className={styles.mapGrid} />
-        {filtered.slice(0, 5).map((b, i) => (
-          <div key={b._id} className={`${styles.mapPin} ${styles[`p${i}`]}`}>
-            {b.displayName || b.profile?.name || '?'}
-          </div>
-        ))}
-        {filtered.length === 0 && !loading && (
-          <span className={styles.mapEmpty}>No results in this area</span>
-        )}
       </div>
 
       {!loading && (
@@ -201,6 +224,52 @@ export default function PatronDashboard({ user }) {
           <p>No businesses found. Try adjusting your search or filter.</p>
         </div>
       )}
+
+      {/* Item Search */}
+      <div className={styles.itemSearchSection}>
+        <h4 className={styles.sectionHeading}>Item Search</h4>
+        <p className={styles.sectionSub}>Search products available across your connected stores.</p>
+        <div className={styles.itemSearchBar}>
+          <input
+            className={styles.itemSearchInput}
+            placeholder="Search for an item…"
+            value={itemQuery}
+            onChange={e => setItemQuery(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleItemSearch() }}
+          />
+          <button
+            className={styles.itemSearchBtn}
+            onClick={handleItemSearch}
+            disabled={itemSearching}
+          >
+            {itemSearching ? '…' : 'Search'}
+          </button>
+        </div>
+        {itemSearching && (
+          <div className={styles.skeletons}>
+            {[1, 2, 3].map(n => <div key={n} className={styles.skeleton} />)}
+          </div>
+        )}
+        {!itemSearching && itemSearched && itemResults.length === 0 && (
+          <p className={styles.empty}>No matching products found in your connected stores.</p>
+        )}
+        {!itemSearching && itemResults.length > 0 && (
+          <div className={styles.itemResultList}>
+            {itemResults.map((p, i) => (
+              <div key={`${p._id}-${i}`} className={styles.itemResultRow}>
+                <div className={styles.itemResultInfo}>
+                  <span className={styles.itemResultName}>{p.name}</span>
+                  {p.brand && <span className={styles.itemResultBrand}>{p.brand}</span>}
+                  <span className={styles.itemResultStore}>{p._storeName}</span>
+                </div>
+                <span className={`${styles.itemStatusBadge} ${p.status === 'on_sale' ? styles.badgeSale : styles.badgeStocked}`}>
+                  {p.status === 'on_sale' ? 'On Sale' : 'In Store'}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <footer className={styles.footer}>
         <button className={styles.bugLink} onClick={() => setShowBugReport(true)}>

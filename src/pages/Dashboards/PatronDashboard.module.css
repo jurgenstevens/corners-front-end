@@ -1,5 +1,7 @@
 .page { max-width: 640px; margin: 0 auto; padding: 24px 20px 100px; }
 
+.heading { font-size: 1rem; font-weight: 700; margin: 0 0 12px; }
+
 /* ── Search ── */
 .searchBar {
   display: flex; align-items: center; gap: 10px;
@@ -44,45 +46,6 @@
   width: 1px; height: 16px;
   background: var(--border);
   margin: 0 2px;
-}
-
-/* ── Map placeholder ── */
-.mapBox {
-  position: relative; height: 200px;
-  background: #e8ead6; border-radius: 16px;
-  margin-bottom: 14px; overflow: hidden;
-}
-:global([data-theme='dark']) .mapBox { background: #1e2318; }
-
-.mapGrid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-:global([data-theme='dark']) .mapGrid {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-}
-.mapPin {
-  position: absolute;
-  background: #1a1a1a; color: #fff;
-  font-size: 0.68rem; font-weight: 700;
-  padding: 4px 10px; border-radius: 20px;
-  white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-:global([data-theme='dark']) .mapPin { background: #f59e0b; color: #000; }
-.p0 { top: 40%; left: 32%; }
-.p1 { top: 20%; left: 58%; }
-.p2 { top: 60%; left: 62%; }
-.p3 { top: 30%; left: 12%; }
-.p4 { top: 70%; left: 20%; }
-.mapEmpty {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-muted); font-size: 0.85rem;
 }
 
 .resultCount { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin: 0 0 12px; }
@@ -153,3 +116,44 @@
   cursor: pointer; padding: 0; transition: color 0.15s;
 }
 .bugLink:hover { color: var(--text); }
+
+/* ── Item Search ── */
+.itemSearchSection {
+  margin-top: 32px; padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.sectionHeading { font-size: 1rem; font-weight: 700; margin: 0 0 4px; }
+.sectionSub { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 14px; }
+
+.itemSearchBar { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.itemSearchInput {
+  flex: 1; padding: 10px 14px;
+  font-size: 0.95rem; border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text); outline: none;
+}
+.itemSearchInput:focus { border-color: var(--text); }
+.itemSearchBtn {
+  padding: 10px 18px;
+  background: var(--text); color: var(--bg);
+  border: none; border-radius: 12px;
+  font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap; transition: opacity 0.15s;
+}
+.itemSearchBtn:hover:not(:disabled) { opacity: 0.8; }
+.itemSearchBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.itemResultList { display: flex; flex-direction: column; gap: 8px; }
+.itemResultRow {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 14px;
+}
+.itemResultInfo { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.itemResultName  { font-size: 0.9rem; font-weight: 700; }
+.itemResultBrand { font-size: 0.75rem; color: var(--text-muted); }
+.itemResultStore { font-size: 0.75rem; color: var(--text-muted); font-style: italic; margin-top: 2px; }
+
+.itemStatusBadge { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 3px 8px; }
+.badgeStocked { background: var(--success); color: #000; }
+.badgeSale    { background: #f59e0b; color: #000; }

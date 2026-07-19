@@ -242,7 +242,12 @@ export default function Signup({ handleAuthEvt }) {
       } else if (formData.role === 'Business') {
         navigate('/dashboard/business/setup')
       } else {
-        redirectByRole(user, navigate)
+        const businessSlug = searchParams.get('businessSlug')
+        if (businessSlug) {
+          navigate(`/join/${businessSlug}`)
+        } else {
+          redirectByRole(user, navigate)
+        }
       }
     } catch (err) {
       setError(err.message || 'Signup failed')

@@ -66,11 +66,11 @@ export default function JoinBusiness() {
             <h2 className={styles.cta}>Want to get products from {name}?</h2>
             <button
               className={styles.primaryBtn}
-              onClick={() => navigate(`/auth/signup?role=Patron&redirect=/join/${slug}`)}
+              onClick={() => navigate(`/auth/signup?role=Patron&businessSlug=${slug}`)}
             >
               Sign up to follow this store
             </button>
-            <Link to={`/auth/login?redirect=/join/${slug}`} className={styles.secondaryLink}>
+            <Link to={`/auth/login?businessSlug=${slug}`} className={styles.secondaryLink}>
               Already have an account? Log in
             </Link>
           </div>
