@@ -115,19 +115,6 @@ export default function PatronMyStores() {
         )}
       </div>
 
-      {/* Map placeholder */}
-      <div className={styles.mapBox}>
-        <div className={styles.mapGrid} />
-        {filtered.slice(0, 5).map((b, i) => (
-          <div key={b._id} className={`${styles.mapPin} ${styles[`p${i}`]}`}>
-            {b.displayName || b.profile?.name || '?'}
-          </div>
-        ))}
-        {filtered.length === 0 && !loading && (
-          <span className={styles.mapEmpty}>No results in this area</span>
-        )}
-      </div>
-
       {/* Skeletons */}
       {loading && (
         <div className={styles.skeletons}>

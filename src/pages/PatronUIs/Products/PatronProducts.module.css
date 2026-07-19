@@ -186,3 +186,48 @@
   .overlay { align-items: center; padding: 20px; }
   .modal { border-radius: 20px; max-height: 85vh; }
 }
+
+/* ── Item Search ── */
+.searchSection {
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.searchHeading { font-size: 1rem; font-weight: 700; margin: 0 0 2px; }
+.searchSub { font-size: 0.78rem; color: var(--text-muted); margin: 0 0 12px; }
+.searchRow { display: flex; gap: 8px; align-items: center; }
+.searchInput {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text);
+  outline: none;
+}
+.searchInput:focus { border-color: var(--accent); }
+.searchBtn {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 8px; padding: 8px 16px;
+  cursor: pointer; font-weight: 700; font-size: 0.85rem;
+  white-space: nowrap; flex-shrink: 0;
+}
+.searchBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.searchingText { font-size: 0.82rem; color: var(--text-muted); margin: 10px 0 0; }
+
+.searchResultList { margin-top: 12px; display: flex; flex-direction: column; }
+.searchResultItem {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 11px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.searchResultItem:last-child { border-bottom: none; }
+.searchResultInfo { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.searchResultName { font-size: 0.9rem; font-weight: 700; }
+.searchResultBrand { font-size: 0.75rem; color: var(--text-muted); }
+.searchResultStore { font-size: 0.72rem; color: var(--text-muted); font-style: italic; }
+
+.statusBadge { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 3px 8px; }
+.stockedBadge { background: var(--success); color: #000; }
+.saleBadge    { background: var(--accent); color: var(--accent-text); }

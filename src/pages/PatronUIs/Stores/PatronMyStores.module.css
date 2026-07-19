@@ -36,53 +36,6 @@
 }
 .resultCount { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
 
-/* ── Map placeholder ── */
-.mapBox {
-  position: relative;
-  height: 200px;
-  background: #e8ead6;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-:global([data-theme='dark']) .mapBox { background: #1e2318; }
-
-.mapGrid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-:global([data-theme='dark']) .mapGrid {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-}
-
-/* Pin positions */
-.mapPin {
-  position: absolute;
-  background: #1a1a1a;
-  color: #fff;
-  font-size: 0.68rem; font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-:global([data-theme='dark']) .mapPin { background: #f59e0b; color: #000; }
-.p0 { top: 40%;  left: 32%; }
-.p1 { top: 20%;  left: 58%; }
-.p2 { top: 60%;  left: 62%; }
-.p3 { top: 30%;  left: 12%; }
-.p4 { top: 70%;  left: 20%; }
-.mapEmpty {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-muted); font-size: 0.85rem;
-}
-
 /* ── Skeletons ── */
 .skeletons { display: flex; flex-direction: column; gap: 12px; }
 .skeleton {

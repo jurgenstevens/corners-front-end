@@ -40,6 +40,10 @@ export default function PatronProducts({ user }) {
   const [canScrollLeft, setCanScrollLeft]   = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const tabsScrollRef = useRef(null)
+  const [searchQuery, setSearchQuery]     = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [hasSearched, setHasSearched]     = useState(false)
 
   async function load() {
     const [prods, strs] = await Promise.all([
@@ -77,6 +81,35 @@ export default function PatronProducts({ user }) {
   function scrollTabs(dir) {
     tabsScrollRef.current?.scrollBy({ left: dir * 150, behavior: 'smooth' })
     setTimeout(checkScroll, 200)
+  }
+
+  async function handleSearch() {
+    if (!searchQuery.trim()) return
+    setSearchLoading(true)
+    setHasSearched(true)
+    setSearchResults([])
+    try {
+      const q = searchQuery.toLowerCase()
+      const perStore = await Promise.all(
+        stores.map(store =>
+          productService.getProductsByBusiness(store._id)
+            .then(products => {
+              if (!Array.isArray(products)) return []
+              return products
+                .filter(p => p.status === 'stocked' || p.status === 'on_sale')
+                .filter(p =>
+                  (p.name || '').toLowerCase().includes(q) ||
+                  (p.brand || '').toLowerCase().includes(q)
+                )
+                .map(p => ({ ...p, _storeName: store.displayName || store.profile?.name || 'Unknown' }))
+            })
+            .catch(() => [])
+        )
+      )
+      setSearchResults(perStore.flat())
+    } finally {
+      setSearchLoading(false)
+    }
   }
 
   async function handleVote(id) {
@@ -181,6 +214,49 @@ export default function PatronProducts({ user }) {
           <button className={styles.requestBtn} onClick={openModal}>+ Request</button>
         )}
       </div>
+
+      {/* Item Search */}
+      {stores.length > 0 && (
+        <div className={styles.searchSection}>
+          <h3 className={styles.searchHeading}>Item Search</h3>
+          <p className={styles.searchSub}>Search products available across your connected stores.</p>
+          <div className={styles.searchRow}>
+            <input
+              className={styles.searchInput}
+              placeholder="Search by name or brand…"
+              value={searchQuery}
+              onChange={e => {
+                setSearchQuery(e.target.value)
+                if (!e.target.value) { setSearchResults([]); setHasSearched(false) }
+              }}
+              onKeyDown={e => { if (e.key === 'Enter') handleSearch() }}
+            />
+            <button className={styles.searchBtn} onClick={handleSearch} disabled={searchLoading}>
+              {searchLoading ? 'Searching…' : 'Search'}
+            </button>
+          </div>
+          {searchLoading && <p className={styles.searchingText}>Searching…</p>}
+          {!searchLoading && hasSearched && searchResults.length === 0 && (
+            <p className={styles.empty}>No matching products found in your connected stores.</p>
+          )}
+          {!searchLoading && searchResults.length > 0 && (
+            <div className={styles.searchResultList}>
+              {searchResults.map((p, i) => (
+                <div key={`${p._id}-${i}`} className={styles.searchResultItem}>
+                  <div className={styles.searchResultInfo}>
+                    <span className={styles.searchResultName}>{p.name}</span>
+                    {p.brand && <span className={styles.searchResultBrand}>{p.brand}</span>}
+                    <span className={styles.searchResultStore}>{p._storeName}</span>
+                  </div>
+                  <span className={`${styles.statusBadge} ${p.status === 'on_sale' ? styles.saleBadge : styles.stockedBadge}`}>
+                    {p.status === 'on_sale' ? 'On Sale' : 'In Store'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Store tabs — horizontal scroll with carousel arrows */}
       <div className={styles.tabsWrap}>
