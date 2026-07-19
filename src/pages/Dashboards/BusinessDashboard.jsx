@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as businessService from '../../services/businessService'
+import * as productService from '../../services/productService'
+import * as connectionService from '../../services/connectionService'
 import BugReportModal from '../../components/BugReportModal/BugReportModal'
 import MessageInbox from '../../components/MessageInbox/MessageInbox'
 import styles from './BusinessDashboard.module.css'
@@ -22,6 +24,9 @@ export default function BusinessDashboard({ user }) {
   const [business, setBusiness] = useState(null)
   const [loading, setLoading]   = useState(true)
   const [showBugReport, setShowBugReport] = useState(false)
+  const [pendingRequests, setPendingRequests]   = useState(null)
+  const [connectedPatrons, setConnectedPatrons] = useState(null)
+  const [productsInStore, setProductsInStore]   = useState(null)
 
   useEffect(() => {
     businessService.getMyBusiness()
@@ -39,6 +44,18 @@ export default function BusinessDashboard({ user }) {
           return
         }
         setBusiness(data)
+        Promise.all([
+          productService.getBusinessProducts(),
+          connectionService.getPendingConnections(),
+        ]).then(([products, connections]) => {
+          if (Array.isArray(products)) {
+            setPendingRequests(products.filter(p => p.status === 'pending').length)
+            setProductsInStore(products.filter(p => p.status === 'stocked' || p.status === 'on_sale').length)
+          }
+          if (Array.isArray(connections)) {
+            setConnectedPatrons(connections.filter(c => c.status === 'approved').length)
+          }
+        }).catch(() => {})
       })
       .catch(() => navigate('/dashboard/business/setup'))
       .finally(() => setLoading(false))
@@ -52,6 +69,25 @@ export default function BusinessDashboard({ user }) {
         <h1>Welcome back{business?.displayName ? `, ${business.displayName}` : ''}.</h1>
         {business?.businessType && <p>{business.businessType}</p>}
       </header>
+
+      {(pendingRequests !== null || connectedPatrons !== null || productsInStore !== null) && (
+        <div className={styles.statsRow}>
+          <div className={styles.statChip}>
+            <span className={styles.statValue} style={{ color: pendingRequests > 0 ? 'var(--text-warning)' : undefined }}>
+              {pendingRequests ?? '—'}
+            </span>
+            <span className={styles.statLabel}>Pending requests</span>
+          </div>
+          <div className={styles.statChip}>
+            <span className={styles.statValue}>{connectedPatrons ?? '—'}</span>
+            <span className={styles.statLabel}>Connected patrons</span>
+          </div>
+          <div className={styles.statChip}>
+            <span className={styles.statValue}>{productsInStore ?? '—'}</span>
+            <span className={styles.statLabel}>Products in store</span>
+          </div>
+        </div>
+      )}
 
       <section className={styles.cardGrid}>
         {NAV_CARDS.map(({ to, icon, emoji, label, sub }) => (
