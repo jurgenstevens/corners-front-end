@@ -54,3 +54,10 @@ export const getExpiringRejected = () => req('GET', '/products/expiring-rejected
 export const hardDeleteProduct = (id) => req('DELETE', `/products/${id}`)
 export const restoreProduct = (id) => req('PUT', `/products/${id}/restore`)
 export const approveProductForStore = (id) => req('PUT', `/products/${id}/approve-for-store`)
+
+export const getBoosts = () => req('GET', '/boosts')
+export const createBoost = (data) => req('POST', '/boosts', data)
+export const updateBoost = (productId, data) => req('PUT', `/boosts/${productId}`, data)
+export const pauseBoost = (productId) => req('PUT', `/boosts/${productId}/pause`)
+export const resumeBoost = (productId) => req('PUT', `/boosts/${productId}/resume`)
+export const cancelBoost = (productId) => req('DELETE', `/boosts/${productId}`)

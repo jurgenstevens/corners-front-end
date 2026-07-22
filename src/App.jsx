@@ -51,6 +51,7 @@ import AdminDistribution from './pages/Admin/AdminDistribution'
 import AdminBugReports from './pages/Admin/AdminBugReports'
 import AdminAnalytics from './pages/Admin/AdminAnalytics'
 import AdminSettings from './pages/Admin/AdminSettings'
+import AdminBoosts from './pages/Admin/AdminBoosts'
 
 // layout + components
 import DashboardLayout from './components/DashboardLayout/DashboardLayout'
@@ -237,6 +238,7 @@ function App() {
           <Route path="distribution" element={<AdminDistribution />} />
           <Route path="bug-reports" element={<AdminBugReports />} />
           <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="sponsored" element={<AdminBoosts />} />
           <Route path="settings" element={<AdminSettings user={user} />} />
         </Route>
       </Routes>

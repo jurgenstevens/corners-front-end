@@ -231,3 +231,22 @@
 .statusBadge { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 3px 8px; }
 .stockedBadge { background: var(--success); color: #000; }
 .saleBadge    { background: var(--accent); color: var(--accent-text); }
+
+/* ── Sponsored ── */
+.sponsoredLabel {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em;
+  color: #f59e0b; background: rgba(245,158,11,0.12);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 4px; padding: 1px 6px; flex-shrink: 0;
+}
+.sponsoredRequestBtn {
+  background: #f59e0b; color: #000;
+  border: none; border-radius: 8px;
+  padding: 6px 12px; font-size: 0.8rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
+}
+.sponsoredRequestBtn:hover { opacity: 0.85; }
+.sponsoredModalProduct {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}

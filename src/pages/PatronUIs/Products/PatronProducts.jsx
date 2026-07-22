@@ -44,6 +44,10 @@ export default function PatronProducts({ user }) {
   const [searchResults, setSearchResults] = useState([])
   const [searchLoading, setSearchLoading] = useState(false)
   const [hasSearched, setHasSearched]     = useState(false)
+  const [sponsoredRequest, setSponsoredRequest] = useState(null)
+  const [selectedStore, setSelectedStore] = useState('')
+  const [sponsoredSubmitting, setSponsoredSubmitting] = useState(false)
+  const [sponsoredError, setSponsoredError] = useState('')
 
   async function load() {
     const [prods, strs] = await Promise.all([
@@ -156,6 +160,36 @@ export default function PatronProducts({ user }) {
   }
   function closeUpdateModal() { setUpdateProduct(null); setUpdateError('') }
   function handleUpdateChange(e) { setUpdateForm(prev => ({ ...prev, [e.target.name]: e.target.value })) }
+
+  function openSponsoredRequest(product) {
+    setSponsoredRequest(product)
+    setSelectedStore(stores[0]?._id || '')
+    setSponsoredError('')
+  }
+  function closeSponsoredRequest() {
+    setSponsoredRequest(null)
+    setSponsoredError('')
+  }
+
+  async function handleSponsoredRequest(e) {
+    e.preventDefault()
+    if (!selectedStore) return setSponsoredError('Please select a store.')
+    setSponsoredSubmitting(true)
+    setSponsoredError('')
+    const result = await productService.requestProduct(selectedStore, {
+      name: sponsoredRequest.name,
+      brand: sponsoredRequest.brand || '',
+      description: sponsoredRequest.description || '',
+      image: sponsoredRequest.image || '',
+    })
+    setSponsoredSubmitting(false)
+    if (result.err) {
+      setSponsoredError(result.err)
+    } else {
+      closeSponsoredRequest()
+      load()
+    }
+  }
 
   async function handleUpdateSubmit(e) {
     e.preventDefault()
@@ -327,6 +361,9 @@ export default function PatronProducts({ user }) {
                 <div className={styles.titleRow}>
                   <span className={styles.productName}>{p.name}</span>
                   <span className={styles.ago}>{timeAgo(p.createdAt)}</span>
+                  {p._sponsored && (
+                    <span className={styles.sponsoredLabel}>Sponsored</span>
+                  )}
                 </div>
                 <p className={styles.subtitle}>{getSubtitle(p)}</p>
                 {p.brand && <p className={styles.brand}>{p.brand}</p>}
@@ -344,13 +381,24 @@ export default function PatronProducts({ user }) {
               </div>
 
               <div className={styles.action}>
-                {p.status === 'needs_info' && (
-                  <button className={styles.updateBtn} onClick={() => openUpdateModal(p)}>Update</button>
+                {p._sponsored ? (
+                  <button
+                    className={styles.sponsoredRequestBtn}
+                    onClick={(e) => { e.stopPropagation(); openSponsoredRequest(p) }}
+                  >
+                    + Request
+                  </button>
+                ) : (
+                  <>
+                    {p.status === 'needs_info' && (
+                      <button className={styles.updateBtn} onClick={() => openUpdateModal(p)}>Update</button>
+                    )}
+                    {votable && (
+                      <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
+                    )}
+                    {myVotes[p._id] && unseen && p.status !== 'needs_info' && <span className={styles.voted}>✓</span>}
+                  </>
                 )}
-                {votable && (
-                  <button className={styles.voteBtn} onClick={() => handleVote(p._id)}>+1</button>
-                )}
-                {myVotes[p._id] && unseen && p.status !== 'needs_info' && <span className={styles.voted}>✓</span>}
               </div>
             </div>
           )
@@ -421,6 +469,68 @@ export default function PatronProducts({ user }) {
                 <button type="button" className={styles.cancelBtn} onClick={closeUpdateModal}>Cancel</button>
                 <button type="submit" className={styles.submitBtn} disabled={updating}>
                   {updating ? 'Submitting…' : 'Resubmit Request'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {sponsoredRequest && (
+        <div className={styles.overlay} onClick={closeSponsoredRequest}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Request this product</h3>
+              <button className={styles.closeBtn} onClick={closeSponsoredRequest}>✕</button>
+            </div>
+            <div className={styles.sponsoredModalProduct}>
+              <div className={styles.avatar}>
+                {sponsoredRequest.image
+                  ? <img src={sponsoredRequest.image} alt={sponsoredRequest.name} />
+                  : <span>{sponsoredRequest.name?.[0]?.toUpperCase() || '?'}</span>
+                }
+              </div>
+              <div>
+                <p className={styles.productName}>{sponsoredRequest.name}</p>
+                {sponsoredRequest.brand && (
+                  <p className={styles.brand}>{sponsoredRequest.brand}</p>
+                )}
+                <span className={styles.sponsoredLabel}>Sponsored</span>
+              </div>
+            </div>
+            <p className={styles.updateNote}>
+              Let your store know you want to carry this product.
+            </p>
+            <form onSubmit={handleSponsoredRequest} className={styles.modalForm}>
+              <label>Choose a store *
+                <select
+                  value={selectedStore}
+                  onChange={e => setSelectedStore(e.target.value)}
+                  required
+                >
+                  <option value="">Select a store…</option>
+                  {stores.map(s => (
+                    <option key={s._id} value={s._id}>
+                      {s.displayName || s.profile?.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {sponsoredError && <p className={styles.error}>{sponsoredError}</p>}
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.cancelBtn}
+                  onClick={closeSponsoredRequest}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className={styles.submitBtn}
+                  disabled={sponsoredSubmitting}
+                >
+                  {sponsoredSubmitting ? 'Sending…' : 'Send Request'}
                 </button>
               </div>
             </form>

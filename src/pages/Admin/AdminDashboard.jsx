@@ -19,6 +19,7 @@ const NAV = [
     items: [
       { label: 'Products', icon: '📦', to: `${BASE}/products` },
       { label: 'Distribution', icon: '🚛', to: `${BASE}/distribution` },
+      { label: 'Sponsored', icon: '⭐', to: `${BASE}/sponsored` },
     ],
   },
   {
@@ -36,6 +37,7 @@ const SECTION_TITLES = {
   [`${BASE}/stores`]: 'Stores',
   [`${BASE}/products`]: 'Products',
   [`${BASE}/distribution`]: 'Distribution',
+  [`${BASE}/sponsored`]: 'Sponsored',
   [`${BASE}/bug-reports`]: 'Bug Reports',
   [`${BASE}/analytics`]: 'Analytics',
 }
