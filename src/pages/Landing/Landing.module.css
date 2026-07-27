@@ -1,140 +1,692 @@
-.container {
+/* ───────────────────────────────────────────
+   PAGE SHELL
+─────────────────────────────────────────── */
+.page {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  padding: 40px 16px 80px;
 }
 
-/* HERO */
-
-.hero {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto 80px;
-}
-
-.header {
-  font-size: 56px;
-  font-weight: 900;
-  margin-bottom: 12px;
-}
-
-.tagline {
-  font-size: 20px;
-  color: var(--text-muted);
-  margin-bottom: 32px;
-  line-height: 1.4;
-}
-
-.heroButtons {
+/* ───────────────────────────────────────────
+   1. LANDING NAV
+─────────────────────────────────────────── */
+.landingNav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 56px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.navWordmark {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.navLogin {
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 7px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.navLogin:hover {
+  background: var(--bg-card);
+  border-color: var(--text-muted);
+}
+
+/* ───────────────────────────────────────────
+   2. HERO
+─────────────────────────────────────────── */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 64px 20px 80px;
+}
+
+.heroText {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 52px;
+}
+
+.heroHeadline {
+  font-size: clamp(30px, 6vw, 54px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 20px;
+}
+
+.heroSub {
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Role door cards — 1-col mobile → 3-col desktop */
+.roleDoors {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .roleDoors {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.roleCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.roleIcon {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+
+.roleType {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.roleSub {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
+  flex: 1;
+}
+
+/* ───────────────────────────────────────────
+   SHARED BUTTONS
+─────────────────────────────────────────── */
+.btnPrimary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btnPrimary:hover {
+  opacity: 0.88;
+}
+
+.btnOutline {
+  background: none;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  white-space: nowrap;
+}
+
+.btnOutline:hover {
+  border-color: var(--text-muted);
+}
+
+/* ───────────────────────────────────────────
+   SHARED SECTION HELPERS
+─────────────────────────────────────────── */
+.sectionTitle {
+  font-size: clamp(22px, 4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin: 0 0 40px;
+}
+
+.sectionInner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ───────────────────────────────────────────
+   3. SHOWCASE
+─────────────────────────────────────────── */
+.showcase {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 20px;
+}
+
+.showcaseInner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tab pills */
+.tabs {
+  display: flex;
   justify-content: center;
+  gap: 8px;
+  margin-bottom: 48px;
   flex-wrap: wrap;
 }
 
-.primaryButton {
-  background: var(--primary);
-  color: var(--on-primary);
-  border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  font-size: 16px;
+.tab {
+  padding: 8px 22px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: none;
+  color: var(--text-muted);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 
-.primaryButton:hover {
-  opacity: 0.9;
-}
-
-.secondaryButton {
-  background: var(--surface);
+.tab:hover {
   color: var(--text);
-  border: 2px solid var(--text);
-  padding: 12px 26px;
-  border-radius: 8px;
+  border-color: var(--text-muted);
+}
+
+.tabActive {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+/* Showcase body: phone + bullets */
+.showcaseBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+@media (min-width: 720px) {
+  .showcaseBody {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+  }
+}
+
+/* Phone frame */
+.phoneFrame {
+  width: 260px;
+  aspect-ratio: 9 / 19;
+  border-radius: 28px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Bullets */
+.bulletList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 380px;
+}
+
+.bulletItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   font-size: 16px;
+  line-height: 1.55;
+}
+
+.checkIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── PHONE MOCK SHARED ── */
+.mock {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 14px 12px 10px;
+  gap: 0;
+}
+
+.mockHeader {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mockRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.mockRow:last-of-type {
+  border-bottom: none;
+}
+
+.mockAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.mockTexts {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mockBar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+}
+
+.mockBarWide   { width: 80%; }
+.mockBarNarrow { width: 52%; }
+
+/* Tally (patrons mid row) */
+.mockTallyWrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mockTallyTrack {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.mockTallyFill {
+  height: 100%;
+  width: 60%;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.mockTallyLabel {
+  font-size: 7px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Sponsored pill (patrons last row) */
+.sponsoredPill {
+  font-size: 7px;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 2px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Approve / Later buttons (stores mock) */
+.mockActions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.mockApprove {
+  font-size: 7px;
   font-weight: 600;
-  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-text);
+  cursor: default;
+  pointer-events: none;
 }
 
-.secondaryButton:hover {
-  opacity: 0.85;
+.mockLater {
+  font-size: 7px;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-muted);
+  cursor: default;
+  pointer-events: none;
 }
 
-.linkButton {
-  margin-top: 16px;
+/* Status dots (distributors mock) */
+.mockDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mockDotSuccess { background: var(--success); }
+.mockDotAccent  { background: var(--accent); }
+.mockDotMuted   { background: var(--text-muted); }
+
+/* Bottom bar (distributors mock) */
+.mockFooter {
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 8px;
+  color: var(--text-muted);
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+/* ───────────────────────────────────────────
+   4. HOW IT WORKS
+─────────────────────────────────────────── */
+.howItWorks {
+  padding: 80px 20px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 720px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stepNum {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.stepTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stepDesc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ───────────────────────────────────────────
+   5. PRICING
+─────────────────────────────────────────── */
+.pricing {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 20px;
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (min-width: 720px) {
+  .pricingGrid {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+}
+
+.priceCard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.priceCardFeatured {
+  border-color: var(--accent);
+  border-width: 2px;
+}
+
+.popularPill {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+.priceTier {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.priceAmount {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0;
+}
+
+.pricePer {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.priceNote {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.priceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.priceItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* ───────────────────────────────────────────
+   6. TRUST STRIP
+─────────────────────────────────────────── */
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 22px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.trustIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.trustDot {
+  color: var(--border);
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (max-width: 719px) {
+  .trustDot { display: none; }
+}
+
+/* ───────────────────────────────────────────
+   7. FINAL CTA
+─────────────────────────────────────────── */
+.finalCta {
+  padding: 88px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.finalCtaTitle {
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 520px;
+}
+
+.ghostLink {
   background: none;
   border: none;
-  color: var(--text);
-  cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
-}
-
-/* FEATURES */
-
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
-  max-width: 960px;
-  margin: 0 auto 80px;
-}
-
-.featureCard {
-  background: var(--surface);
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
-
-.featureCard h3 {
-  margin-bottom: 8px;
-}
-
-.featureCard p {
   color: var(--text-muted);
-  line-height: 1.4;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0;
+  transition: color 0.15s;
 }
 
-/* HOW IT WORKS */
+.ghostLink:hover {
+  color: var(--text);
+}
 
-.howItWorks {
-  max-width: 720px;
-  margin: 0 auto 80px;
+/* ───────────────────────────────────────────
+   8. FOOTER
+─────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   text-align: center;
 }
 
-.howItWorks h2 {
-  margin-bottom: 16px;
+.footerWordmark {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--text);
 }
 
-.howItWorks ol {
-  text-align: left;
-  margin: 0 auto;
-  max-width: 480px;
+.footerLinks {
+  display: flex;
+  gap: 28px;
 }
 
-.howItWorks li {
-  margin-bottom: 12px;
+.footerLink {
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-/* SOCIAL PROOF */
-
-.socialProof {
-  text-align: center;
-  margin-bottom: 80px;
-}
-
-.comingSoon {
-  margin-top: 12px;
-  font-weight: 600;
-}
-
-/* CTA */
-
-.cta {
-  text-align: center;
+.footerCopy {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
 }
