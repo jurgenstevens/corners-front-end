@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { MoonIcon, SunIcon } from '@heroicons/react/24/solid'
 import { useTheme } from '../../context/ThemeContext'
 import NotificationBell from '../NotificationBell/NotificationBell'
 import styles from './NavBar.module.css'
@@ -27,9 +28,14 @@ const NavBar = ({ user, handleLogout }) => {
         <button
           className={`${styles.toggle} ${theme === 'dark' ? styles.active : ''}`}
           onClick={toggleTheme}
-          aria-label="Toggle dark mode"
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          <div className={styles.toggleKnob} />
+          <div className={styles.toggleKnob}>
+            {theme === 'dark'
+              ? <MoonIcon className={styles.toggleIcon} aria-hidden="true" />
+              : <SunIcon  className={styles.toggleIcon} aria-hidden="true" />
+            }
+          </div>
         </button>
       </div>
     </nav>

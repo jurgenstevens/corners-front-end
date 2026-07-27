@@ -102,6 +102,15 @@
   position: absolute;
   left: 3px;
   transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleIcon {
+  width: 11px;
+  height: 11px;
+  color: #333;
 }
 
 /* Active (dark mode on) */

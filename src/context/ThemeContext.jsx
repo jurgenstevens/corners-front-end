@@ -8,7 +8,7 @@ function getSystemTheme() {
 }
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => localStorage.getItem(STORAGE_KEY) || getSystemTheme())
+  const [theme, setTheme] = useState(() => localStorage.getItem(STORAGE_KEY) || 'dark')
 
   const toggleTheme = () => {
     setTheme(prev => {
