@@ -1,4 +1,15 @@
 import { NavLink, useLocation } from 'react-router-dom'
+import {
+  HomeIcon,
+  ShoppingBagIcon,
+  UsersIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  ClipboardDocumentListIcon,
+  TagIcon,
+  CubeIcon,
+  BookOpenIcon,
+} from '@heroicons/react/24/solid'
 import styles from './MobileBottomNav.module.css'
 
 const DASHBOARD_ROOTS = []
@@ -17,54 +28,54 @@ export default function MobileBottomNav({ user }) {
       {isBusiness && (
         <>
           <NavLink to="/dashboard/business" end className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🏠</span><span className={styles.label}>Home</span>
+            <HomeIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Home</span>
           </NavLink>
           <NavLink to="/dashboard/business/products" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>📦</span><span className={styles.label}>Products</span>
+            <ShoppingBagIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Products</span>
           </NavLink>
           <NavLink to="/dashboard/business/patron-requests" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>👥</span><span className={styles.label}>Patrons</span>
+            <UsersIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Patrons</span>
           </NavLink>
           <NavLink to="/dashboard/business/analytics" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>📊</span><span className={styles.label}>Analytics</span>
+            <ChartBarIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Analytics</span>
           </NavLink>
           <NavLink to="/dashboard/business/settings" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>⚙️</span><span className={styles.label}>Settings</span>
+            <Cog6ToothIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Settings</span>
           </NavLink>
         </>
       )}
       {isPatron && (
         <>
           <NavLink to="/dashboard/patron" end className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🏠</span><span className={styles.label}>Home</span>
+            <HomeIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Home</span>
           </NavLink>
           <NavLink to="/dashboard/patron/products" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🛍️</span><span className={styles.label}>Products</span>
+            <ShoppingBagIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Products</span>
           </NavLink>
           <NavLink to="/dashboard/patron/requests" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>📋</span><span className={styles.label}>Requests</span>
+            <ClipboardDocumentListIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Requests</span>
           </NavLink>
           <NavLink to="/dashboard/patron/promotions" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🏷️</span><span className={styles.label}>Promotions</span>
+            <TagIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Promotions</span>
           </NavLink>
           <NavLink to="/dashboard/patron/settings" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>⚙️</span><span className={styles.label}>Settings</span>
+            <Cog6ToothIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Settings</span>
           </NavLink>
         </>
       )}
       {isDistributor && (
         <>
           <NavLink to="/dashboard/distributor" end className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>🏠</span><span className={styles.label}>Home</span>
+            <HomeIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Home</span>
           </NavLink>
           <NavLink to="/dashboard/distributor/orders" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>📦</span><span className={styles.label}>Orders</span>
+            <CubeIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Orders</span>
           </NavLink>
           <NavLink to="/dashboard/distributor/catalog" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>📋</span><span className={styles.label}>Catalog</span>
+            <BookOpenIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Catalog</span>
           </NavLink>
           <NavLink to="/dashboard/distributor/settings" className={({ isActive }) => isActive ? styles.active : ''}>
-            <span>⚙️</span><span className={styles.label}>Settings</span>
+            <Cog6ToothIcon className={styles.navIcon} aria-hidden="true" /><span className={styles.label}>Settings</span>
           </NavLink>
         </>
       )}

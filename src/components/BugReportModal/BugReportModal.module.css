@@ -141,7 +141,7 @@
   text-align: center;
   padding: 20px 0 10px;
 }
-.successIcon { font-size: 42px; margin: 0 0 12px; }
+.successIcon { width: 42px; height: 42px; margin: 0 0 12px; color: var(--success); }
 .successTitle { font-size: 22px; font-weight: 800; color: var(--text); margin: 0 0 6px; }
 .successMsg { font-size: 15px; color: var(--text-muted); margin: 0 0 24px; }
 .doneBtn {

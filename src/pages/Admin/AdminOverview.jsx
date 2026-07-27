@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  BuildingStorefrontIcon,
+  CheckCircleIcon,
+  UsersIcon,
+  FlagIcon,
+  BugAntIcon,
+  CubeIcon,
+  UserIcon,
+} from '@heroicons/react/24/solid'
 import * as adminService from '../../services/adminService'
 import styles from './AdminOverview.module.css'
 
@@ -22,20 +31,20 @@ export default function AdminOverview() {
   if (!stats) return <p className={styles.error}>Failed to load stats.</p>
 
   const CARDS = [
-    { label: 'Pending Approval', count: stats.pendingBusinesses, icon: '🏪', to: `${BASE}/stores?status=unverified`, warn: stats.pendingBusinesses > 0 },
-    { label: 'Approved Stores', count: stats.approvedBusinesses, icon: '✅', to: `${BASE}/stores?status=verified` },
-    { label: 'Total Patrons', count: stats.totalPatrons, icon: '👥', to: `${BASE}/patrons` },
-    { label: 'Abuse Flags', count: stats.abuseFlags, icon: '🚩', to: `${BASE}/patrons#abuse`, danger: stats.abuseFlags > 0 },
-    { label: 'Open Bug Reports', count: stats.openBugReports, icon: '🐛', to: `${BASE}/bug-reports`, warn: stats.openBugReports > 0 },
-    { label: 'Products Hit Tally', count: stats.tallyHits, icon: '📦', to: `${BASE}/products` },
+    { label: 'Pending Approval',  count: stats.pendingBusinesses, icon: BuildingStorefrontIcon, to: `${BASE}/stores?status=unverified`, warn: stats.pendingBusinesses > 0 },
+    { label: 'Approved Stores',   count: stats.approvedBusinesses, icon: CheckCircleIcon,       to: `${BASE}/stores?status=verified`                                     },
+    { label: 'Total Patrons',     count: stats.totalPatrons,       icon: UsersIcon,             to: `${BASE}/patrons`                                                    },
+    { label: 'Abuse Flags',       count: stats.abuseFlags,         icon: FlagIcon,              to: `${BASE}/patrons#abuse`, danger: stats.abuseFlags > 0               },
+    { label: 'Open Bug Reports',  count: stats.openBugReports,     icon: BugAntIcon,            to: `${BASE}/bug-reports`, warn: stats.openBugReports > 0               },
+    { label: 'Products Hit Tally', count: stats.tallyHits,         icon: CubeIcon,              to: `${BASE}/products`                                                  },
   ]
 
   return (
     <div>
       <div className={styles.grid}>
-        {CARDS.map(({ label, count, icon, to, warn, danger }) => (
+        {CARDS.map(({ label, count, icon: Icon, to, warn, danger }) => (
           <Link key={label} to={to} className={`${styles.card} ${warn ? styles.cardWarn : ''} ${danger ? styles.cardDanger : ''}`}>
-            <span className={styles.cardIcon}>{icon}</span>
+            <Icon className={styles.cardIcon} aria-hidden="true" />
             <span className={styles.cardCount}>{count ?? '—'}</span>
             <span className={styles.cardLabel}>{label}</span>
           </Link>
@@ -47,7 +56,7 @@ export default function AdminOverview() {
         <div className={styles.activityList}>
           {stats.recentVerified?.map(b => (
             <div key={b._id} className={styles.activityItem}>
-              <span className={styles.activityIcon}>✅</span>
+              <CheckCircleIcon className={styles.activityIcon} aria-hidden="true" />
               <div>
                 <p className={styles.activityText}><strong>{b.displayName || b.profile?.name}</strong> store verified</p>
                 <p className={styles.activityTime}>{new Date(b.updatedAt).toLocaleDateString()}</p>
@@ -56,7 +65,7 @@ export default function AdminOverview() {
           ))}
           {stats.recentSignups?.map(p => (
             <div key={p._id} className={styles.activityItem}>
-              <span className={styles.activityIcon}>👤</span>
+              <UserIcon className={styles.activityIcon} aria-hidden="true" />
               <div>
                 <p className={styles.activityText}><strong>{p.name}</strong> signed up as {ROLE_LABEL[p.authorizationLevel]}</p>
                 <p className={styles.activityTime}>{new Date(p.createdAt).toLocaleDateString()}</p>

@@ -1,22 +1,24 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  ShoppingBagIcon,
+  UsersIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+} from '@heroicons/react/24/solid'
 import * as businessService from '../../services/businessService'
 import * as productService from '../../services/productService'
 import * as connectionService from '../../services/connectionService'
 import BugReportModal from '../../components/BugReportModal/BugReportModal'
 import MessageInbox from '../../components/MessageInbox/MessageInbox'
 import styles from './BusinessDashboard.module.css'
-import productsImg  from '../assets/products.png'
-import patronsImg   from '../assets/patrons.jpg'
-import analyticsImg from '../assets/analytics.png'
-import settingsImg  from '../assets/settings.png'
 
 const NAV_CARDS = [
-  { to: '/dashboard/business/products',        icon: productsImg,  label: 'Products',        sub: 'Manage your catalog'              },
-  { to: '/dashboard/business/patron-requests', icon: patronsImg,   label: 'Patron Requests', sub: 'Approve or deny patrons'          },
-  // { to: '/dashboard/business/distributors', icon: null, emoji: '🚛', label: 'Distributors', sub: 'Order from nearby distributors' }, // Hidden until distributor launch
-  { to: '/dashboard/business/analytics',       icon: analyticsImg, label: 'Analytics',       sub: 'View your business stats'         },
-  { to: '/dashboard/business/setup',           icon: settingsImg,  label: 'Settings',        sub: 'Update your business info'        },
+  { to: '/dashboard/business/products',        icon: ShoppingBagIcon, label: 'Products',        sub: 'Manage your catalog'     },
+  { to: '/dashboard/business/patron-requests', icon: UsersIcon,       label: 'Patron Requests', sub: 'Approve or deny patrons' },
+  // { to: '/dashboard/business/distributors', icon: TruckIcon, label: 'Distributors', sub: 'Order from nearby distributors' }, // Hidden until distributor launch
+  { to: '/dashboard/business/analytics',       icon: ChartBarIcon,    label: 'Analytics',       sub: 'View your business stats'  },
+  { to: '/dashboard/business/setup',           icon: Cog6ToothIcon,   label: 'Settings',        sub: 'Update your business info' },
 ]
 
 export default function BusinessDashboard({ user }) {
@@ -90,13 +92,10 @@ export default function BusinessDashboard({ user }) {
       )}
 
       <section className={styles.cardGrid}>
-        {NAV_CARDS.map(({ to, icon, emoji, label, sub }) => (
+        {NAV_CARDS.map(({ to, icon: Icon, label, sub }) => (
           <Link key={to} to={to} className={styles.card}>
             <div className={styles.iconWrapper}>
-              {icon
-                ? <img src={icon} alt={label} />
-                : <span className={styles.cardEmoji}>{emoji}</span>
-              }
+              <Icon className={styles.cardIcon} aria-hidden="true" />
             </div>
             <div>
               <h3 className={styles.cardLabel}>{label}</h3>

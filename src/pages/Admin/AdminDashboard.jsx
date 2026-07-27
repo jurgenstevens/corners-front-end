@@ -1,32 +1,44 @@
 import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
+import {
+  HomeIcon,
+  UsersIcon,
+  BuildingStorefrontIcon,
+  ShoppingBagIcon,
+  TruckIcon,
+  StarIcon,
+  BugAntIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  ArrowRightStartOnRectangleIcon,
+} from '@heroicons/react/24/solid'
 import * as adminService from '../../services/adminService'
 import styles from './AdminDashboard.module.css'
 
 const BASE = '/dashboard/admin'
 
 const NAV = [
-  { section: 'OVERVIEW', items: [{ label: 'Dashboard', icon: '🏠', to: BASE }] },
+  { section: 'OVERVIEW', items: [{ label: 'Dashboard', icon: HomeIcon, to: BASE }] },
   {
     section: 'USERS',
     items: [
-      { label: 'Patrons', icon: '👥', to: `${BASE}/patrons` },
-      { label: 'Stores', icon: '🏪', to: `${BASE}/stores` },
+      { label: 'Patrons', icon: UsersIcon,              to: `${BASE}/patrons` },
+      { label: 'Stores',  icon: BuildingStorefrontIcon, to: `${BASE}/stores`  },
     ],
   },
   {
     section: 'CATALOG',
     items: [
-      { label: 'Products', icon: '📦', to: `${BASE}/products` },
-      { label: 'Distribution', icon: '🚛', to: `${BASE}/distribution` },
-      { label: 'Sponsored', icon: '⭐', to: `${BASE}/sponsored` },
+      { label: 'Products',      icon: ShoppingBagIcon, to: `${BASE}/products`     },
+      { label: 'Distribution',  icon: TruckIcon,       to: `${BASE}/distribution` },
+      { label: 'Sponsored',     icon: StarIcon,        to: `${BASE}/sponsored`    },
     ],
   },
   {
     section: 'SYSTEM',
     items: [
-      { label: 'Bug Reports', icon: '🐛', to: `${BASE}/bug-reports`, badge: true },
-      { label: 'Analytics', icon: '📊', to: `${BASE}/analytics` },
+      { label: 'Bug Reports', icon: BugAntIcon,  to: `${BASE}/bug-reports`, badge: true },
+      { label: 'Analytics',   icon: ChartBarIcon, to: `${BASE}/analytics`               },
     ],
   },
 ]
@@ -77,7 +89,7 @@ export default function AdminDashboard({ user }) {
           {NAV.map(({ section, items }) => (
             <div key={section} className={styles.navSection}>
               <p className={styles.navSectionLabel}>{section}</p>
-              {items.map(({ label, icon, to, badge }) => (
+              {items.map(({ label, icon: Icon, to, badge }) => (
                 <NavLink
                   key={to}
                   to={to}
@@ -87,7 +99,7 @@ export default function AdminDashboard({ user }) {
                   }
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <span className={styles.navIcon}>{icon}</span>
+                  <Icon className={styles.navIcon} aria-hidden="true" />
                   <span>{label}</span>
                   {badge && openBugCount > 0 && (
                     <span className={styles.badge}>{openBugCount}</span>
@@ -104,11 +116,11 @@ export default function AdminDashboard({ user }) {
             className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
             onClick={() => setSidebarOpen(false)}
           >
-            <span className={styles.navIcon}>⚙️</span>
+            <Cog6ToothIcon className={styles.navIcon} aria-hidden="true" />
             <span>Settings</span>
           </NavLink>
           <button className={styles.signOutBtn} onClick={handleSignOut}>
-            <span className={styles.navIcon}>🚪</span>
+            <ArrowRightStartOnRectangleIcon className={styles.navIcon} aria-hidden="true" />
             <span>Sign Out</span>
           </button>
         </div>

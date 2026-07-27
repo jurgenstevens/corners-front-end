@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { BuildingStorefrontIcon } from '@heroicons/react/24/solid'
 import * as businessService from '../../../services/businessService'
 import styles from './BusinessPendingApproval.module.css'
 
@@ -26,7 +27,7 @@ export default function BusinessPendingApproval() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.iconWrap}>
-          <span className={styles.icon}>🏪</span>
+          <BuildingStorefrontIcon className={styles.icon} aria-hidden="true" />
         </div>
 
         <h1 className={styles.title}>Your store is under review</h1>

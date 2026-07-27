@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
+import {
+  HomeIcon,
+  ShoppingBagIcon,
+  ClipboardDocumentListIcon,
+  TagIcon,
+  Cog6ToothIcon,
+  ArchiveBoxIcon,
+  UsersIcon,
+  ChartBarIcon,
+  CubeIcon,
+  BookOpenIcon,
+} from '@heroicons/react/24/solid'
 
 // pages
 import Signup from './pages/Signup/Signup'
@@ -76,29 +88,29 @@ function AdminGuard({ user, children }) {
 }
 
 const PATRON_NAV = [
-  { to: '/dashboard/patron',            label: 'Home',        icon: '🏠', end: true },
-  { to: '/dashboard/patron/products',   label: 'Products',    icon: '🛍️'            },
-  { to: '/dashboard/patron/requests',   label: 'My Requests', icon: '📋'            },
-  { to: '/dashboard/patron/promotions', label: 'Promotions',  icon: '🏷️'            },
-  { to: '/dashboard/patron/settings',   label: 'Settings',    icon: '⚙️'            },
+  { to: '/dashboard/patron',            label: 'Home',        icon: HomeIcon,                  end: true },
+  { to: '/dashboard/patron/products',   label: 'Products',    icon: ShoppingBagIcon                     },
+  { to: '/dashboard/patron/requests',   label: 'My Requests', icon: ClipboardDocumentListIcon           },
+  { to: '/dashboard/patron/promotions', label: 'Promotions',  icon: TagIcon                             },
+  { to: '/dashboard/patron/settings',   label: 'Settings',    icon: Cog6ToothIcon                       },
 ]
 
 const BUSINESS_NAV = [
-  { to: '/dashboard/business',                  label: 'Home',         icon: '🏠', end: true },
-  { to: '/dashboard/business/products',         label: 'Products',     icon: '📦'            },
-  { to: '/dashboard/business/inventory',        label: 'Inventory',    icon: '🗂️'            },
-  { to: '/dashboard/business/promotions',       label: 'Promotions',   icon: '🏷️'            },
-  { to: '/dashboard/business/patron-requests',  label: 'Patrons',      icon: '👥'            },
-  // { to: '/dashboard/business/distributors', label: 'Distributors', icon: '🚚' },  // Hidden until distributor launch
-  { to: '/dashboard/business/analytics',        label: 'Analytics',    icon: '📊'            },
-  { to: '/dashboard/business/settings',         label: 'Settings',     icon: '⚙️'            },
+  { to: '/dashboard/business',                  label: 'Home',         icon: HomeIcon,      end: true },
+  { to: '/dashboard/business/products',         label: 'Products',     icon: ShoppingBagIcon          },
+  { to: '/dashboard/business/inventory',        label: 'Inventory',    icon: ArchiveBoxIcon           },
+  { to: '/dashboard/business/promotions',       label: 'Promotions',   icon: TagIcon                  },
+  { to: '/dashboard/business/patron-requests',  label: 'Patrons',      icon: UsersIcon                },
+  // { to: '/dashboard/business/distributors', label: 'Distributors', icon: TruckIcon },  // Hidden until distributor launch
+  { to: '/dashboard/business/analytics',        label: 'Analytics',    icon: ChartBarIcon             },
+  { to: '/dashboard/business/settings',         label: 'Settings',     icon: Cog6ToothIcon            },
 ]
 
 const DISTRIBUTOR_NAV = [
-  { to: '/dashboard/distributor',          label: 'Home',     icon: '🏠', end: true },
-  { to: '/dashboard/distributor/orders',   label: 'Orders',   icon: '📦'            },
-  { to: '/dashboard/distributor/catalog',  label: 'Catalog',  icon: '📋'            },
-  { to: '/dashboard/distributor/settings', label: 'Settings', icon: '⚙️'            },
+  { to: '/dashboard/distributor',          label: 'Home',     icon: HomeIcon,      end: true },
+  { to: '/dashboard/distributor/orders',   label: 'Orders',   icon: CubeIcon                },
+  { to: '/dashboard/distributor/catalog',  label: 'Catalog',  icon: BookOpenIcon            },
+  { to: '/dashboard/distributor/settings', label: 'Settings', icon: Cog6ToothIcon           },
 ]
 
 function getDashboard(user) {

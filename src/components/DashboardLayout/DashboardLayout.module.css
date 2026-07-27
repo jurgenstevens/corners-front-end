@@ -45,7 +45,7 @@
 .navLink.navActive,
 .navLink.navActive:hover { background: var(--accent); color: #000; }
 
-.navIcon { font-size: 1.1rem; flex-shrink: 0; }
+.navIcon { width: 22px; height: 22px; flex-shrink: 0; }
 
 /* ── Mobile: sidebar takes over full screen ── */
 .main  { display: block; }

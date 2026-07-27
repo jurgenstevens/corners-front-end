@@ -16,14 +16,14 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
       {/* ── Left nav sidebar (desktop only, patron/distributor) ── */}
       {navItems && (
         <nav className={styles.leftNav}>
-          {navItems.map(({ to, label, icon, end }) => (
+          {navItems.map(({ to, label, icon: NavIcon, end }) => (
             <NavLink
               key={to}
               to={to}
               end={end}
               className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navActive : ''}`}
             >
-              {icon && <span className={styles.navIcon}>{icon}</span>}
+              {NavIcon && <NavIcon className={styles.navIcon} aria-hidden="true" />}
               {label}
             </NavLink>
           ))}

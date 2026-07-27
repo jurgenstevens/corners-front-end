@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { BellIcon } from '@heroicons/react/24/solid'
 import * as notificationService from '../../services/notificationService'
 import styles from './NotificationBell.module.css'
 
@@ -79,7 +80,7 @@ export default function NotificationBell({ user }) {
   return (
     <div className={styles.wrapper} ref={ref}>
       <button className={styles.bell} onClick={() => setOpen(o => !o)} aria-label="Notifications">
-        🔔
+        <BellIcon className={styles.bellIcon} aria-hidden="true" />
         {unread > 0 && <span className={styles.badge}>{unread > 9 ? '9+' : unread}</span>}
       </button>
       {open && (

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CheckCircleIcon } from '@heroicons/react/24/solid'
 import { submitBugReport } from '../../services/bugReportService'
 import styles from './BugReportModal.module.css'
 
@@ -70,7 +71,7 @@ export default function BugReportModal({ isOpen, onClose, user }) {
 
         {submitted ? (
           <div className={styles.success}>
-            <p className={styles.successIcon}>✅</p>
+            <CheckCircleIcon className={styles.successIcon} aria-hidden="true" />
             <p className={styles.successTitle}>Thanks!</p>
             <p className={styles.successMsg}>We'll look into it.</p>
             <button className={styles.doneBtn} onClick={handleClose}>Done</button>

@@ -47,10 +47,10 @@
 .iconWrapper {
   position: relative; flex-shrink: 0;
   width: 52px; height: 52px; border-radius: 14px;
-  background: rgba(245,158,11,0.12);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
   display: flex; align-items: center; justify-content: center;
 }
-.cardEmoji { font-size: 1.6rem; line-height: 1; }
+.cardIcon { width: 28px; height: 28px; }
 
 .cardBadge {
   position: absolute; top: -4px; right: -4px;

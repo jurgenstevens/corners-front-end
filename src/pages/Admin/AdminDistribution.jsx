@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { TruckIcon, CubeIcon } from '@heroicons/react/24/solid'
 import * as adminService from '../../services/adminService'
 import styles from './AdminDistribution.module.css'
 
@@ -17,7 +18,7 @@ export default function AdminDistribution() {
   return (
     <div>
       <div className={styles.notice}>
-        <span className={styles.noticeIcon}>🚛</span>
+        <TruckIcon className={styles.noticeIcon} aria-hidden="true" />
         <div>
           <p className={styles.noticeTitle}>Distributor Admin — Coming Soon</p>
           <p className={styles.noticeText}>
@@ -37,7 +38,7 @@ export default function AdminDistribution() {
 
       {!loading && distributors.length === 0 && (
         <div className={styles.empty}>
-          <p className={styles.emptyIcon}>📦</p>
+          <CubeIcon className={styles.emptyIcon} aria-hidden="true" />
           <p>No distributors registered yet.</p>
         </div>
       )}

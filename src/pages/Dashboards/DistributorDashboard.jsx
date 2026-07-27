@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  CubeIcon,
+  BookOpenIcon,
+  DocumentArrowUpIcon,
+  Cog6ToothIcon,
+} from '@heroicons/react/24/solid'
 import * as distributorService from '../../services/distributorService'
 import styles from './DistributorDashboard.module.css'
 
@@ -29,26 +35,26 @@ export default function DistributorDashboard() {
   const NAV_CARDS = [
     {
       to: '/dashboard/distributor/orders',
-      emoji: '📦',
+      icon: CubeIcon,
       label: 'Orders',
       sub: pendingCount > 0 ? `${pendingCount} pending response${pendingCount !== 1 ? 's' : ''}` : 'Manage incoming orders',
       badge: pendingCount || null,
     },
     {
       to: '/dashboard/distributor/catalog',
-      emoji: '📋',
+      icon: BookOpenIcon,
       label: 'My Catalog',
       sub: productCount > 0 ? `${productCount} product${productCount !== 1 ? 's' : ''}` : 'Manage your products',
     },
     {
       to: '/dashboard/distributor/catalog',
-      emoji: '📄',
+      icon: DocumentArrowUpIcon,
       label: 'Upload PDF',
       sub: 'Import products from a price sheet',
     },
     {
       to: '/dashboard/distributor/settings',
-      emoji: '⚙️',
+      icon: Cog6ToothIcon,
       label: 'Settings',
       sub: 'Update service regions & categories',
     },
@@ -79,10 +85,10 @@ export default function DistributorDashboard() {
       </section>
 
       <section className={styles.cardGrid}>
-        {NAV_CARDS.map(({ to, emoji, label, sub, badge }) => (
+        {NAV_CARDS.map(({ to, icon: Icon, label, sub, badge }) => (
           <Link key={label} to={to} className={styles.card}>
             <div className={styles.iconWrapper}>
-              <span className={styles.cardEmoji}>{emoji}</span>
+              <Icon className={styles.cardIcon} aria-hidden="true" />
               {badge ? <span className={styles.cardBadge}>{badge}</span> : null}
             </div>
             <div className={styles.cardText}>
