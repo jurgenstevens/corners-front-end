@@ -19,7 +19,7 @@
 .iconWrap {
   width: 72px; height: 72px;
   border-radius: 20px;
-  background: rgba(245,158,11,0.12);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 24px;
 }
@@ -65,8 +65,8 @@
 }
 .dotDone { background: #22c55e; }
 .dotActive {
-  background: rgba(245,158,11,0.2);
-  border: 2px solid #f59e0b;
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  border: 2px solid var(--accent);
   animation: pulse 1.8s ease-in-out infinite;
 }
 .dotLocked {
@@ -95,9 +95,9 @@
 
 .notYet {
   font-size: 0.85rem;
-  color: #f59e0b;
-  background: rgba(245,158,11,0.08);
-  border: 1px solid rgba(245,158,11,0.2);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   border-radius: 8px;
   padding: 10px 16px;
   margin: 0 0 16px;

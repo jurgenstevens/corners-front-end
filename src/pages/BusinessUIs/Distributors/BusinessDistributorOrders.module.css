@@ -77,7 +77,7 @@
 .statusDone      { background: var(--border); color: var(--text-muted); }
 .statusCancelled { background: #fee2e2; color: #b91c1c; }
 
-:global([data-theme='dark']) .statusPending   { background: #451a03; color: #fbbf24; }
+:global([data-theme='dark']) .statusPending   { background: #451a03; color: var(--accent); }
 :global([data-theme='dark']) .statusQuoted    { background: #1e3a5f; color: #93c5fd; }
 :global([data-theme='dark']) .statusAccepted  { background: #052e16; color: #4ade80; }
 :global([data-theme='dark']) .statusActive    { background: #2e1065; color: #c4b5fd; }

@@ -117,7 +117,7 @@
 .pill:hover { border-color: var(--text); color: var(--text); }
 
 .pill_low    { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.08); }
-.pill_medium { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.08); }
+.pill_medium { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .pill_high   { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.08); }
 .pill_critical { border-color: #dc2626; color: #dc2626; background: rgba(220,38,38,0.12); font-weight: 700; }
 

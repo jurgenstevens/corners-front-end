@@ -12,14 +12,14 @@
   --text:        #0f0f0f;
   --text-muted:  #555555;
   --border:      #dddddd;
-  --accent:      #f59e0b;
-  --accent-text: #000000;
+  --accent:      #075985;
+  --accent-text: #ffffff;
   --btn-bg:      #000000;
   --btn-text:    #ffffff;
   --btn-hover:   #222222;
   --danger:      #ef4444;
   --success:     #22c55e;
-  --info:        #3b82f6;
+  --info:        #8b5cf6;
 }
 
 /* =========================
@@ -31,7 +31,7 @@
   --text:        #ffffff;
   --text-muted:  #999999;
   --border:      #2e2e2e;
-  --accent:      #f59e0b;
+  --accent:      #38bdf8;
   --accent-text: #000000;
   --btn-bg:      #ffffff;
   --btn-text:    #000000;
@@ -47,7 +47,7 @@
     --text:        #ffffff;
     --text-muted:  #999999;
     --border:      #2e2e2e;
-    --accent:      #f59e0b;
+    --accent:      #38bdf8;
     --accent-text: #000000;
     --btn-bg:      #ffffff;
     --btn-text:    #000000;

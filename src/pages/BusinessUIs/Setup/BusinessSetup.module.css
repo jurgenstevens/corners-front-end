@@ -31,7 +31,7 @@ input, select, textarea {
   box-sizing: border-box;
 }
 input:focus, select:focus, textarea:focus {
-  outline: none; border-color: #f59e0b;
+  outline: none; border-color: var(--accent);
 }
 
 /* Dark mode overrides */

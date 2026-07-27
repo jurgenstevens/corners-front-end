@@ -25,7 +25,7 @@
   transform: translateY(-1px);
 }
 
-.cardWarn { border-color: #f59e0b; }
+.cardWarn { border-color: var(--accent); }
 .cardDanger { border-color: #ef4444; }
 
 .cardIcon { font-size: 22px; line-height: 1; margin-bottom: 4px; }

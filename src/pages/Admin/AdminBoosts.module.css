@@ -27,7 +27,7 @@
   white-space: nowrap; text-transform: capitalize; display: flex; align-items: center; gap: 5px;
 }
 .success { color: #22c55e; border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.1); }
-.warn    { color: #f59e0b; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); }
+.warn    { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 30%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .danger  { color: #ef4444; border-color: rgba(239,68,68,0.3);  background: rgba(239,68,68,0.1); }
 
 .liveDot {

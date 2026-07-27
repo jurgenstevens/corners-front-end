@@ -3,7 +3,7 @@ import * as productService from '../../../services/productService'
 import styles from './PatronRequests.module.css'
 
 const STATUS_COLORS = {
-  pending: '#f59e0b', approved: '#22c55e', rejected: '#ef4444',
+  pending: 'var(--accent)', approved: '#22c55e', rejected: '#ef4444',
   ready_to_stock: '#3b82f6', stocked: '#a855f7'
 }
 

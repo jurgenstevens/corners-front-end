@@ -156,4 +156,4 @@
 
 .itemStatusBadge { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 3px 8px; }
 .badgeStocked { background: var(--success); color: #000; }
-.badgeSale    { background: #f59e0b; color: #000; }
+.badgeSale    { background: var(--accent); color: var(--accent-text); }

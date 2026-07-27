@@ -27,7 +27,7 @@
 .statusBadge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; text-transform: capitalize; }
 .status_active { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
 .status_banned { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
-.status_suspended { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.status_suspended { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
 
 .metaGrid { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin-bottom: 16px; font-size: 13px; color: #e2e8f0; }
 .metaLabel { color: #4a4a6a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; align-self: center; }
@@ -40,7 +40,7 @@
   margin-top: 12px; padding: 12px; border-radius: 8px;
 }
 .confirm { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); }
-.confirmWarn { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); }
+.confirmWarn { background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); }
 .confirm p { font-size: 13px; color: #fca5a5; margin: 0 0 10px; }
 .confirmWarn p { font-size: 13px; color: #fcd34d; margin: 0 0 10px; }
 
@@ -48,7 +48,7 @@
 .flagItem:last-child { border-bottom: none; padding-bottom: 0; }
 .flagTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .reasonBadge {
-  background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3);
+  background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;
 }
 .flagDesc { font-size: 12px; color: #94a3b8; margin: 0; }
@@ -68,9 +68,9 @@
 .btnGreen:hover { background: rgba(34,197,94,0.25); }
 .btnOrange {
   padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
-  background: rgba(245,158,11,0.15); color: #f59e0b; transition: background 0.15s;
+  background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); transition: background 0.15s;
 }
-.btnOrange:hover { background: rgba(245,158,11,0.25); }
+.btnOrange:hover { background: color-mix(in srgb, var(--accent) 25%, transparent); }
 .btnRed {
   padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
   background: rgba(239,68,68,0.15); color: #ef4444; transition: background 0.15s;
@@ -100,12 +100,12 @@
 
 .connBadge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
 .connApproved { background: rgba(34,197,94,0.12); color: #22c55e; }
-.connPending { background: rgba(245,158,11,0.12); color: #f59e0b; }
+.connPending { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .connDenied { background: rgba(239,68,68,0.12); color: #ef4444; }
 
 .reqStatus { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
 .success { background: rgba(34,197,94,0.12);  color: #22c55e; }
-.warn    { background: rgba(245,158,11,0.12); color: #f59e0b; }
+.warn    { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .danger  { background: rgba(239,68,68,0.12);  color: #ef4444; }
 .info    { background: rgba(99,102,241,0.12); color: #818cf8; }
 .muted   { background: rgba(148,163,184,0.1); color: #94a3b8; }

@@ -67,7 +67,7 @@
 .rejected       { background: var(--danger); }
 .ready_to_stock { background: var(--info); }
 .stocked        { background: #a855f7; }
-.needs_info     { background: #f59e0b; }
+.needs_info     { background: var(--accent); }
 
 .avatar {
   width: 44px; height: 44px; border-radius: 50%;
@@ -103,7 +103,7 @@
 }
 .voteBtn:hover { opacity: 0.8; }
 .updateBtn {
-  background: #f59e0b; color: #000;
+  background: var(--accent); color: var(--accent-text);
   border: none; border-radius: 8px;
   padding: 6px 12px; font-size: 0.8rem; font-weight: 700;
   cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
@@ -115,7 +115,7 @@
 .updateTab { position: relative; }
 .updateBadge {
   display: inline-flex; align-items: center; justify-content: center;
-  background: #f59e0b; color: #000;
+  background: var(--accent); color: var(--accent-text);
   border-radius: 10px; font-size: 0.65rem; font-weight: 800;
   min-width: 16px; height: 16px; padding: 0 4px;
   margin-left: 5px; line-height: 1;
@@ -235,12 +235,12 @@
 /* ── Sponsored ── */
 .sponsoredLabel {
   font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em;
-  color: #f59e0b; background: rgba(245,158,11,0.12);
-  border: 1px solid rgba(245,158,11,0.3);
+  color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   border-radius: 4px; padding: 1px 6px; flex-shrink: 0;
 }
 .sponsoredRequestBtn {
-  background: #f59e0b; color: #000;
+  background: var(--accent); color: var(--accent-text);
   border: none; border-radius: 8px;
   padding: 6px 12px; font-size: 0.8rem; font-weight: 700;
   cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
