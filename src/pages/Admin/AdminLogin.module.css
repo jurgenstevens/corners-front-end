@@ -4,7 +4,7 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #0f0f14;
+  background: #0f0f0f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,8 +14,8 @@
 .card {
   width: 100%;
   max-width: 400px;
-  background: #1a1a2e;
-  border: 1px solid #2a2a4a;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
   border-radius: 12px;
   padding: 40px 36px 32px;
   display: flex;
@@ -27,8 +27,8 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: #6366f1;
-  color: #fff;
+  background: #38bdf8;
+  color: #000;
   font-size: 22px;
   font-weight: 800;
   display: flex;
@@ -67,8 +67,8 @@
   padding: 13px 12px;
   font-size: 15px;
   border-radius: 6px;
-  border: 1px solid #2a2a4a;
-  background: #0f0f14;
+  border: 1px solid #2e2e2e;
+  background: #0f0f0f;
   color: #e2e8f0;
   outline: none;
   transition: border-color 0.15s ease;
@@ -76,11 +76,11 @@
 }
 
 .input::placeholder {
-  color: #4a4a6a;
+  color: #4b5563;
 }
 
 .input:focus {
-  border-color: #6366f1;
+  border-color: #38bdf8;
 }
 
 .passwordWrap {
@@ -101,7 +101,7 @@
   cursor: pointer;
   font-size: 0.7rem;
   font-weight: 700;
-  color: #4a4a6a;
+  color: #4b5563;
   padding: 4px 6px;
   border-radius: 4px;
   letter-spacing: 0.05em;
@@ -119,8 +119,8 @@
   padding: 13px 0;
   border-radius: 8px;
   border: none;
-  background: #6366f1;
-  color: #fff;
+  background: #38bdf8;
+  color: #000;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -143,7 +143,7 @@
 .backLink {
   margin-top: 24px;
   font-size: 13px;
-  color: #4a4a6a;
+  color: #4b5563;
   text-decoration: none;
   transition: color 0.15s ease;
 }

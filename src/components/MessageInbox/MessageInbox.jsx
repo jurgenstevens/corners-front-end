@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { EnvelopeIcon } from '@heroicons/react/24/solid'
 import * as messageService from '../../services/messageService'
 import styles from './MessageInbox.module.css'
 
@@ -93,7 +94,7 @@ export default function MessageInbox({ user }) {
         aria-label="Messages"
         title="Messages from Corners Admin"
       >
-        ✉️
+        <EnvelopeIcon className={styles.msgIcon} aria-hidden="true" />
         {totalUnread > 0 && <span className={styles.toggleBadge}>{totalUnread > 9 ? '9+' : totalUnread}</span>}
       </button>
 
@@ -120,7 +121,7 @@ export default function MessageInbox({ user }) {
                 threads.length === 0
                   ? (
                     <div className={styles.empty}>
-                      <p className={styles.emptyIcon}>✉️</p>
+                      <EnvelopeIcon className={styles.emptyIcon} aria-hidden="true" />
                       <p>No messages yet.</p>
                     </div>
                   )
