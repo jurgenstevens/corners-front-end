@@ -63,12 +63,18 @@ export default function JoinBusiness() {
 
         {!user ? (
           <div className={styles.actions}>
-            <h2 className={styles.cta}>Want to get products from {name}?</h2>
+            <h2 className={styles.cta}>Are you signing up as a patron or a business?</h2>
             <button
               className={styles.primaryBtn}
               onClick={() => navigate(`/auth/signup?role=Patron&businessSlug=${slug}`)}
             >
-              Sign up to follow this store
+              Patron
+            </button>
+            <button
+              className={styles.secondaryBtn}
+              onClick={() => navigate('/auth/signup?role=Business')}
+            >
+              Business
             </button>
             <Link to={`/auth/login?businessSlug=${slug}`} className={styles.secondaryLink}>
               Already have an account? Log in
