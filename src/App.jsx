@@ -124,8 +124,7 @@ function App() {
   const [user, setUser] = useState(authService.getUser())
   const navigate = useNavigate()
   const location = useLocation()
-  const isAdminPath   = location.pathname.startsWith('/dashboard/admin') || location.pathname.startsWith('/admin/login')
-  const isLandingPath = location.pathname === '/'
+  const isAdminPath = location.pathname.startsWith('/dashboard/admin') || location.pathname.startsWith('/admin/login')
 
   const handleLogout = () => {
     authService.logout()
@@ -149,7 +148,7 @@ function App() {
 
   return (
     <>
-      {!isAdminPath && !isLandingPath && <NavBar user={user} handleLogout={handleLogout} />}
+      {!isAdminPath && <NavBar user={user} handleLogout={handleLogout} />}
       <Routes>
         {/* Admin — standalone, no auth guard, dark login */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -255,7 +254,7 @@ function App() {
           <Route path="settings" element={<AdminSettings user={user} />} />
         </Route>
       </Routes>
-      {!isAdminPath && !isLandingPath && <MobileBottomNav user={user} />}
+      {!isAdminPath && <MobileBottomNav user={user} />}
       <IdleWarningModal
         showWarning={showWarning}
         secondsLeft={secondsLeft}
