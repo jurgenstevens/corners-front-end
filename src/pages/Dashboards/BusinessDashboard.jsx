@@ -18,7 +18,7 @@ const NAV_CARDS = [
   { to: '/dashboard/business/patron-requests', icon: UsersIcon,       label: 'Patron Requests', sub: 'Approve or deny patrons' },
   // { to: '/dashboard/business/distributors', icon: TruckIcon, label: 'Distributors', sub: 'Order from nearby distributors' }, // Hidden until distributor launch
   { to: '/dashboard/business/analytics',       icon: ChartBarIcon,    label: 'Analytics',       sub: 'View your business stats'  },
-  { to: '/dashboard/business/setup',           icon: Cog6ToothIcon,   label: 'Settings',        sub: 'Update your business info' },
+  { to: '/dashboard/business/settings',         icon: Cog6ToothIcon,   label: 'Settings',        sub: 'Update your business info' },
 ]
 
 export default function BusinessDashboard({ user }) {

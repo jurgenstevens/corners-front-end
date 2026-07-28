@@ -67,7 +67,7 @@ export default function BusinessSettings() {
       <h2 className={styles.heading}>Settings</h2>
 
       <div className={styles.qrToggleRow} onClick={() => setQrOpen(o => !o)}>
-        <span className={styles.qrToggleLabel}>Your QR Code</span>
+        <span className={styles.sectionLabel} style={{ margin: 0 }}>Your QR Code</span>
         <span className={styles.qrCaret}>{qrOpen ? '⌄' : '›'}</span>
       </div>
       {qrOpen && (

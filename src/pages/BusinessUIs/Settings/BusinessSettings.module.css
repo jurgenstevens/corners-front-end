@@ -2,7 +2,7 @@
 
 .heading { font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; }
 
-.section { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.section { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; margin-top: 20px; }
 .sectionSub { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
 
 .linkBtn {
@@ -115,11 +115,9 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  padding: 14px 0;
+  padding: 14px 4px;
   border-bottom: 1px solid var(--border);
 }
 .qrToggleRow:hover { background: rgba(128,128,128,0.06); }
 
-.qrToggleLabel { font-size: 0.8rem; font-weight: 500; }
-
-.qrCaret { font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }
+.qrCaret { font-size: 18px; color: var(--text-muted); transition: transform 0.2s; padding: 0 6px; }
