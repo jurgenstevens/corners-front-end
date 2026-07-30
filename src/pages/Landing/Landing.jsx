@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import {
   UsersIcon,
   BuildingStorefrontIcon,
-  TruckIcon,
   LockClosedIcon,
   DevicePhoneMobileIcon,
   MapPinIcon,
@@ -22,30 +21,6 @@ const TAB_BULLETS = {
     'Approve a request and it becomes a stocked product',
     'Boost products to the top of the neighborhood feed',
   ],
-  distributors: [
-    'See demand across every store you serve',
-    'Manage catalog and orders in one dashboard',
-    'Grow route density block by block',
-  ],
-}
-
-function DistributorsMock() {
-  const dotClasses = [styles.mockDotSuccess, styles.mockDotAccent, styles.mockDotMuted]
-  return (
-    <div className={styles.mock}>
-      <div className={styles.mockHeader}>Orders</div>
-      {[0, 1, 2].map(i => (
-        <div key={i} className={styles.mockRow}>
-          <div className={styles.mockTexts}>
-            <div className={`${styles.mockBar} ${styles.mockBarWide}`} />
-            <div className={`${styles.mockBar} ${styles.mockBarNarrow}`} />
-          </div>
-          <div className={`${styles.mockDot} ${dotClasses[i]}`} />
-        </div>
-      ))}
-      <div className={styles.mockFooter}>12 stores connected</div>
-    </div>
-  )
 }
 
 const Landing = () => {
@@ -55,20 +30,13 @@ const Landing = () => {
   return (
     <div className={styles.page}>
 
-      {/* ── 1. NAV ── */}
-      <nav className={styles.landingNav}>
-        <img src="/corners-logo-transparent.png" alt="Corners" className={styles.navLogo} />
-        <button className={styles.navLogin} onClick={() => navigate('/auth/login')}>Log in</button>
-      </nav>
-
-      {/* ── 2. HERO ── */}
+      {/* ── 1. HERO ── */}
       <section className={styles.hero}>
         <div className={styles.heroText}>
           <h1 className={styles.heroHeadline}>Your corner store, connected.</h1>
           <p className={styles.heroSub}>
-            Corners links neighbors, corner stores, and distributors in one local marketplace.
-            Request the products you want, stock what your neighborhood actually asks for,
-            and fulfill real demand.
+            Corners links neighbors and corner stores in one local marketplace.
+            Request the products you want, and stock what your neighborhood actually asks for.
           </p>
         </div>
         <div className={styles.roleDoors}>
@@ -88,23 +56,15 @@ const Landing = () => {
               List your store
             </button>
           </div>
-          <div className={styles.roleCard}>
-            <TruckIcon className={styles.roleIcon} aria-hidden="true" />
-            <p className={styles.roleType}>I distribute products</p>
-            <p className={styles.roleSub}>Turn store demand into orders on one dashboard.</p>
-            <button className={styles.btnOutline} onClick={() => navigate('/auth/signup?role=Distributor')}>
-              Partner with us
-            </button>
-          </div>
         </div>
       </section>
 
       {/* ── 3. SHOWCASE ── */}
       <section className={styles.showcase}>
         <div className={styles.showcaseInner}>
-          <h2 className={styles.sectionTitle}>One app, three sides of the corner.</h2>
+          <h2 className={styles.sectionTitle}>One app, two sides of the corner.</h2>
           <div className={styles.tabs}>
-            {['patrons', 'stores', 'distributors'].map(tab => (
+            {['patrons', 'stores'].map(tab => (
               <button
                 key={tab}
                 className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
@@ -120,7 +80,7 @@ const Landing = () => {
                 <img
                   src="/patronhomepage.PNG"
                   alt="Patron browsing local store products on Corners"
-                  className={`${styles.screenshotImg} ${styles.screenshotPatron}`}
+                  className={styles.screenshotImg}
                   loading="lazy"
                 />
               )}
@@ -128,11 +88,10 @@ const Landing = () => {
                 <img
                   src="/businessproductspage.PNG"
                   alt="Store owner viewing product vote tallies on Corners"
-                  className={`${styles.screenshotImg} ${styles.screenshotStores}`}
+                  className={styles.screenshotImg}
                   loading="lazy"
                 />
               )}
-              {activeTab === 'distributors' && <DistributorsMock />}
             </div>
             <ul className={styles.bulletList}>
               {TAB_BULLETS[activeTab].map((b, i) => (
@@ -160,9 +119,7 @@ const Landing = () => {
               { src: '/businesssettingspage.PNG',  alt: 'Settings page with QR code for patron sign-ups',       caption: 'One QR code, endless patrons' },
             ].map(({ src, alt, caption }) => (
               <div key={src} className={styles.toolkitCard}>
-                <div className={styles.toolkitImgBox}>
-                  <img src={src} alt={alt} className={styles.toolkitImg} loading="lazy" />
-                </div>
+                <img src={src} alt={alt} className={styles.toolkitImg} loading="lazy" />
                 <p className={styles.toolkitCaption}>{caption}</p>
               </div>
             ))}
@@ -179,7 +136,6 @@ const Landing = () => {
               { n: '1', title: 'A neighbor requests',   desc: 'Patrons ask their corner store for a product and neighbors add votes.' },
               { n: '2', title: 'The tally fills',        desc: 'The store sees real demand — names and numbers, not guesses.' },
               { n: '3', title: 'The store stocks it',    desc: 'One approval turns a request into a product on the shelf.' },
-              { n: '4', title: 'Distributors deliver',   desc: 'Suppliers see the order and fulfill it. The whole block wins.' },
             ].map(({ n, title, desc }) => (
               <div key={n} className={styles.step}>
                 <div className={styles.stepNum}>{n}</div>
@@ -191,7 +147,8 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ── 5. PRICING ── */}
+      {/* PRICING — hidden until Stripe checkout is verified. Uncomment to restore. */}
+      {/*
       <section className={styles.pricing}>
         <div className={styles.sectionInner}>
           <h2 className={styles.sectionTitle}>Simple, transparent pricing</h2>
@@ -255,6 +212,7 @@ const Landing = () => {
           </div>
         </div>
       </section>
+      */}
 
       {/* ── 6. TRUST STRIP ── */}
       <div className={styles.trust}>
@@ -287,7 +245,7 @@ const Landing = () => {
 
       {/* ── 8. FOOTER ── */}
       <footer className={styles.footer}>
-        <img src="/corners-logo-transparent.png" alt="Corners" className={styles.footerLogo} />
+        <span className={styles.footerWordmark}>CORNERS</span>
         <div className={styles.footerLinks}>
           <span className={styles.footerLink}>Privacy Policy</span>
           <span className={styles.footerLink}>Terms</span>

@@ -8,53 +8,7 @@
 }
 
 /* ───────────────────────────────────────────
-   1. LANDING NAV
-─────────────────────────────────────────── */
-.landingNav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  height: 56px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-}
-
-.navWordmark {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--text);
-}
-
-.navLogo {
-  height: 28px;
-  width: auto;
-  display: block;
-}
-
-.navLogin {
-  background: none;
-  border: 1.5px solid var(--border);
-  color: var(--text);
-  padding: 7px 18px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.navLogin:hover {
-  background: var(--bg-card);
-  border-color: var(--text-muted);
-}
-
-/* ───────────────────────────────────────────
-   2. HERO
+   1. HERO
 ─────────────────────────────────────────── */
 .hero {
   max-width: 1100px;
@@ -83,7 +37,7 @@
   margin: 0;
 }
 
-/* Role door cards — 1-col mobile → 3-col desktop */
+/* Role door cards — 1-col mobile → 2-col desktop */
 .roleDoors {
   display: grid;
   grid-template-columns: 1fr;
@@ -92,7 +46,8 @@
 
 @media (min-width: 720px) {
   .roleDoors {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 480px));
+    justify-content: center;
   }
 }
 
@@ -246,12 +201,12 @@
 
 /* Phone frame */
 .phoneFrame {
-  width: 260px;
-  aspect-ratio: 9 / 19;
+  max-width: 290px;
+  width: 100%;
   border-radius: 28px;
   border: 2px solid var(--border);
   background: var(--bg);
-  overflow: hidden;
+  padding: 10px;
   flex-shrink: 0;
 }
 
@@ -285,17 +240,10 @@
 /* Screenshot images inside phone frame */
 .screenshotImg {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   display: block;
-}
-
-.screenshotPatron {
-  object-position: center 14%;
-}
-
-.screenshotStores {
-  object-position: center 14%;
+  border-radius: 12px;
 }
 
 /* ── PHONE MOCK SHARED ── */
@@ -480,29 +428,26 @@
 .toolkitCard {
   border: 1px solid var(--border);
   border-radius: 14px;
-  overflow: hidden;
   background: var(--bg-card);
-}
-
-.toolkitImgBox {
-  height: 240px;
-  overflow: hidden;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .toolkitImg {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 14%;
+  height: auto;
+  object-fit: contain;
   display: block;
+  border-radius: 10px;
 }
 
 .toolkitCaption {
   font-size: 13px;
   color: var(--text-muted);
-  padding: 12px 14px 14px;
   margin: 0;
-  border-top: 1px solid var(--border);
+  padding: 0 4px 2px;
 }
 
 /* ───────────────────────────────────────────
@@ -520,7 +465,7 @@
 
 @media (min-width: 720px) {
   .steps {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
 }
