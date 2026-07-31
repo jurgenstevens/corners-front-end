@@ -2,10 +2,14 @@ import { NavLink } from 'react-router-dom'
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid'
 import { useTheme } from '../../context/ThemeContext'
 import NotificationBell from '../NotificationBell/NotificationBell'
+import useBilling from '../../hooks/useBilling'
+import * as billingService from '../../services/billingService'
 import styles from './NavBar.module.css'
 
 const NavBar = ({ user, handleLogout }) => {
   const { theme, toggleTheme } = useTheme()
+  const billing = useBilling(user)
+  const showTrialChip = billing.status === 'trialing' && billing.daysLeftInTrial > 7
 
   return (
     <nav className={styles.nav}>
@@ -21,6 +25,16 @@ const NavBar = ({ user, handleLogout }) => {
           </>
         ) : (
           <>
+            {showTrialChip && (
+              <button
+                className={styles.trialChip}
+                onClick={() => billingService.createCheckoutSession()}
+                title="Subscribe now — you won't be charged until your trial ends."
+                aria-label="Subscribe now — you won't be charged until your trial ends."
+              >
+                Trial · {billing.daysLeftInTrial}d left
+              </button>
+            )}
             <NotificationBell user={user} />
             <button className={styles.navButton} onClick={handleLogout}>Log Out</button>
           </>

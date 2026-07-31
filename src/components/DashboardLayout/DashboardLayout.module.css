@@ -1,3 +1,55 @@
+/* ── Trial banners ── */
+.trialBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.trialBannerWarn {
+  background: #7a5f00;
+  color: #ffe87a;
+}
+
+.trialBannerAccent {
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-card));
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.trialBannerCta {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+  color: inherit;
+  transition: opacity 0.15s;
+}
+.trialBannerCta:hover { opacity: 0.75; }
+
+.trialBannerDismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: inherit;
+  opacity: 0.6;
+  padding: 2px 6px;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+.trialBannerDismiss:hover { opacity: 1; }
+
 .root { min-height: 100vh; }
 
 /* ── Left nav sidebar (desktop only) ── */
