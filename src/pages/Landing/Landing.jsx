@@ -13,7 +13,7 @@ import styles from './Landing.module.css'
 const TAB_BULLETS = {
   patrons: [
     "Request products your store doesn't carry yet",
-    'Vote with neighbors — when the tally fills, the store stocks it',
+    'Vote with neighbors. When the tally fills, the store stocks it',
     "Scan a store's QR code to connect instantly",
   ],
   stores: [
@@ -134,7 +134,7 @@ const Landing = () => {
           <div className={styles.steps}>
             {[
               { n: '1', title: 'A neighbor requests',   desc: 'Patrons ask their corner store for a product and neighbors add votes.' },
-              { n: '2', title: 'The tally fills',        desc: 'The store sees real demand — names and numbers, not guesses.' },
+              { n: '2', title: 'The tally fills',        desc: 'The store sees real demand: names and numbers, not guesses.' },
               { n: '3', title: 'The store stocks it',    desc: 'One approval turns a request into a product on the shelf.' },
             ].map(({ n, title, desc }) => (
               <div key={n} className={styles.step}>
@@ -223,7 +223,7 @@ const Landing = () => {
         <span className={styles.trustDot} aria-hidden="true">·</span>
         <span className={styles.trustItem}>
           <DevicePhoneMobileIcon className={styles.trustIcon} aria-hidden="true" />
-          Works on any phone — no app store needed
+          Works on any phone. No app store needed (as of yet)!
         </span>
         <span className={styles.trustDot} aria-hidden="true">·</span>
         <span className={styles.trustItem}>
@@ -234,7 +234,7 @@ const Landing = () => {
 
       {/* ── 7. FINAL CTA ── */}
       <section className={styles.finalCta}>
-        <h2 className={styles.finalCtaTitle}>Ready to put your corner on the map?</h2>
+        <h2 className={styles.finalCtaTitle}>Ready to put your corner store on the map?</h2>
         <button className={styles.btnPrimary} onClick={() => navigate('/auth/signup?role=Patron')}>
           Get started
         </button>
