@@ -12,11 +12,10 @@ export async function getStatus() {
   return res.json()
 }
 
-export async function createCheckoutSession(priceId = import.meta.env.VITE_STRIPE_PRICE_ID) {
-  const res = await fetch(`${BASE}/api/billing/checkout`, {
+export async function createCheckoutSession() {
+  const res = await fetch(`${BASE}/api/billing/create-checkout`, {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ priceId }),
   })
   const json = await res.json()
   if (json.err) throw new Error(json.err)
