@@ -33,6 +33,10 @@ export default function AdminBusinessDetail() {
   const [replyBody, setReplyBody] = useState('')
   const [actionFeedback, setActionFeedback] = useState('')
   const [confirmReject, setConfirmReject] = useState(false)
+  const [trialExtendDays, setTrialExtendDays] = useState(30)
+  const [trialExtending, setTrialExtending] = useState(false)
+  const [trialFeedback, setTrialFeedback] = useState('')
+  const [confirmExtend, setConfirmExtend] = useState(false)
 
   useEffect(() => {
     adminService.getBusinessDetail(id).then(data => { setDetail(data); setLoading(false) })
@@ -89,6 +93,21 @@ export default function AdminBusinessDetail() {
     if (data.verificationStatus) {
       setDetail(d => ({ ...d, business: { ...d.business, verificationStatus: data.verificationStatus, verificationNotes: null } }))
       setActionFeedback('Approval revoked. Store is now pending.')
+    }
+  }
+
+  async function handleExtendTrial() {
+    setTrialExtending(true)
+    const data = await adminService.extendTrial(id, trialExtendDays)
+    setTrialExtending(false)
+    setConfirmExtend(false)
+    if (data.err) {
+      setTrialFeedback(`Error: ${data.err}`)
+    } else {
+      setDetail(d => ({ ...d, billing: data.billing }))
+      setTrialFeedback(data.stripeSyncError
+        ? `Trial extended (Stripe sync failed: ${data.stripeSyncError})`
+        : 'Trial extended.')
     }
   }
 
@@ -283,6 +302,55 @@ export default function AdminBusinessDetail() {
               </label>
             ))}
           </div>
+        </div>
+
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Billing</h3>
+          {!detail.billing ? (
+            <p className={styles.empty}>No billing record.</p>
+          ) : (
+            <>
+              <div className={styles.detailGrid}>
+                <span className={styles.detailLabel}>Status</span>
+                <span>{detail.billing.subscriptionStatus}</span>
+                <span className={styles.detailLabel}>Trial ends</span>
+                <span>
+                  {detail.billing.trialEndsAt
+                    ? new Date(detail.billing.trialEndsAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                    : '—'}
+                </span>
+              </div>
+              <div className={styles.actions}>
+                <select
+                  className={styles.input}
+                  style={{ width: 'auto' }}
+                  value={trialExtendDays}
+                  onChange={e => setTrialExtendDays(Number(e.target.value))}
+                >
+                  <option value={30}>30 days</option>
+                  <option value={60}>60 days</option>
+                  <option value={90}>90 days</option>
+                </select>
+                <button className={styles.btnAccent} onClick={() => setConfirmExtend(true)}>
+                  + Extend Trial
+                </button>
+              </div>
+              {trialFeedback && <p className={styles.feedback}>{trialFeedback}</p>}
+              {confirmExtend && (
+                <div className={styles.confirmBox} style={{ borderColor: 'rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.06)' }}>
+                  <p className={styles.confirmText} style={{ color: '#e2e8f0' }}>
+                    Extend {business.displayName || owner?.name}&apos;s trial by {trialExtendDays} days?
+                  </p>
+                  <div className={styles.actions}>
+                    <button className={styles.btnGreen} disabled={trialExtending} onClick={handleExtendTrial}>
+                      {trialExtending ? 'Extending…' : 'Confirm'}
+                    </button>
+                    <button className={styles.btnGhost} onClick={() => setConfirmExtend(false)}>Cancel</button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
