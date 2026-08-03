@@ -304,6 +304,11 @@ export default function AdminBusinessDetail() {
           </div>
         </div>
 
+        </div>
+      </div>
+
+      {/* BILLING — 4th grid child: auto-placed to col 1 row 2 on desktop, bottom on mobile */}
+      <div className={styles.col}>
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>Billing</h3>
           {!detail.billing ? (
@@ -312,7 +317,7 @@ export default function AdminBusinessDetail() {
             <>
               <div className={styles.detailGrid}>
                 <span className={styles.detailLabel}>Status</span>
-                <span>{detail.billing.subscriptionStatus}</span>
+                <span>{detail.billing.subscriptionStatus.charAt(0).toUpperCase() + detail.billing.subscriptionStatus.slice(1)}</span>
                 <span className={styles.detailLabel}>Trial ends</span>
                 <span>
                   {detail.billing.trialEndsAt
@@ -321,16 +326,18 @@ export default function AdminBusinessDetail() {
                 </span>
               </div>
               <div className={styles.actions}>
-                <select
-                  className={styles.input}
-                  style={{ width: 'auto' }}
-                  value={trialExtendDays}
-                  onChange={e => setTrialExtendDays(Number(e.target.value))}
-                >
-                  <option value={30}>30 days</option>
-                  <option value={60}>60 days</option>
-                  <option value={90}>90 days</option>
-                </select>
+                <div className={styles.selectWrapper}>
+                  <select
+                    className={styles.selectInput}
+                    value={trialExtendDays}
+                    onChange={e => setTrialExtendDays(Number(e.target.value))}
+                  >
+                    <option value={30}>30 Days</option>
+                    <option value={60}>60 Days</option>
+                    <option value={90}>90 Days</option>
+                  </select>
+                  <span className={styles.selectArrow}>▾</span>
+                </div>
                 <button className={styles.btnAccent} onClick={() => setConfirmExtend(true)}>
                   + Extend Trial
                 </button>
@@ -339,7 +346,7 @@ export default function AdminBusinessDetail() {
               {confirmExtend && (
                 <div className={styles.confirmBox} style={{ borderColor: 'rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.06)' }}>
                   <p className={styles.confirmText} style={{ color: '#e2e8f0' }}>
-                    Extend {business.displayName || owner?.name}&apos;s trial by {trialExtendDays} days?
+                    Extend {business.displayName || owner?.name}&apos;s trial by {trialExtendDays} Days?
                   </p>
                   <div className={styles.actions}>
                     <button className={styles.btnGreen} disabled={trialExtending} onClick={handleExtendTrial}>

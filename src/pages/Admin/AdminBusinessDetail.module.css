@@ -85,7 +85,33 @@
 .textarea:focus { border-color: #6366f1; }
 .textarea::placeholder { color: #4a4a6a; }
 
-.actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.selectWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.selectInput {
+  appearance: none;
+  padding: 7px 32px 7px 12px;
+  border-radius: 6px;
+  border: 1px solid #2a2a4a;
+  background: #0f0f14;
+  color: #e2e8f0;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+.selectInput:focus { border-color: #6366f1; }
+.selectArrow {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
 .btnAccent {
   padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
   background: #6366f1; color: #fff; transition: opacity 0.15s;
