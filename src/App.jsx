@@ -231,6 +231,10 @@ function App() {
           <Route path="catalog"  element={<DistributorCatalog />} />
           <Route path="settings" element={<DistributorSettings />} />
         </Route>
+        {/* Safety-net redirects for old Stripe return URLs */}
+        <Route path="/billing/success" element={<Navigate to="/dashboard/business?billing=success" replace />} />
+        <Route path="/billing/cancel"  element={<Navigate to="/dashboard/business" replace />} />
+
         {/* ── Admin dashboard (nested under /dashboard/admin) ── */}
         <Route
           path="/dashboard/admin"

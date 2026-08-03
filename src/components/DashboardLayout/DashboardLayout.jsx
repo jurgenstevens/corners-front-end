@@ -39,7 +39,7 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
 
   const isTrialing          = billing.status === 'trialing'
   const showCountdownBanner = isTrialing && billing.daysLeftInTrial <= 7
-  const showWelcomeBanner   = isTrialing && billing.daysLeftInTrial > 7 && !welcomeDismissed
+  const showWelcomeBanner   = isTrialing && billing.daysLeftInTrial > 7 && !welcomeDismissed && !billing.hasPaymentMethod
 
   return (
     <div className={`${styles.root} ${navItems ? styles.hasNav : ''}`}>

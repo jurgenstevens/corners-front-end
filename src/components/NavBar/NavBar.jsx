@@ -26,14 +26,24 @@ const NavBar = ({ user, handleLogout }) => {
         ) : (
           <>
             {showTrialChip && (
-              <button
-                className={styles.trialChip}
-                onClick={() => billingService.createCheckoutSession()}
-                title="Subscribe now — you won't be charged until your trial ends."
-                aria-label="Subscribe now — you won't be charged until your trial ends."
-              >
-                Trial · {billing.daysLeftInTrial}d left
-              </button>
+              billing.hasPaymentMethod ? (
+                <span
+                  className={styles.trialChip}
+                  style={{ opacity: 0.7, cursor: 'default' }}
+                  title="You're all set — billing starts when your trial ends."
+                >
+                  Trial · {billing.daysLeftInTrial}d · ✓ card on file
+                </span>
+              ) : (
+                <button
+                  className={styles.trialChip}
+                  onClick={() => billingService.createCheckoutSession()}
+                  title="Subscribe now — you won't be charged until your trial ends."
+                  aria-label="Subscribe now — you won't be charged until your trial ends."
+                >
+                  Trial · {billing.daysLeftInTrial}d left
+                </button>
+              )
             )}
             <NotificationBell user={user} />
             <button className={styles.navButton} onClick={handleLogout}>Log Out</button>

@@ -7,6 +7,7 @@ export default function useBilling(user) {
     plan: null,
     trialEndsAt: null,
     daysLeftInTrial: 0,
+    hasPaymentMethod: false,
     loading: true,
   })
 
@@ -20,7 +21,7 @@ export default function useBilling(user) {
         const trialEndsAt = data.trialEndsAt ? new Date(data.trialEndsAt) : null
         const msLeft = trialEndsAt ? trialEndsAt - Date.now() : 0
         const daysLeftInTrial = Math.max(0, Math.ceil(msLeft / 86400000))
-        setBilling({ status: data.status, plan: data.plan, trialEndsAt, daysLeftInTrial, loading: false })
+        setBilling({ status: data.status, plan: data.plan, trialEndsAt, daysLeftInTrial, hasPaymentMethod: !!data.hasPaymentMethod, loading: false })
       })
       .catch(() => setBilling(b => ({ ...b, loading: false })))
   }, [user])

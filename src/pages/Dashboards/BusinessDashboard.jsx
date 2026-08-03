@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ShoppingBagIcon,
   UsersIcon,
@@ -9,9 +9,15 @@ import {
 import * as businessService from '../../services/businessService'
 import * as productService from '../../services/productService'
 import * as connectionService from '../../services/connectionService'
+import useBilling from '../../hooks/useBilling'
 import BugReportModal from '../../components/BugReportModal/BugReportModal'
 import MessageInbox from '../../components/MessageInbox/MessageInbox'
 import styles from './BusinessDashboard.module.css'
+
+function formatDate(date) {
+  if (!date) return ''
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
 
 const NAV_CARDS = [
   { to: '/dashboard/business/products',        icon: ShoppingBagIcon, label: 'Products',        sub: 'Manage your catalog'     },
@@ -23,12 +29,23 @@ const NAV_CARDS = [
 
 export default function BusinessDashboard({ user }) {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const billing = useBilling(user)
   const [business, setBusiness] = useState(null)
   const [loading, setLoading]   = useState(true)
   const [showBugReport, setShowBugReport] = useState(false)
   const [pendingRequests, setPendingRequests]   = useState(null)
   const [connectedPatrons, setConnectedPatrons] = useState(null)
   const [productsInStore, setProductsInStore]   = useState(null)
+
+  const billingParam = searchParams.get('billing')
+  const [showSuccessBanner, setShowSuccessBanner] = useState(billingParam === 'success')
+
+  useEffect(() => {
+    if (billingParam === 'success' || billingParam === 'cancel') {
+      setSearchParams({}, { replace: true })
+    }
+  }, [])
 
   useEffect(() => {
     businessService.getMyBusiness()
@@ -67,6 +84,22 @@ export default function BusinessDashboard({ user }) {
 
   return (
     <div className={styles.page}>
+      {showSuccessBanner && (
+        <div className={styles.successBanner}>
+          <span>
+            ✓ Payment method saved. Your trial runs through{' '}
+            {billing.trialEndsAt ? formatDate(billing.trialEndsAt) : 'the end of your trial'}; you won&apos;t be charged until then.
+          </span>
+          <button
+            className={styles.successBannerDismiss}
+            onClick={() => setShowSuccessBanner(false)}
+            aria-label="Dismiss"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <header className={styles.greeting}>
         <h1>Welcome back{business?.displayName ? `, ${business.displayName}` : ''}.</h1>
         {business?.businessType && <p>{business.businessType}</p>}
