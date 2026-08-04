@@ -304,7 +304,6 @@ export default function AdminBusinessDetail() {
           </div>
         </div>
 
-        </div>
       </div>
 
       {/* BILLING — 4th grid child: auto-placed to col 1 row 2 on desktop, bottom on mobile */}
