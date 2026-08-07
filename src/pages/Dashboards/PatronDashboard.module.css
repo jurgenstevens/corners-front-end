@@ -1,5 +1,40 @@
 .page { max-width: 640px; margin: 0 auto; padding: 24px 20px 100px; }
 
+/* ── Stores / Products segmented control ── */
+.segControl {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 3px;
+  margin-bottom: 18px;
+}
+.segBtn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-radius: 9px;
+  padding: 8px 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.segBtnActive {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ── Zip prompt ── */
+.zipPrompt { margin: 0 0 14px; font-size: 0.84rem; }
+.zipPromptLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.zipPromptLink:hover { text-decoration: underline; }
+
 .heading { font-size: 1rem; font-weight: 700; margin: 0 0 12px; }
 
 /* ── Search ── */
@@ -142,6 +177,32 @@
 }
 .itemSearchBtn:hover:not(:disabled) { opacity: 0.8; }
 .itemSearchBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Product result actions ── */
+.itemResultAction {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+}
+.viewStoreBtn {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--text); cursor: pointer;
+  transition: border-color 0.15s;
+}
+.viewStoreBtn:hover { border-color: var(--text); }
+
+.requestTally { display: flex; align-items: center; gap: 6px; }
+.tallyLabel   { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.voteBtn {
+  background: var(--accent); color: var(--accent-text);
+  border: none; border-radius: 6px;
+  padding: 4px 9px; font-size: 0.8rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.voteBtn:hover { opacity: 0.8; }
+.voted { font-size: 0.85rem; color: var(--success); font-weight: 700; }
 
 .itemResultList { display: flex; flex-direction: column; gap: 8px; }
 .itemResultRow {
