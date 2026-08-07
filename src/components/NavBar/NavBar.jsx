@@ -37,7 +37,7 @@ const NavBar = ({ user, handleLogout }) => {
               ) : (
                 <button
                   className={styles.trialChip}
-                  onClick={() => billingService.createCheckoutSession()}
+                  onClick={() => billingService.createCheckoutSession().catch(() => {})}
                   title="Subscribe now — you won't be charged until your trial ends."
                   aria-label="Subscribe now — you won't be charged until your trial ends."
                 >

@@ -50,6 +50,12 @@
 }
 .trialBannerDismiss:hover { opacity: 1; }
 
+.trialBannerError {
+  margin-left: 8px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
 .root { min-height: 100vh; }
 
 /* ── Left nav sidebar (desktop only) ── */

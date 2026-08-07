@@ -37,6 +37,16 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
     setCountdownDismissed(true)
   }
 
+  const [checkoutError, setCheckoutError] = useState(null)
+  async function startCheckout() {
+    setCheckoutError(null)
+    try {
+      await billingService.createCheckoutSession()
+    } catch (err) {
+      setCheckoutError(err.message || 'Something went wrong. Please try again.')
+    }
+  }
+
   // Capture the trial length on first render so the welcome message is stable
   const initialDaysRef = useRef(null)
   useEffect(() => {
@@ -84,10 +94,13 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
               {' '}
               <button
                 className={styles.trialBannerCta}
-                onClick={() => billingService.createCheckoutSession()}
+                onClick={startCheckout}
               >
                 Subscribe now
               </button>
+              {checkoutError && (
+                <span className={styles.trialBannerError}>{checkoutError}</span>
+              )}
             </span>
             {!forceCountdown && (
               <button
@@ -111,10 +124,13 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
               {' '}
               <button
                 className={styles.trialBannerCta}
-                onClick={() => billingService.createCheckoutSession()}
+                onClick={startCheckout}
               >
                 Add payment method
               </button>
+              {checkoutError && (
+                <span className={styles.trialBannerError}>{checkoutError}</span>
+              )}
             </span>
             <button
               className={styles.trialBannerDismiss}
