@@ -28,6 +28,15 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
     setWelcomeDismissed(true)
   }
 
+  // Countdown banner: dismissible at 4-7 days, force-shown at ≤ 3 days
+  const [countdownDismissed, setCountdownDismissed] = useState(
+    () => !!localStorage.getItem('trial_countdown_dismissed')
+  )
+  function dismissCountdown() {
+    localStorage.setItem('trial_countdown_dismissed', '1')
+    setCountdownDismissed(true)
+  }
+
   // Capture the trial length on first render so the welcome message is stable
   const initialDaysRef = useRef(null)
   useEffect(() => {
@@ -38,7 +47,8 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
   const welcomeDays = initialDaysRef.current ?? billing.daysLeftInTrial
 
   const isTrialing          = billing.status === 'trialing'
-  const showCountdownBanner = isTrialing && billing.daysLeftInTrial <= 7
+  const forceCountdown      = isTrialing && billing.daysLeftInTrial <= 3
+  const showCountdownBanner = isTrialing && billing.daysLeftInTrial <= 7 && (forceCountdown || !countdownDismissed)
   const showWelcomeBanner   = isTrialing && billing.daysLeftInTrial > 7 && !welcomeDismissed && !billing.hasPaymentMethod
 
   return (
@@ -79,6 +89,15 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
                 Subscribe now
               </button>
             </span>
+            {!forceCountdown && (
+              <button
+                className={styles.trialBannerDismiss}
+                onClick={dismissCountdown}
+                aria-label="Dismiss trial reminder"
+              >
+                ✕
+              </button>
+            )}
           </div>
         )}
 
