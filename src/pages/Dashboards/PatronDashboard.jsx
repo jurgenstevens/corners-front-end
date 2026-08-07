@@ -33,6 +33,9 @@ export default function PatronDashboard({ user }) {
   const [sortBy, setSortBy]       = useState('name')
 
   // Products tab state
+  const [allPatronProducts, setAllPatronProducts] = useState([])
+  const [storeNameMap, setStoreNameMap]           = useState({})
+  const [storeIdMap, setStoreIdMap]               = useState({})
   const [productQuery, setProductQuery]           = useState('')
   const [productResults, setProductResults]       = useState([])
   const [productLoading, setProductLoading]       = useState(false)
@@ -64,9 +67,37 @@ export default function PatronDashboard({ user }) {
     Promise.all([
       connectionService.getNearbyBusinesses(),
       connectionService.getMyStores(),
-    ]).then(([nb, cn]) => {
+      productService.getPatronProducts(),
+    ]).then(([nb, cn, prods]) => {
       if (Array.isArray(nb)) setNearby(nb)
-      if (Array.isArray(cn)) setConnected(cn)
+      if (Array.isArray(cn)) {
+        setConnected(cn)
+        // Build profile-id → store name/id maps for product lookup
+        const nameMap = {}
+        const idMap   = {}
+        cn.forEach(s => {
+          const pid = (s.profile?._id || s.profile)?.toString()
+          if (pid) {
+            nameMap[pid] = s.displayName || s.profile?.name || 'Unknown'
+            idMap[pid]   = s._id
+          }
+        })
+        setStoreNameMap(nameMap)
+        setStoreIdMap(idMap)
+      }
+      if (Array.isArray(prods)) {
+        const visible = prods.filter(p =>
+          ['stocked', 'on_sale', 'approved', 'ready_to_stock'].includes(p.status)
+        )
+        setAllPatronProducts(visible)
+        if (user?.profileId) {
+          const votes = {}
+          visible.forEach(p => {
+            if (p.votedBy?.some(v => v.toString() === user.profileId.toString())) votes[p._id] = true
+          })
+          setProductVotes(votes)
+        }
+      }
     }).finally(() => setLoading(false))
   }, [])
 
@@ -77,46 +108,24 @@ export default function PatronDashboard({ user }) {
     debounceRef.current = setTimeout(() => fetchNearby(val), 500)
   }
 
-  async function handleProductSearch() {
+  function handleProductSearch() {
     if (!productQuery.trim()) return
-    setProductLoading(true)
     setHasProductSearched(true)
-    setProductResults([])
-    try {
-      const nearbyStores = await connectionService.getNearbyBusinesses(patronZip || undefined)
-      if (!Array.isArray(nearbyStores) || nearbyStores.length === 0) return
-      const q = productQuery.toLowerCase()
-      const perStore = await Promise.all(
-        nearbyStores.map(store =>
-          productService.getProductsByBusiness(store._id)
-            .then(prods => {
-              if (!Array.isArray(prods)) return []
-              return prods
-                .filter(p =>
-                  (p.name  || '').toLowerCase().includes(q) ||
-                  (p.brand || '').toLowerCase().includes(q)
-                )
-                .map(p => ({
-                  ...p,
-                  _storeName: store.displayName || store.profile?.name || 'Unknown',
-                  _storeId:   store._id,
-                }))
-            })
-            .catch(() => [])
-        )
+    const q = productQuery.toLowerCase()
+    const results = allPatronProducts
+      .filter(p =>
+        (p.name  || '').toLowerCase().includes(q) ||
+        (p.brand || '').toLowerCase().includes(q)
       )
-      const results = perStore.flat()
-      if (user?.profileId) {
-        const votes = {}
-        results.forEach(p => {
-          if (p.votedBy?.some(v => v.toString() === user.profileId.toString())) votes[p._id] = true
-        })
-        setProductVotes(votes)
-      }
-      setProductResults(results)
-    } finally {
-      setProductLoading(false)
-    }
+      .map(p => {
+        const bizId = (p.business?._id || p.business)?.toString()
+        return {
+          ...p,
+          _storeName: storeNameMap[bizId] || p.business?.name || 'Unknown',
+          _storeId:   storeIdMap[bizId]   || null,
+        }
+      })
+    setProductResults(results)
   }
 
   async function handleProductVote(id) {
@@ -303,7 +312,7 @@ export default function PatronDashboard({ user }) {
           <div className={styles.itemSearchBar}>
             <input
               className={styles.itemSearchInput}
-              placeholder="Search products near you…"
+              placeholder="Search products in your stores…"
               value={productQuery}
               onChange={e => {
                 setProductQuery(e.target.value)
@@ -314,23 +323,22 @@ export default function PatronDashboard({ user }) {
             <button
               className={styles.itemSearchBtn}
               onClick={handleProductSearch}
-              disabled={productLoading}
             >
-              {productLoading ? 'Searching…' : 'Search'}
+              Search
             </button>
           </div>
 
-          {productLoading && (
+          {loading && (
             <div className={styles.skeletons}>
               {[1, 2, 3].map(n => <div key={n} className={styles.skeleton} />)}
             </div>
           )}
 
-          {!productLoading && hasProductSearched && productResults.length === 0 && (
-            <p className={styles.empty}>No matching products found near you.</p>
+          {!loading && hasProductSearched && productResults.length === 0 && (
+            <p className={styles.empty}>No matching products found in your connected stores.</p>
           )}
 
-          {!productLoading && productResults.length > 0 && (
+          {!loading && productResults.length > 0 && (
             <div className={styles.itemResultList}>
               {productResults.map((p, i) => {
                 const isStocked = p.status === 'stocked' || p.status === 'on_sale'
