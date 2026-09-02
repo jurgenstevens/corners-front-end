@@ -95,23 +95,21 @@
   padding: 10px 20px;
   font-size: 1rem;
   font-weight: 600;
-  color: #ffffff;
-  background-color: #0d6efd;
-  border: 1px solid #0d6efd;
+  color: var(--accent);
+  background-color: var(--btn-bg);
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   text-align: center;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.05s ease;
   width: 100%;
 }
 
 .submitBtn:hover {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  opacity: 0.88;
 }
 
 .submitBtn:active {
-  background-color: #0a58ca;
   transform: scale(0.99);
 }
 

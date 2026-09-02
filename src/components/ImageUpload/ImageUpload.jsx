@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { CameraIcon } from '@heroicons/react/24/solid'
 import * as uploadService from '../../services/uploadService'
 import styles from './ImageUpload.module.css'
 
@@ -39,7 +40,7 @@ export default function ImageUpload({ value, onChange, label = 'Photo' }) {
         disabled={uploading}
         onClick={() => inputRef.current?.click()}
       >
-        {uploading ? <span className={styles.spinner} /> : '📷'} {uploading ? 'Uploading…' : `Choose ${label}`}
+        {uploading ? <span className={styles.spinner} /> : <CameraIcon style={{width:16,height:16,display:'inline',verticalAlign:'middle',marginRight:4}} />}{uploading ? 'Uploading…' : `Choose ${label}`}
       </button>
       {error && <p className={styles.error}>{error}</p>}
       {value && (

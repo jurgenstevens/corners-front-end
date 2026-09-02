@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { MapPinIcon, StarIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import * as connectionService from '../../services/connectionService'
 import * as patronService from '../../services/patronService'
 import * as productService from '../../services/productService'
@@ -205,7 +206,7 @@ export default function PatronDashboard({ user }) {
           )}
 
           <div className={styles.searchBar}>
-            <span className={styles.searchIcon}>⌕</span>
+            <MagnifyingGlassIcon className={styles.searchIcon} />
             <input
               className={styles.searchInput}
               placeholder="Search by zip code…"
@@ -262,9 +263,9 @@ export default function PatronDashboard({ user }) {
                       <h3 className={styles.bizName}>{name}</h3>
                       <div className={styles.meta}>
                         {b.rating > 0 && (
-                          <span className={styles.rating}>☆ {b.rating.toFixed(1)} ({b.reviewCount || 0} reviews)</span>
+                          <span className={styles.rating}><StarIcon className={styles.starIcon} /> {b.rating.toFixed(1)} ({b.reviewCount || 0} reviews)</span>
                         )}
-                        {b.address && <span className={styles.dist}>📍 {b.address}</span>}
+                        {b.address && <span className={styles.dist}><MapPinIcon className={styles.pinIcon} /> {b.address}</span>}
                       </div>
                       {b.priceTier && <span className={styles.price}>{b.priceTier}</span>}
                     </div>

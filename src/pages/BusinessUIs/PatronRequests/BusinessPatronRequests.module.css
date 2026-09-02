@@ -23,7 +23,7 @@
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 }
-.activeTab { background: var(--text); color: var(--bg); }
+.activeTab { background: var(--accent); color: var(--accent-text); }
 
 .visibilityRow {
   display: flex;
@@ -47,7 +47,7 @@
   padding: 0;
   transition: background 0.2s;
 }
-.toggleOn  { background: var(--text); }
+.toggleOn  { background: var(--accent); }
 .toggleOff { background: var(--border); }
 
 .toggleKnob {
@@ -115,8 +115,8 @@
   display: flex; align-items: center; justify-content: center;
   transition: opacity 0.15s;
 }
-.acceptBtn { background: var(--text); color: var(--bg); }
-.rejectBtn { background: var(--text); color: var(--bg); }
+.acceptBtn { background: var(--btn-bg); color: var(--accent); }
+.rejectBtn { background: var(--btn-bg); color: var(--accent); }
 .acceptBtn:hover, .rejectBtn:hover { opacity: 0.75; }
 
 .thumb {

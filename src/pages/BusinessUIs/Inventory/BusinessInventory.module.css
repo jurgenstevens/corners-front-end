@@ -77,7 +77,7 @@
   cursor: pointer; transition: all 0.15s;
 }
 .tab:hover { border-color: var(--text); }
-.tabActive { background: var(--text); border-color: var(--text); color: var(--bg); }
+.tabActive { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 
 /* ── Status badges ── */
 .badge { display: inline-block; font-size: 0.72rem; font-weight: 700; border-radius: 4px; padding: 3px 8px; }

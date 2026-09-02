@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { NoSymbolIcon } from '@heroicons/react/24/solid'
 import * as authService from '../../../services/authService'
 import styles from './BusinessRejected.module.css'
 
@@ -14,7 +15,7 @@ export default function BusinessRejected() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.iconWrap}>
-          <span className={styles.icon}>🚫</span>
+          <NoSymbolIcon className={styles.icon} />
         </div>
 
         <h1 className={styles.title}>Store application denied</h1>

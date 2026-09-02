@@ -33,7 +33,7 @@
   transition: all 0.15s; white-space: nowrap;
 }
 .tab:hover { border-color: var(--text); }
-.activeTab { background: var(--text); color: var(--bg); border-color: var(--text); }
+.activeTab { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
 
 /* ── Skeletons ── */
 .skeletons { display: flex; flex-direction: column; }
@@ -96,7 +96,7 @@
 
 .action { flex-shrink: 0; display: flex; align-items: center; padding-top: 2px; gap: 6px; }
 .voteBtn {
-  background: var(--text); color: var(--bg);
+  background: var(--btn-bg); color: var(--accent);
   border: none; border-radius: 8px;
   padding: 6px 14px; font-size: 0.85rem; font-weight: 700;
   cursor: pointer; transition: opacity 0.15s; white-space: nowrap;

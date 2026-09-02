@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { MapPinIcon } from '@heroicons/react/24/solid'
 import * as connectionService from '../../../services/connectionService'
 import styles from './PatronMyStores.module.css'
 
@@ -141,7 +142,7 @@ export default function PatronMyStores() {
                       </span>
                     )}
                     {b.address && (
-                      <span className={styles.dist}>📍 {b.address}</span>
+                      <span className={styles.dist}><MapPinIcon style={{width:12,height:12,flexShrink:0}} /> {b.address}</span>
                     )}
                   </div>
                   {b.priceTier && <span className={styles.price}>{b.priceTier}</span>}

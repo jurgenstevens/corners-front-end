@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { MapPinIcon, ClockIcon } from '@heroicons/react/24/solid'
 import * as distributorService from '../../services/distributorService'
 import styles from './DistributorOrders.module.css'
 
@@ -193,8 +194,8 @@ export default function DistributorOrders() {
               {/* Delivery/pickup details */}
               {(order.deliveryAddress || order.preferredWindow || order.notes) && (
                 <div className={styles.orderMeta}>
-                  {order.deliveryAddress && <p>📍 {order.deliveryAddress}</p>}
-                  {order.preferredWindow && <p>🕐 {order.preferredWindow}</p>}
+                  {order.deliveryAddress && <p><MapPinIcon style={{width:13,height:13,display:'inline',verticalAlign:'middle',marginRight:3}} />{order.deliveryAddress}</p>}
+                  {order.preferredWindow && <p><ClockIcon style={{width:13,height:13,display:'inline',verticalAlign:'middle',marginRight:3}} />{order.preferredWindow}</p>}
                   {order.notes && <p className={styles.orderNotes}>"{order.notes}"</p>}
                 </div>
               )}
