@@ -83,7 +83,7 @@ export default function JoinBusiness() {
         ) : user.authorizationLevel === 150 ? (
           <div className={styles.actions}>
             {followed ? (
-              <p className={styles.success}>You're now following {name}! 🎉</p>
+              <p className={styles.success}>You're now following {name}!</p>
             ) : (
               <button className={styles.primaryBtn} onClick={handleFollow} disabled={following}>
                 {following ? 'Connecting…' : 'Follow Store'}

@@ -37,13 +37,13 @@
   border-radius: 10px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--accent);
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
-.navLink:hover { background: var(--border); color: var(--text); text-decoration: none; }
+.navLink:hover { background: var(--border); color: var(--accent); text-decoration: none; }
 .navLink.navActive,
-.navLink.navActive:hover { background: var(--accent); color: #000; }
+.navLink.navActive:hover { background: var(--accent); color: var(--accent-text); }
 
 .navIcon { width: 22px; height: 22px; flex-shrink: 0; }
 

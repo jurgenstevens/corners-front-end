@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { MapPinIcon, PhoneIcon, ClockIcon, BuildingStorefrontIcon } from '@heroicons/react/24/solid'
 import * as businessService from '../../../services/businessService'
 import * as productService from '../../../services/productService'
 import * as connectionService from '../../../services/connectionService'
@@ -101,7 +102,7 @@ export default function PatronStoreDetail({ user }) {
             )}
           </>
         ) : (
-          <div className={styles.photoPlaceholder}>🏪</div>
+          <div className={styles.photoPlaceholder}><BuildingStorefrontIcon style={{width:48,height:48,opacity:0.3}} /></div>
         )}
         <button className={styles.backBtn} onClick={() => navigate(-1)}>‹ Back</button>
       </div>
@@ -142,14 +143,14 @@ export default function PatronStoreDetail({ user }) {
         {activeTab === 'info' && (
           <>
             {business.address && (
-              <div className={styles.infoRow}><span>📍</span><span>{business.address}, {business.location?.city}, {business.location?.state} {business.location?.zip}</span></div>
+              <div className={styles.infoRow}><MapPinIcon style={{width:14,height:14,flexShrink:0}} /><span>{business.address}, {business.location?.city}, {business.location?.state} {business.location?.zip}</span></div>
             )}
             {business.phone && (
-              <div className={styles.infoRow}><span>📞</span><a href={`tel:${business.phone}`}>{business.phone}</a></div>
+              <div className={styles.infoRow}><PhoneIcon style={{width:14,height:14,flexShrink:0}} /><a href={`tel:${business.phone}`}>{business.phone}</a></div>
             )}
             {DAYS.some(d => business.hours?.[d]) && (
               <div className={styles.hours}>
-                <span>🕐</span>
+                <ClockIcon style={{width:14,height:14,flexShrink:0}} />
                 <div>
                   {DAYS.filter(d => business.hours?.[d]).map(d => (
                     <div key={d} className={styles.hourRow}>

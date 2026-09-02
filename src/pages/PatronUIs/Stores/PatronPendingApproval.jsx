@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { ClockIcon, XCircleIcon, NoSymbolIcon } from '@heroicons/react/24/solid'
 import * as connectionService from '../../../services/connectionService'
 import styles from './PatronPendingApproval.module.css'
 
@@ -30,14 +31,14 @@ export default function PatronPendingApproval() {
     <div className={styles.container}>
       {status === 'pending' && (
         <>
-          <span className={styles.icon}>⏳</span>
+          <ClockIcon className={styles.icon} />
           <h2>Request Pending</h2>
           <p>Your connection request is awaiting approval. You'll be redirected shortly.</p>
         </>
       )}
       {status === 'denied' && (
         <>
-          <span className={styles.icon}>❌</span>
+          <XCircleIcon className={styles.icon} />
           <h2>Request Denied</h2>
           {conn?.denialReason && <p className={styles.reason}>Reason: {conn.denialReason}</p>}
           <button onClick={() => navigate('/dashboard/patron')}>Back to Dashboard</button>
@@ -45,7 +46,7 @@ export default function PatronPendingApproval() {
       )}
       {status === 'blocked' && (
         <>
-          <span className={styles.icon}>🚫</span>
+          <NoSymbolIcon className={styles.icon} />
           <h2>Connection Not Available</h2>
           <p>This business is not available for connection.</p>
           <button onClick={() => navigate('/dashboard/patron')}>Back to Dashboard</button>

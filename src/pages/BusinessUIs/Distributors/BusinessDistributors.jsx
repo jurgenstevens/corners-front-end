@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { MapPinIcon } from '@heroicons/react/24/solid'
 import * as distributorService from '../../../services/distributorService'
 import styles from './BusinessDistributors.module.css'
 
@@ -42,7 +43,7 @@ export default function BusinessDistributors() {
                     )}
                     {d.serviceRegions?.length > 0 && (
                       <p className={styles.regions}>
-                        📍 {d.serviceRegions.slice(0, 3).join(', ')}
+                        <MapPinIcon style={{width:12,height:12,display:'inline',verticalAlign:'middle',marginRight:3}} />{d.serviceRegions.slice(0, 3).join(', ')}
                         {d.serviceRegions.length > 3 ? ` +${d.serviceRegions.length - 3} more` : ''}
                       </p>
                     )}
