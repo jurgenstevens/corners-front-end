@@ -39,7 +39,6 @@ export default function PatronDashboard({ user }) {
   const [storeIdMap, setStoreIdMap]               = useState({})
   const [productQuery, setProductQuery]           = useState('')
   const [productResults, setProductResults]       = useState([])
-  const [productLoading, setProductLoading]       = useState(false)
   const [hasProductSearched, setHasProductSearched] = useState(false)
   const [productVotes, setProductVotes]           = useState({})
 
@@ -109,10 +108,10 @@ export default function PatronDashboard({ user }) {
     debounceRef.current = setTimeout(() => fetchNearby(val), 500)
   }
 
-  function handleProductSearch() {
-    if (!productQuery.trim()) return
+  function handleProductSearch(query = productQuery) {
+    if (!query.trim()) return
     setHasProductSearched(true)
-    const q = productQuery.toLowerCase()
+    const q = query.toLowerCase()
     const results = allPatronProducts
       .filter(p =>
         (p.name  || '').toLowerCase().includes(q) ||
@@ -316,8 +315,14 @@ export default function PatronDashboard({ user }) {
               placeholder="Search products in your stores…"
               value={productQuery}
               onChange={e => {
-                setProductQuery(e.target.value)
-                if (!e.target.value) { setProductResults([]); setHasProductSearched(false) }
+                const val = e.target.value
+                setProductQuery(val)
+                if (!val.trim()) {
+                  setProductResults([])
+                  setHasProductSearched(false)
+                } else {
+                  handleProductSearch(val)
+                }
               }}
               onKeyDown={e => { if (e.key === 'Enter') handleProductSearch() }}
             />
