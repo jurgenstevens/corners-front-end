@@ -80,6 +80,31 @@
 .miniAvatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .arrowHint { font-size: 14px; color: #4a4a6a; }
 
+.editInput {
+  width: 100%; padding: 7px 10px; border-radius: 6px; border: 1px solid #2a2a4a;
+  background: #0f1635; color: #e2e8f0; font-size: 13px; outline: none; box-sizing: border-box;
+}
+.editInput:focus { border-color: #6366f1; }
+.editInput::placeholder { color: #4a4a6a; }
+.editTextarea {
+  width: 100%; padding: 7px 10px; border-radius: 6px; border: 1px solid #2a2a4a;
+  background: #0f1635; color: #e2e8f0; font-size: 13px; resize: vertical;
+  box-sizing: border-box; outline: none; margin-bottom: 12px;
+}
+.editTextarea:focus { border-color: #6366f1; }
+.editSelect {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid #2a2a4a;
+  background: #0f1635; color: #e2e8f0; font-size: 12px; outline: none;
+  appearance: none; cursor: pointer;
+}
+.editSelect:focus { border-color: #6366f1; }
+.editCheckRow { display: flex; gap: 20px; margin: 10px 0; }
+.editCheckLabel {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #e2e8f0; cursor: pointer;
+  accent-color: #6366f1;
+}
+
 .btnOrange {
   padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
   background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); transition: background 0.15s;
