@@ -40,6 +40,7 @@ export const getBusinessDetail = (id) => req('GET', `/businesses/${id}`)
 export const verifyBusiness = (id, notes) => req('PUT', `/businesses/${id}/verify`, { notes })
 export const revokeBusiness = (id) => req('PUT', `/businesses/${id}/revoke`)
 export const rejectStore = (id) => req('PUT', `/businesses/${id}/reject-store`)
+export const extendTrial = (businessId, days) => req('PUT', `/businesses/${businessId}/extend-trial`, { days })
 
 export const getAllPatrons = () => req('GET', '/users/patrons')
 export const getPatronDetail = (id) => req('GET', `/users/patrons/${id}`)

@@ -2,10 +2,15 @@ import { NavLink } from 'react-router-dom'
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid'
 import { useTheme } from '../../context/ThemeContext'
 import NotificationBell from '../NotificationBell/NotificationBell'
+import useBilling from '../../hooks/useBilling'
+import * as billingService from '../../services/billingService'
 import styles from './NavBar.module.css'
 
 const NavBar = ({ user, handleLogout }) => {
   const { theme, toggleTheme } = useTheme()
+  const billing = useBilling(user)
+  const showTrialChip = billing.status === 'trialing'
+  const trialIsUrgent = billing.daysLeftInTrial <= 7
 
   return (
     <nav className={styles.nav}>
@@ -21,6 +26,26 @@ const NavBar = ({ user, handleLogout }) => {
           </>
         ) : (
           <>
+            {showTrialChip && (
+              billing.hasPaymentMethod ? (
+                <span
+                  className={`${styles.trialChip} ${trialIsUrgent ? styles.trialChipWarn : ''}`}
+                  style={{ opacity: 0.7, cursor: 'default' }}
+                  title="You're all set — billing starts when your trial ends."
+                >
+                  Trial · {billing.daysLeftInTrial}d · ✓ card on file
+                </span>
+              ) : (
+                <button
+                  className={`${styles.trialChip} ${trialIsUrgent ? styles.trialChipWarn : ''}`}
+                  onClick={() => billingService.createCheckoutSession().catch(() => {})}
+                  title="Subscribe now — you won't be charged until your trial ends."
+                  aria-label="Subscribe now — you won't be charged until your trial ends."
+                >
+                  Trial · {billing.daysLeftInTrial}d left
+                </button>
+              )
+            )}
             <NotificationBell user={user} />
             <button className={styles.navButton} onClick={handleLogout}>Log Out</button>
           </>

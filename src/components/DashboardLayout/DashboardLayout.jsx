@@ -1,14 +1,65 @@
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, useOutlet, useNavigate, useLocation } from 'react-router-dom'
+import useBilling from '../../hooks/useBilling'
+import * as billingService from '../../services/billingService'
 import styles from './DashboardLayout.module.css'
+
+function formatDate(date) {
+  if (!date) return ''
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
 
 export default function DashboardLayout({ Dashboard, user, homePath, navItems }) {
   const outlet   = useOutlet()
   const navigate = useNavigate()
   const location = useLocation()
+  const billing  = useBilling(user)
 
   const isSetupLocked = location.pathname === '/dashboard/business/setup'
 
   function close() { if (!isSetupLocked) navigate(homePath) }
+
+  // Welcome banner: shown once, dismissed to localStorage
+  const [welcomeDismissed, setWelcomeDismissed] = useState(
+    () => !!localStorage.getItem('trial_welcome_dismissed')
+  )
+  function dismissWelcome() {
+    localStorage.setItem('trial_welcome_dismissed', '1')
+    setWelcomeDismissed(true)
+  }
+
+  // Countdown banner: dismissible at 4-7 days, force-shown at ≤ 3 days
+  const [countdownDismissed, setCountdownDismissed] = useState(
+    () => !!localStorage.getItem('trial_countdown_dismissed')
+  )
+  function dismissCountdown() {
+    localStorage.setItem('trial_countdown_dismissed', '1')
+    setCountdownDismissed(true)
+  }
+
+  const [checkoutError, setCheckoutError] = useState(null)
+  async function startCheckout() {
+    setCheckoutError(null)
+    try {
+      await billingService.createCheckoutSession()
+    } catch (err) {
+      setCheckoutError(err.message || 'Something went wrong. Please try again.')
+    }
+  }
+
+  // Capture the trial length on first render so the welcome message is stable
+  const initialDaysRef = useRef(null)
+  useEffect(() => {
+    if (billing.status === 'trialing' && billing.daysLeftInTrial > 0 && initialDaysRef.current === null) {
+      initialDaysRef.current = billing.daysLeftInTrial
+    }
+  }, [billing])
+  const welcomeDays = initialDaysRef.current ?? billing.daysLeftInTrial
+
+  const isTrialing          = billing.status === 'trialing'
+  const forceCountdown      = isTrialing && billing.daysLeftInTrial <= 3
+  const showCountdownBanner = isTrialing && billing.daysLeftInTrial <= 7 && (forceCountdown || !countdownDismissed)
+  const showWelcomeBanner   = isTrialing && billing.daysLeftInTrial > 7 && !welcomeDismissed && !billing.hasPaymentMethod
 
   return (
     <div className={`${styles.root} ${navItems ? styles.hasNav : ''}`}>
@@ -32,6 +83,87 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
 
       {/* ── Main dashboard ── */}
       <div className={outlet ? `${styles.main} ${styles.dimmed}` : styles.main}>
+
+        {/* Trial countdown banner (≤ 7 days, non-dismissible; ≤ 3 days force-shown) */}
+        {showCountdownBanner && (
+          <div className={`${styles.trialBanner} ${styles.trialBannerWarn}`}>
+            <span>
+              {billing.daysLeftInTrial <= 0
+                ? 'Your trial has ended — subscribe to keep full access.'
+                : `Your trial ends in ${billing.daysLeftInTrial} day${billing.daysLeftInTrial === 1 ? '' : 's'}.`}
+              {' '}
+              <button
+                className={styles.trialBannerCta}
+                onClick={startCheckout}
+              >
+                Subscribe now
+              </button>
+              {checkoutError && (
+                <span className={styles.trialBannerError}>{checkoutError}</span>
+              )}
+            </span>
+            {!forceCountdown && (
+              <button
+                className={styles.trialBannerDismiss}
+                onClick={dismissCountdown}
+                aria-label="Dismiss trial reminder"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Past-due banner */}
+        {billing.status === 'past_due' && (
+          <div className={`${styles.trialBanner} ${styles.trialBannerWarn}`}>
+            <span>
+              Your payment failed. Update your payment method to keep your store active.{' '}
+              <button className={styles.trialBannerCta} onClick={startCheckout}>Subscribe now</button>
+              {checkoutError && <span className={styles.trialBannerError}>{checkoutError}</span>}
+            </span>
+          </div>
+        )}
+
+        {/* Cancelled banner */}
+        {billing.status === 'cancelled' && (
+          <div className={`${styles.trialBanner} ${styles.trialBannerWarn}`}>
+            <span>
+              Your subscription is paused. Resubscribe to restore access.{' '}
+              <button className={styles.trialBannerCta} onClick={startCheckout}>Resubscribe</button>
+              {checkoutError && <span className={styles.trialBannerError}>{checkoutError}</span>}
+            </span>
+          </div>
+        )}
+
+        {/* Welcome banner (first time, > 7 days remaining) */}
+        {showWelcomeBanner && (
+          <div className={`${styles.trialBanner} ${styles.trialBannerAccent}`}>
+            <span>
+              Your {welcomeDays}-day free trial is active. Full access, no card needed.
+              Add a payment method anytime — you won&apos;t be charged until{' '}
+              {billing.trialEndsAt ? formatDate(billing.trialEndsAt) : 'your trial ends'}.
+              {' '}
+              <button
+                className={styles.trialBannerCta}
+                onClick={startCheckout}
+              >
+                Add payment method
+              </button>
+              {checkoutError && (
+                <span className={styles.trialBannerError}>{checkoutError}</span>
+              )}
+            </span>
+            <button
+              className={styles.trialBannerDismiss}
+              onClick={dismissWelcome}
+              aria-label="Dismiss welcome message"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         <Dashboard user={user} />
       </div>
 
