@@ -19,7 +19,9 @@
 .cardTitleRow .cardTitle { margin: 0; }
 
 .bizHeader { margin-bottom: 14px; }
-.bizName { font-size: 20px; font-weight: 700; color: #e2e8f0; margin: 0 0 8px; }
+.bizNameRow { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.bizNameRow .input { flex: 1; margin-bottom: 0; }
+.bizName { font-size: 20px; font-weight: 700; color: #e2e8f0; margin: 0; }
 .badgeRow { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .badge {

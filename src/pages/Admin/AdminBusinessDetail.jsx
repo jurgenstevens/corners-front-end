@@ -9,6 +9,20 @@ function authHeaders() {
   return { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }
 }
 
+const BUSINESS_TYPES = [
+  'Convenience Store', 'Mini Mart', 'Hardware Store', 'Pharmacy', 'Grocery',
+  'Skate Shop', 'Clothing Boutique', 'Coffee Shop', 'Bakery', 'Auto Parts',
+  'Electronics', 'Pet Store', 'Book Store', 'Toy Store', 'Sporting Goods',
+]
+
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
+  'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
+  'MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+  'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
+  'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY',
+]
+
 const CHECKLIST = [
   'Business name matches registration',
   'Address verified via map lookup',
@@ -37,6 +51,10 @@ export default function AdminBusinessDetail() {
   const [trialExtending, setTrialExtending] = useState(false)
   const [trialFeedback, setTrialFeedback] = useState('')
   const [confirmExtend, setConfirmExtend] = useState(false)
+  const [editingInfo, setEditingInfo] = useState(false)
+  const [infoForm, setInfoForm] = useState({})
+  const [infoSaving, setInfoSaving] = useState(false)
+  const [infoFeedback, setInfoFeedback] = useState('')
 
   useEffect(() => {
     adminService.getBusinessDetail(id).then(data => { setDetail(data); setLoading(false) })
@@ -111,6 +129,39 @@ export default function AdminBusinessDetail() {
     }
   }
 
+  function startEditInfo() {
+    setInfoForm({
+      displayName:  business.displayName  || '',
+      businessType: business.businessType || '',
+      phone:        business.phone        || '',
+      address:      business.address      || '',
+      city:         business.location?.city  || '',
+      state:        business.location?.state || '',
+      zip:          business.location?.zip   || '',
+      description:  business.description  || '',
+    })
+    setInfoFeedback('')
+    setEditingInfo(true)
+  }
+
+  function cancelEditInfo() {
+    setEditingInfo(false)
+    setInfoFeedback('')
+  }
+
+  async function handleUpdateInfo() {
+    setInfoSaving(true)
+    const data = await adminService.updateStoreInfo(id, infoForm)
+    setInfoSaving(false)
+    if (data.err) {
+      setInfoFeedback(`Error: ${data.err}`)
+    } else {
+      setDetail(d => ({ ...d, business: { ...d.business, ...data } }))
+      setEditingInfo(false)
+      setInfoFeedback('Info updated.')
+    }
+  }
+
   async function handleRejectStore() {
     const data = await adminService.rejectStore(id)
     if (data.verificationStatus) {
@@ -138,7 +189,15 @@ export default function AdminBusinessDetail() {
       <div className={styles.col}>
         <div className={styles.card}>
           <div className={styles.bizHeader}>
-            <h2 className={styles.bizName}>{business.displayName || owner?.name}</h2>
+            <div className={styles.bizNameRow}>
+              {editingInfo
+                ? <input className={styles.input} style={{ marginBottom: 0 }} value={infoForm.displayName} onChange={e => setInfoForm(f => ({ ...f, displayName: e.target.value }))} placeholder="Display name" />
+                : <h2 className={styles.bizName}>{business.displayName || owner?.name}</h2>
+              }
+              {!editingInfo && (
+                <button className={styles.btnGhost} onClick={startEditInfo}>Edit</button>
+              )}
+            </div>
             <div className={styles.badgeRow}>
               <span className={`${styles.badge} ${styles[STATUS_CLASS[vStatus]]}`}>{vStatus.charAt(0).toUpperCase() + vStatus.slice(1)}</span>
             </div>
@@ -154,16 +213,60 @@ export default function AdminBusinessDetail() {
             </div>
           )}
 
-          <div className={styles.detailGrid}>
-            {business.businessType && <><span className={styles.detailLabel}>Type</span><span>{business.businessType}</span></>}
-            {business.phone && <><span className={styles.detailLabel}>Phone</span><span>{business.phone}</span></>}
-            {business.address && <><span className={styles.detailLabel}>Address</span><span>{business.address}</span></>}
-            {(business.location?.city || business.location?.state) && (
-              <><span className={styles.detailLabel}>Location</span><span>{[business.location.city, business.location.state].filter(Boolean).join(', ')}</span></>
-            )}
-          </div>
+          {editingInfo ? (
+            <div className={styles.detailGrid}>
+              <span className={styles.detailLabel}>Type</span>
+              <div className={styles.selectWrapper} style={{ width: '100%' }}>
+                <select className={styles.selectInput} style={{ width: '100%' }} value={infoForm.businessType} onChange={e => setInfoForm(f => ({ ...f, businessType: e.target.value }))}>
+                  <option value="">— Select type —</option>
+                  {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+                <span className={styles.selectArrow}>▾</span>
+              </div>
+              <span className={styles.detailLabel}>Phone</span>
+              <input className={styles.input} style={{ marginBottom: 0 }} value={infoForm.phone} onChange={e => setInfoForm(f => ({ ...f, phone: e.target.value }))} placeholder="Phone" />
+              <span className={styles.detailLabel}>Address</span>
+              <input className={styles.input} style={{ marginBottom: 0 }} value={infoForm.address} onChange={e => setInfoForm(f => ({ ...f, address: e.target.value }))} placeholder="Street address" />
+              <span className={styles.detailLabel}>City</span>
+              <input className={styles.input} style={{ marginBottom: 0 }} value={infoForm.city} onChange={e => setInfoForm(f => ({ ...f, city: e.target.value }))} placeholder="City" />
+              <span className={styles.detailLabel}>State</span>
+              <div className={styles.selectWrapper} style={{ width: '100%' }}>
+                <select className={styles.selectInput} style={{ width: '100%' }} value={infoForm.state} onChange={e => setInfoForm(f => ({ ...f, state: e.target.value }))}>
+                  <option value="">— Select state —</option>
+                  {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <span className={styles.selectArrow}>▾</span>
+              </div>
+              <span className={styles.detailLabel}>Zip</span>
+              <input className={styles.input} style={{ marginBottom: 0 }} value={infoForm.zip} onChange={e => setInfoForm(f => ({ ...f, zip: e.target.value }))} placeholder="Zip" />
+            </div>
+          ) : (
+            <div className={styles.detailGrid}>
+              {business.businessType && <><span className={styles.detailLabel}>Type</span><span>{business.businessType}</span></>}
+              {business.phone && <><span className={styles.detailLabel}>Phone</span><span>{business.phone}</span></>}
+              {business.address && <><span className={styles.detailLabel}>Address</span><span>{business.address}</span></>}
+              {(business.location?.city || business.location?.state) && (
+                <><span className={styles.detailLabel}>Location</span><span>{[business.location.city, business.location.state].filter(Boolean).join(', ')}</span></>
+              )}
+            </div>
+          )}
 
-          {business.description && <p className={styles.description}>{business.description}</p>}
+          {editingInfo ? (
+            <textarea className={styles.textarea} rows={3} value={infoForm.description} onChange={e => setInfoForm(f => ({ ...f, description: e.target.value }))} placeholder="Description…" style={{ marginTop: '8px' }} />
+          ) : (
+            business.description && <p className={styles.description}>{business.description}</p>
+          )}
+
+          {editingInfo && (
+            <div className={styles.actions}>
+              <button className={styles.btnAccent} disabled={infoSaving} onClick={handleUpdateInfo}>
+                {infoSaving ? 'Saving…' : 'Update'}
+              </button>
+              <button className={styles.btnGhost} onClick={cancelEditInfo}>Cancel</button>
+              {infoFeedback && <span style={{ fontSize: '13px', color: infoFeedback.startsWith('Error') ? '#ef4444' : '#22c55e' }}>{infoFeedback}</span>}
+            </div>
+          )}
+          {!editingInfo && infoFeedback && <p className={styles.feedback}>{infoFeedback}</p>}
 
           {business.photos?.length > 0 && (
             <div className={styles.photos}>
