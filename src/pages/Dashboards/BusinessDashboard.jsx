@@ -48,6 +48,15 @@ export default function BusinessDashboard({ user }) {
   }, [])
 
   useEffect(() => {
+    if (billing.loading) return
+    const level = user?.authorizationLevel ?? 0
+    if (level < 250 || level >= 500) return
+    if (['expired', 'cancelled', 'past_due'].includes(billing.status)) {
+      navigate('/billing/upgrade', { replace: true })
+    }
+  }, [billing.loading, billing.status])
+
+  useEffect(() => {
     businessService.getMyBusiness()
       .then(data => {
         if (data?.err || !data?.businessType || !data?.location?.zip) {

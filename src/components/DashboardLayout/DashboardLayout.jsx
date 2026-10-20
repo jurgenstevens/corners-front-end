@@ -114,6 +114,28 @@ export default function DashboardLayout({ Dashboard, user, homePath, navItems })
           </div>
         )}
 
+        {/* Past-due banner */}
+        {billing.status === 'past_due' && (
+          <div className={`${styles.trialBanner} ${styles.trialBannerWarn}`}>
+            <span>
+              Your payment failed. Update your payment method to keep your store active.{' '}
+              <button className={styles.trialBannerCta} onClick={startCheckout}>Subscribe now</button>
+              {checkoutError && <span className={styles.trialBannerError}>{checkoutError}</span>}
+            </span>
+          </div>
+        )}
+
+        {/* Cancelled banner */}
+        {billing.status === 'cancelled' && (
+          <div className={`${styles.trialBanner} ${styles.trialBannerWarn}`}>
+            <span>
+              Your subscription is paused. Resubscribe to restore access.{' '}
+              <button className={styles.trialBannerCta} onClick={startCheckout}>Resubscribe</button>
+              {checkoutError && <span className={styles.trialBannerError}>{checkoutError}</span>}
+            </span>
+          </div>
+        )}
+
         {/* Welcome banner (first time, > 7 days remaining) */}
         {showWelcomeBanner && (
           <div className={`${styles.trialBanner} ${styles.trialBannerAccent}`}>

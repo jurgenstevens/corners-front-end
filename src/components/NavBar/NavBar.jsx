@@ -9,7 +9,8 @@ import styles from './NavBar.module.css'
 const NavBar = ({ user, handleLogout }) => {
   const { theme, toggleTheme } = useTheme()
   const billing = useBilling(user)
-  const showTrialChip = billing.status === 'trialing' && billing.daysLeftInTrial > 7
+  const showTrialChip = billing.status === 'trialing'
+  const trialIsUrgent = billing.daysLeftInTrial <= 7
 
   return (
     <nav className={styles.nav}>
@@ -28,7 +29,7 @@ const NavBar = ({ user, handleLogout }) => {
             {showTrialChip && (
               billing.hasPaymentMethod ? (
                 <span
-                  className={styles.trialChip}
+                  className={`${styles.trialChip} ${trialIsUrgent ? styles.trialChipWarn : ''}`}
                   style={{ opacity: 0.7, cursor: 'default' }}
                   title="You're all set — billing starts when your trial ends."
                 >
@@ -36,7 +37,7 @@ const NavBar = ({ user, handleLogout }) => {
                 </span>
               ) : (
                 <button
-                  className={styles.trialChip}
+                  className={`${styles.trialChip} ${trialIsUrgent ? styles.trialChipWarn : ''}`}
                   onClick={() => billingService.createCheckoutSession().catch(() => {})}
                   title="Subscribe now — you won't be charged until your trial ends."
                   aria-label="Subscribe now — you won't be charged until your trial ends."

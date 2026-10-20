@@ -33,6 +33,7 @@ import BusinessPatronRequests from './pages/BusinessUIs/PatronRequests/BusinessP
 import BusinessSetup from './pages/BusinessUIs/Setup/BusinessSetup'
 import BusinessPendingApproval from './pages/BusinessUIs/PendingApproval/BusinessPendingApproval'
 import BusinessRejected from './pages/BusinessUIs/Rejected/BusinessRejected'
+import Upgrade from './pages/Billing/Upgrade'
 import BusinessDistributors from './pages/BusinessUIs/Distributors/BusinessDistributors'
 import BusinessDistributorCatalog from './pages/BusinessUIs/Distributors/BusinessDistributorCatalog'
 import BusinessDistributorOrders from './pages/BusinessUIs/Distributors/BusinessDistributorOrders'
@@ -231,6 +232,8 @@ function App() {
           <Route path="catalog"  element={<DistributorCatalog />} />
           <Route path="settings" element={<DistributorSettings />} />
         </Route>
+        {/* Billing */}
+        <Route path="/billing/upgrade" element={<ProtectedRoute user={user}><Upgrade user={user} /></ProtectedRoute>} />
         {/* Safety-net redirects for old Stripe return URLs */}
         <Route path="/billing/success" element={<Navigate to="/dashboard/business?billing=success" replace />} />
         <Route path="/billing/cancel"  element={<Navigate to="/dashboard/business" replace />} />
