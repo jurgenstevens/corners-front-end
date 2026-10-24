@@ -4,6 +4,8 @@ import * as billingService from '../services/billingService'
 export default function useBilling(user) {
   const [billing, setBilling] = useState({
     status: null,
+    graceEndsAt: null,
+    entitled: null,
     plan: null,
     trialEndsAt: null,
     daysLeftInTrial: 0,
@@ -19,9 +21,10 @@ export default function useBilling(user) {
     billingService.getStatus()
       .then(data => {
         const trialEndsAt = data.trialEndsAt ? new Date(data.trialEndsAt) : null
+        const graceEndsAt = data.graceEndsAt ? new Date(data.graceEndsAt) : null
         const msLeft = trialEndsAt ? trialEndsAt - Date.now() : 0
         const daysLeftInTrial = Math.max(0, Math.ceil(msLeft / 86400000))
-        setBilling({ status: data.status, plan: data.plan, trialEndsAt, daysLeftInTrial, hasPaymentMethod: !!data.hasPaymentMethod, loading: false })
+        setBilling({ status: data.status, graceEndsAt, entitled: data.entitled, plan: data.plan, trialEndsAt, daysLeftInTrial, hasPaymentMethod: !!data.hasPaymentMethod, loading: false })
       })
       .catch(() => setBilling(b => ({ ...b, loading: false })))
   }, [user])

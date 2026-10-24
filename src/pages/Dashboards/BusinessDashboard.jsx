@@ -51,7 +51,7 @@ export default function BusinessDashboard({ user }) {
     if (billing.loading) return
     const level = user?.authorizationLevel ?? 0
     if (level < 250 || level >= 500) return
-    if (['expired', 'cancelled', 'past_due'].includes(billing.status)) {
+    if (billing.entitled === false) {
       navigate('/billing/upgrade', { replace: true })
     }
   }, [billing.loading, billing.status])
