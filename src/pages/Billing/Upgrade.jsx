@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useBilling from '../../hooks/useBilling'
 import * as billingService from '../../services/billingService'
@@ -25,6 +25,12 @@ export default function Upgrade({ user }) {
   const billing = useBilling(user)
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    if (!billing.loading && billing.entitled === true) {
+      navigate('/dashboard/business', { replace: true })
+    }
+  }, [billing.loading, billing.entitled])
+
   async function handleSubscribe() {
     setLoading(true)
     try {
@@ -42,7 +48,7 @@ export default function Upgrade({ user }) {
         <button className={styles.cta} onClick={handleSubscribe} disabled={loading}>
           {loading ? 'Redirecting…' : 'Subscribe — $29/month'}
         </button>
-        <button className={styles.back} onClick={() => navigate(-1)}>← Go back</button>
+
       </div>
     </div>
   )
