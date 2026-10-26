@@ -31,6 +31,8 @@ export default function Upgrade({ user }) {
     }
   }, [billing.loading, billing.entitled])
 
+  if (billing.loading || billing.entitled === true) return null
+
   async function handleSubscribe() {
     setLoading(true)
     try {
