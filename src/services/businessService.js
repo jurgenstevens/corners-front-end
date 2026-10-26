@@ -1,36 +1,20 @@
-const BASE = import.meta.env.VITE_BACK_END_SERVER_URL
-
-function authHeaders() {
-  return { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }
-}
+import { apiFetch } from './apiFetch.js'
 
 export async function getMyBusiness() {
-  const res = await fetch(`${BASE}/api/businesses/me`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch('/api/businesses/me')
 }
 
 export async function setupBusiness(data) {
-  const res = await fetch(`${BASE}/api/businesses/setup`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify(data),
-  })
-  return res.json()
+  return apiFetch('/api/businesses/setup', { method: 'PUT', body: JSON.stringify(data) })
 }
 
 export async function getBusinessById(id) {
-  const res = await fetch(`${BASE}/api/businesses/${id}`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch(`/api/businesses/${id}`)
 }
 
 export async function updateVisibility(visibility) {
   console.log('businessService.updateVisibility — setting visibility to:', visibility)
-  const res = await fetch(`${BASE}/api/businesses/setup`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify({ visibility }),
-  })
-  const data = await res.json()
+  const data = await apiFetch('/api/businesses/setup', { method: 'PUT', body: JSON.stringify({ visibility }) })
   console.log('businessService.updateVisibility — response:', data)
   return data
 }

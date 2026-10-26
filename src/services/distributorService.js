@@ -1,92 +1,59 @@
-const BASE = import.meta.env.VITE_BACK_END_SERVER_URL
-
-function authHeaders() {
-  return { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }
-}
+import { apiFetch } from './apiFetch.js'
 
 // ── Business-side ─────────────────────────────────────────────────────────────
 
 export async function getNearbyDistributors() {
-  const res = await fetch(`${BASE}/api/distributors/nearby`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch('/api/distributors/nearby')
 }
 
 export async function getDistributorById(id) {
-  const res = await fetch(`${BASE}/api/distributors/${id}`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch(`/api/distributors/${id}`)
 }
 
 export async function getDistributorCatalog(distributorId) {
-  const res = await fetch(`${BASE}/api/distributors/${distributorId}/catalog`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch(`/api/distributors/${distributorId}/catalog`)
 }
 
 // ── Distributor-side ──────────────────────────────────────────────────────────
 
 export async function getMyDistributor() {
-  const res = await fetch(`${BASE}/api/distributors/me`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch('/api/distributors/me')
 }
 
 export async function updateDistributor(data) {
-  const res = await fetch(`${BASE}/api/distributors/me`, {
-    method: 'PUT', headers: authHeaders(), body: JSON.stringify(data),
-  })
-  return res.json()
+  return apiFetch('/api/distributors/me', { method: 'PUT', body: JSON.stringify(data) })
 }
 
 export async function getMyCatalog() {
-  const res = await fetch(`${BASE}/api/distributors/catalog/mine`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch('/api/distributors/catalog/mine')
 }
 
 export async function createProduct(data) {
-  const res = await fetch(`${BASE}/api/distributors/catalog/mine`, {
-    method: 'POST', headers: authHeaders(), body: JSON.stringify(data),
-  })
-  return res.json()
+  return apiFetch('/api/distributors/catalog/mine', { method: 'POST', body: JSON.stringify(data) })
 }
 
 export async function updateProduct(productId, data) {
-  const res = await fetch(`${BASE}/api/distributors/catalog/${productId}`, {
-    method: 'PUT', headers: authHeaders(), body: JSON.stringify(data),
-  })
-  return res.json()
+  return apiFetch(`/api/distributors/catalog/${productId}`, { method: 'PUT', body: JSON.stringify(data) })
 }
 
 export async function deleteProduct(productId) {
-  const res = await fetch(`${BASE}/api/distributors/catalog/${productId}`, {
-    method: 'DELETE', headers: authHeaders(),
-  })
-  return res.json()
+  return apiFetch(`/api/distributors/catalog/${productId}`, { method: 'DELETE' })
 }
 
 export async function uploadCatalogPDF(file) {
   const formData = new FormData()
   formData.append('catalog', file)
-  const res = await fetch(`${BASE}/api/distributors/catalog/upload`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-    body: formData,
-  })
-  return res.json()
+  return apiFetch('/api/distributors/catalog/upload', { method: 'POST', body: formData })
 }
 
 export async function getMyOrders() {
-  const res = await fetch(`${BASE}/api/orders/distributor`, { headers: authHeaders() })
-  return res.json()
+  return apiFetch('/api/orders/distributor')
 }
 
 export async function quoteOrder(orderId, data) {
-  const res = await fetch(`${BASE}/api/orders/${orderId}/quote`, {
-    method: 'PUT', headers: authHeaders(), body: JSON.stringify(data),
-  })
-  return res.json()
+  return apiFetch(`/api/orders/${orderId}/quote`, { method: 'PUT', body: JSON.stringify(data) })
 }
 
 export async function updateOrderStatus(orderId, status) {
-  const res = await fetch(`${BASE}/api/orders/${orderId}/status`, {
-    method: 'PUT', headers: authHeaders(), body: JSON.stringify({ status }),
-  })
-  return res.json()
+  return apiFetch(`/api/orders/${orderId}/status`, { method: 'PUT', body: JSON.stringify({ status }) })
 }
